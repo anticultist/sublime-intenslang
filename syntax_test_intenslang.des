@@ -1,27 +1,27 @@
 // SYNTAX TEST "semafor-intens.sublime-syntax"
 
 // foo
-// <- source.semafor-intens comment.line.semafor-intens
+// <- source.intens comment.line.intens
 
 INTEGER one, two;
-//  <- storage.type.semafor-intens
-//      ^^^ punctuation.definition.variable.semafor-intens
-//         ^ punctuation.separator.semafor-intens
-//           ^^^ punctuation.definition.variable.semafor-intens
-//              ^ punctuation.terminator.semafor-intens
+//  <- storage.type.intens
+//      ^^^ punctuation.definition.variable.intens
+//         ^ punctuation.separator.intens
+//           ^^^ punctuation.definition.variable.intens
+//              ^ punctuation.terminator.intens
 
 COLOR mycolor1 ();
-//  <- storage.type.semafor-intens
-//    ^^^^^^^^ punctuation.definition.variable.semafor-intens
-//             ^ punctuation.section.group.begin.semafor-intens
-//              ^ punctuation.section.group.end.semafor-intens
-//               ^ punctuation.terminator.semafor-intens
+//  <- storage.type.intens
+//    ^^^^^^^^ punctuation.definition.variable.intens
+//             ^ punctuation.section.group.begin.intens
+//              ^ punctuation.section.group.end.intens
+//               ^ punctuation.terminator.intens
 
 
 COLOR mycolor2 (
-//  <- storage.type.semafor-intens
-//    ^^^^^^^^ punctuation.definition.variable.semafor-intens
-//             ^ punctuation.section.group.begin.semafor-intens
+//  <- storage.type.intens
+//    ^^^^^^^^ punctuation.definition.variable.intens
+//             ^ punctuation.section.group.begin.intens
         INVALID = (red, black),
         < 0 = ("#fff", "#f00"),
         RANGE(0, <2) = ("#ffffff", "#00ff00"),
@@ -29,51 +29,51 @@ COLOR mycolor2 (
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
         ELSE = ("#ffffff", "#0000ff")
     );
-//  ^ punctuation.section.group.end.semafor-intens
-//   ^ punctuation.terminator.semafor-intens
+//  ^ punctuation.section.group.end.intens
+//   ^ punctuation.terminator.intens
 
 INTEGER {EDITABLE}
-//  <- storage.type.semafor-intens
-//       ^^^^^^^^ storage.modifier.semafor-intens
+//  <- storage.type.intens
+//       ^^^^^^^^ storage.modifier.intens
     foo {LABEL="mylabel", TOGGLE, FUNC=myfunc},
-//  ^^^ punctuation.definition.variable.semafor-intens
-//                                            ^ punctuation.separator.semafor-intens
+//  ^^^ punctuation.definition.variable.intens
+//                                            ^ punctuation.separator.intens
     bar {COLOR=mycolor};
-//  ^^^ punctuation.definition.variable.semafor-intens
-//                     ^ punctuation.terminator.semafor-intens
+//  ^^^ punctuation.definition.variable.intens
+//                     ^ punctuation.terminator.intens
 
 SET myset ("zero"=0, "one"=1);
-// <- storage.type.enum.semafor-intens
-//  ^^^^^ entity.name.enum.semafor-intens
-//        ^ punctuation.section.group.begin.semafor-intens
-//                          ^ punctuation.section.group.end.semafor-intens
-//                           ^ punctuation.terminator.semafor-intens
+// <- storage.type.enum.intens
+//  ^^^^^ entity.name.enum.intens
+//        ^ punctuation.section.group.begin.intens
+//                          ^ punctuation.section.group.end.intens
+//                           ^ punctuation.terminator.intens
 
 SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
 
 SET STRING ();
-// <- storage.type.enum.semafor-intens
-//  ^^^^^^ invalid.illegal.name.semafor-intens
-//         ^ punctuation.section.group.begin.semafor-intens
-//          ^ punctuation.section.group.end.semafor-intens
-//           ^ punctuation.terminator.semafor-intens
+// <- storage.type.enum.intens
+//  ^^^^^^ invalid.illegal.name.intens
+//         ^ punctuation.section.group.begin.intens
+//          ^ punctuation.section.group.end.intens
+//           ^ punctuation.terminator.intens
 
 STRUCT MYSTRUCT {
-// <- storage.type.struct.semafor-intens
-//     ^^^^^^^^ entity.name.struct.semafor-intens
-//              ^ punctuation.section.block.begin.semafor-intens
+// <- storage.type.struct.intens
+//     ^^^^^^^^ entity.name.struct.intens
+//              ^ punctuation.section.block.begin.intens
     INTEGER one, two;
-//  ^^^^^^^ storage.type.semafor-intens
-//          ^^^ punctuation.definition.variable.semafor-intens
-//             ^ punctuation.separator.semafor-intens
-//               ^^^ punctuation.definition.variable.semafor-intens
-//                  ^ punctuation.terminator.semafor-intens
+//  ^^^^^^^ storage.type.intens
+//          ^^^ punctuation.definition.variable.intens
+//             ^ punctuation.separator.intens
+//               ^^^ punctuation.definition.variable.intens
+//                  ^ punctuation.terminator.intens
     REAL three;};
-//  ^^^^ storage.type.semafor-intens
-//       ^^^^^ punctuation.definition.variable.semafor-intens
-//            ^ punctuation.terminator.semafor-intens
-//             ^ punctuation.section.block.end.semafor-intens
-//              ^ punctuation.terminator.semafor-intens
+//  ^^^^ storage.type.intens
+//       ^^^^^ punctuation.definition.variable.intens
+//            ^ punctuation.terminator.intens
+//             ^ punctuation.section.block.end.intens
+//              ^ punctuation.terminator.intens
 
 STRUCT MYSTRUCT2 {
     INTEGER { EDITABLE }
@@ -82,51 +82,51 @@ STRUCT MYSTRUCT2 {
 };
 
 STRUCT REAL {};
-// <- storage.type.struct.semafor-intens
-//     ^^^^ invalid.illegal.name.semafor-intens
-//          ^ punctuation.section.block.begin.semafor-intens
-//           ^ punctuation.section.block.end.semafor-intens
-//            ^ punctuation.terminator.semafor-intens
+// <- storage.type.struct.intens
+//     ^^^^ invalid.illegal.name.intens
+//          ^ punctuation.section.block.begin.intens
+//           ^ punctuation.section.block.end.intens
+//            ^ punctuation.terminator.intens
 
 STRUCT MYSTRUCT3 { INTEGER REAL;};
-//               ^ punctuation.section.block.begin.semafor-intens
-//                 ^^^^^^^ storage.type.semafor-intens
-//                         ^^^^ invalid.illegal.name.semafor-intens
-//                             ^ punctuation.terminator.semafor-intens
-//                              ^ punctuation.section.block.end.semafor-intens
-//                               ^ punctuation.terminator.semafor-intens
+//               ^ punctuation.section.block.begin.intens
+//                 ^^^^^^^ storage.type.intens
+//                         ^^^^ invalid.illegal.name.intens
+//                             ^ punctuation.terminator.intens
+//                              ^ punctuation.section.block.end.intens
+//                               ^ punctuation.terminator.intens
 
 FUNC myfunc, myfunc2;
-// <- storage.type.function.semafor-intens
-//   ^^^^^^ entity.name.function.semafor-intens
-//         ^ punctuation.separator.semafor-intens
-//           ^^^^^^^ entity.name.function.semafor-intens
-//                  ^ punctuation.terminator.semafor-intens
+// <- storage.type.function.intens
+//   ^^^^^^ entity.name.function.intens
+//         ^ punctuation.separator.intens
+//           ^^^^^^^ entity.name.function.intens
+//                  ^ punctuation.terminator.intens
 
 FUNC myfunc {
-// <- storage.type.function.semafor-intens
-//   ^^^^^^ entity.name.function.semafor-intens
-//          ^ punctuation.section.block.begin.semafor-intens
+// <- storage.type.function.intens
+//   ^^^^^^ entity.name.function.intens
+//          ^ punctuation.section.block.begin.intens
     INTEGER foo, bar;
-//  ^^^^^^^ storage.type.semafor-intens
-//          ^^^ punctuation.definition.variable.semafor-intens
-//             ^ punctuation.separator.semafor-intens
-//               ^^^ punctuation.definition.variable.semafor-intens
-//                  ^ punctuation.terminator.semafor-intens
+//  ^^^^^^^ storage.type.intens
+//          ^^^ punctuation.definition.variable.intens
+//             ^ punctuation.separator.intens
+//               ^^^ punctuation.definition.variable.intens
+//                  ^ punctuation.terminator.intens
 
     RUN ( myfunc2 );
-//      ^ punctuation.section.group.begin.semafor-intens
-//        ^^^^^^^ variable.function.semafor-intens
-//                ^ punctuation.section.group.end.semafor-intens
-//                 ^ punctuation.terminator.semafor-intens
+//      ^ punctuation.section.group.begin.intens
+//        ^^^^^^^ variable.function.intens
+//                ^ punctuation.section.group.end.intens
+//                 ^ punctuation.terminator.intens
 
     foo = 0;
     WHILE(foo < 4) {
         RUN( myfunc3 );
-//         ^ punctuation.section.group.begin.semafor-intens
-//           ^^^^^^^ variable.function.semafor-intens
-//                   ^ punctuation.section.group.end.semafor-intens
-//                    ^ punctuation.terminator.semafor-intens
+//         ^ punctuation.section.group.begin.intens
+//           ^^^^^^^ variable.function.intens
+//                   ^ punctuation.section.group.end.intens
+//                    ^ punctuation.terminator.intens
         IF (foo != 3) {
             INPUT = OLDVALUE;
             THIS.buzz = 2;
@@ -134,40 +134,40 @@ FUNC myfunc {
         ELSE {
             bar = 0;
             RETURN;
-//          ^^^^^^ keyword.control.semafor-intens
-//                ^ punctuation.terminator.semafor-intens
+//          ^^^^^^ keyword.control.intens
+//                ^ punctuation.terminator.intens
         }
         foo++;
     }
 
     IF ( REASON_OPEN ) {
         ABORT;
-//      ^^^^^ keyword.control.semafor-intens
-//           ^ punctuation.terminator.semafor-intens
+//      ^^^^^ keyword.control.intens
+//           ^ punctuation.terminator.intens
     }
     ELSE IF ( REASON_CLOSE ) {
     }
 
 }
-// <-  punctuation.section.block.end.semafor-intens
+// <-  punctuation.section.block.end.intens
 ;
-// <- punctuation.terminator.semafor-intens
+// <- punctuation.terminator.intens
 
 FUNC myfunc2 {},
-// <- storage.type.function.semafor-intens
-//   ^^^^^^^ entity.name.function.semafor-intens
-//           ^ punctuation.section.block.begin.semafor-intens
-//            ^ punctuation.section.block.end.semafor-intens
-//             ^ punctuation.separator.semafor-intens
+// <- storage.type.function.intens
+//   ^^^^^^^ entity.name.function.intens
+//           ^ punctuation.section.block.begin.intens
+//            ^ punctuation.section.block.end.intens
+//             ^ punctuation.separator.intens
     myfunc3 {};
-//  ^^^^^^^ entity.name.function.semafor-intens
-//          ^ punctuation.section.block.begin.semafor-intens
-//           ^ punctuation.section.block.end.semafor-intens
-//            ^ punctuation.terminator.semafor-intens
+//  ^^^^^^^ entity.name.function.intens
+//          ^ punctuation.section.block.begin.intens
+//           ^ punctuation.section.block.end.intens
+//            ^ punctuation.terminator.intens
 
 FUNC {DEADLY_SILENT, UPDATE_FORMS=NONE}
-// <- storage.type.function.semafor-intens
+// <- storage.type.function.intens
     myfunc4 {};
-//  ^^^^^^^ entity.name.function.semafor-intens
+//  ^^^^^^^ entity.name.function.intens
 
 END.
