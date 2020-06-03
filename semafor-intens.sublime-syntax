@@ -1,0 +1,341 @@
+%YAML 1.2
+---
+# Location: \AppData\Roaming\Sublime Text 3\Packages\User
+
+# See
+# http://www.sublimetext.com/docs/3/syntax.html
+# https://www.sublimetext.com/docs/3/scope_naming.html
+
+# TODO: maybe add file: 'semafor-intens.sublime-settings'
+
+name: Semafor INTENS
+file_extensions: [des, inc]
+scope: source.semafor-intens
+
+variables:
+  base_type: \b(?:COLOR|COMPLEX|INTEGER|REAL|STRING)\b
+  identifier: '{{base_type}}'
+  name: \b[A-Za-z_][A-Za-z_0-9]*\b
+  illegal_names: |-
+        (?x)\b(
+          ABORT|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
+        )\b # TODO: continue
+
+contexts:
+  prototype:  # this are included in every context
+    - include: line_comment
+    - include: double_quote_string
+    - include: numbers
+    - include: constants
+    - include: assignments
+    - include: predefined_variables
+    - include: operators
+
+  double_quote_string:
+    - match: '"'
+      scope: punctuation.definition.string.begin.semafor-intens
+      push:
+        - meta_scope: string.quoted.double.semafor-intens
+        - match: \\.
+          scope: constant.character.escape.semafor-intens
+        - match: '"'
+          scope: punctuation.definition.string.end.semafor-intens
+          pop: true
+
+  line_comment:
+    - match: //
+      scope: punctuation.definition.comment.semafor-intens
+      push:
+        - meta_scope: comment.line.semafor-intens
+        - match: $
+          pop: true
+
+  # keywords:
+  #   - match: |-
+  #       (?x)\b(
+  #         ELSE|END|EXIT|IF|WHILE
+  #       )\b
+  #     scope: keyword.control.semafor-intens
+
+  # keyword-other:
+  #   - match: |-
+  #       (?x)\b(
+  #         DATAPOOL|DESCRIPTION|FIELDGROUP|FILESTREAM|FOLDER|FORM|FUNCTIONS|HELPFILE|IMAGE|
+  #         LINEPLOT|PLOT2D|MENU|OPERATOR|PROCESS|PROCESSGROUP|SOCKET|STREAMER|THERMO|TIMER|UI_MANAGER
+  #       )\b
+  #     scope: keyword.other.semafor-intens
+
+  numbers:
+    - match: '\b(-)?[0-9]+\b'
+      scope: constant.numeric.semafor-intens
+    - match: '\b([0-9][0-9_]*)(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b'
+      scope: constant.numeric.float.decimal.semafor-intens
+
+  constants:
+    - match: \b(DEADLY_SILENT|EOLN|FALSE|HIGH|INDEX|INVALID|NONE|TRUE|OLDVALUE)\b
+      scope: constant.language.semafor-intens
+    - include: reason_expression
+
+  assignments:
+    - match: \+=|-=|\*=|/=|//=|%=|@=|&=|\|=|\^=|>>=|<<=|\*\*=
+      scope: keyword.operator.assignment.augmented.semafor-intens
+    - match: '=(?!=)'
+      scope: keyword.operator.assignment.semafor-intens
+
+  reason_expression:
+    - match: |-
+        (?x)\b(
+          REASON_ACTIVATE|REASON_CLEAR|REASON_CLOSE|REASON_CONNECTION|REASON_DROP|
+          REASON_DUPLICATE|REASON_INPUT|REASON_INSERT|REASON_MOVE|REASON_OPEN|REASON_PACK|
+          REASON_REMOVE|REASON_REMOVE_CONNECTION|REASON_REMOVE_ELEMENT|REASON_SELECT|
+          REASON_SELECT_POINT|REASON_SELECT_RECTANGLE|REASON_UNSELECT
+        )\b
+      scope: constant.other.semafor-intens
+
+  predefined_variables:
+    - match: \b(COLORBIT|INPUT|THIS)\b
+      scope: variable.language.semafor-intens
+
+  operators:
+    - match: <\=|>\=|\=\=|<|>|\!\=
+      scope: keyword.operator.comparison.semafor-intens
+    - match: \+|\-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~
+      scope: keyword.operator.arithmetic.semafor-intens
+    - match: \!
+      scope: keyword.operator.logical.semafor-intens
+
+  main:
+    - include: statements
+
+  statements:
+    - include: structures
+    - include: sets
+    - include: functions
+    - include: variables_definition
+    - include: end_of_propram
+
+  end_of_statement_pop:
+    - match: ;
+      scope: punctuation.terminator.semafor-intens
+      pop: true
+
+  end_of_propram:
+    - match: '\b(END)\b\s*.'
+      captures:
+        1: keyword.other.semafor-intens
+      # TODO: mark everything after as illegal
+
+  end_of_block_pop:
+    - match: '}'
+      scope: punctuation.section.block.end.semafor-intens
+      pop: true
+
+  anonymous_block:
+    - match: '{'
+      scope: punctuation.section.block.begin.semafor-intens
+      push: anonymous_block_body
+
+  anonymous_block_body:
+    - include: function_statements
+    - include: end_of_block_pop
+
+  anonymous_group:
+    - match: '\('
+      scope: punctuation.section.group.begin.semafor-intens
+      push: anonymous_group_body
+
+  anonymous_group_body:
+    - include: anonymous_group
+    - match: '\)'
+      scope: punctuation.section.group.end.semafor-intens
+      pop: true
+
+  structures:
+    - match: \b(STRUCT)\b\s+
+      scope: meta.struct.semafor-intens
+      captures:
+        1: storage.type.struct.semafor-intens
+      push:
+        - include: end_of_statement_pop
+        - include: structures_after_struct
+
+  structures_after_struct:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.semafor-intens
+      set: structures_after_name
+    - match: '\b({{name}})\b'
+      scope: entity.name.struct.semafor-intens
+      set: structures_after_name
+
+  structures_after_name:
+    - match: '{'
+      scope: punctuation.section.block.begin.semafor-intens
+      set: [end_of_statement_pop, structure_body]
+
+  structure_body:
+    - meta_scope: meta.enum.body.semafor-intens meta.block.semafor-intens  # TODO: check
+    - include: end_of_block_pop
+    - include: variables_definition
+
+  variables_definition:
+    - match: \b{{base_type}}\b\s+
+      scope: storage.type.semafor-intens
+      push: variables_definition_after_type
+
+  variables_properties:
+    - match: '{'
+      scope: punctuation.section.block.begin.semafor-intens
+      push: variables_properties_body
+
+  variables_properties_body:
+    - match: '\b(EDITABLE)\b'
+      scope: storage.modifier.semafor-intens
+    - include: end_of_block_pop
+
+  variables_definition_after_type:
+    - include: variables_properties
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.semafor-intens
+      set: variables_definition_after_name
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.semafor-intens
+      set: variables_definition_after_name
+    - include: end_of_statement_pop
+      comment: 'here its an ill-formed definition'
+    # TODO: using set
+
+  variables_definition_after_name:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.semafor-intens
+      set: variables_definition_after_type
+    - match: '\('
+      scope: punctuation.section.group.begin.semafor-intens
+      push: variable_conditional_states_body
+    - match: '{'
+      scope: punctuation.section.group.begin.semafor-intens
+      push: variable_parameter_body
+
+  variable_conditional_states_body:
+    - include: anonymous_group
+    - match: '\)'
+      scope: punctuation.section.group.end.semafor-intens
+      pop: true
+
+  variable_parameter_body:
+    - match: '}'
+      scope: punctuation.section.group.end.semafor-intens
+      pop: true
+
+  sets:
+    - match: \b(SET)\b\s+
+      scope: meta.enum.semafor-intens
+      captures:
+        1: storage.type.enum.semafor-intens
+      push:
+        - include: end_of_statement_pop
+        - include: sets_after_set
+
+  sets_after_set:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.semafor-intens
+      set: sets_after_name
+    - match: '\b({{name}})\b'
+      scope: entity.name.enum.semafor-intens
+      set: sets_after_name
+
+  sets_after_name:
+    - match: '\('
+      scope: punctuation.section.group.begin.semafor-intens
+      set: [end_of_statement_pop, set_body]
+
+  set_body:
+    - meta_scope: meta.enum.body.semafor-intens meta.group.semafor-intens
+    - match: '\)'
+      scope: punctuation.section.group.end.semafor-intens
+      pop: true
+
+  functions:
+    - match: \b(FUNC)\b\s+
+      scope: meta.function.semafor-intens
+      captures:
+        1: storage.type.function.semafor-intens
+      push:
+        - include: end_of_statement_pop
+        - include: functions_after_func
+
+  functions_after_func:
+    - include: function_properties
+    - include: function_declaration
+
+  function_properties:
+    - match: '{'
+      scope: punctuation.section.block.begin.semafor-intens
+      push: function_properties_body
+
+  function_properties_body:
+    - include: end_of_block_pop
+
+  function_declaration:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.semafor-intens
+      set: function_body
+    - match: '\b({{name}})\b'
+      scope: entity.name.function.semafor-intens
+      set: function_body
+
+  function_body:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.semafor-intens
+      set: function_declaration
+      comment: 'for forward declarations'
+    - match: '{'
+      scope: punctuation.section.block.begin.semafor-intens
+      push:
+        - meta_scope: meta.enum.body.semafor-intens meta.block.semafor-intens  # TODO: check
+        - include: function_statements
+        - include: end_of_block_pop
+
+  function_statements:
+    - include: variables_definition
+    - include: anonymous_block
+    - include: run_function
+    - match: '\b(ABORT|RETURN)\b\s*(;)'
+      captures:
+        1: keyword.control.semafor-intens
+        2: punctuation.terminator.semafor-intens
+
+  # builtin_functions:
+  #   - match: |-
+  #       (?x)\b(
+  #         ABS|ASSIGN_CORR|ATAN|CLEAR|CONFIRM|COS|DATASET_TEXT|FILENAME|MESSAGEBOX|OPEN|OPEN_URL|
+  #         PACK|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|
+  #         THUMBNAIL|UNIT|UNSET|VALID|VAR
+  #       )\b
+  #     scope: support.function.builtin.semafor-intens
+  #   - include: gui_statement
+
+  # gui_statement:
+  #   - match: |-
+  #       (?x)\b(
+  #         ALLOW|DISABLE|DISALLOW|ENABLE|MAP|UNMAP|UPDATE|UPDATE_FORMS
+  #       )\b
+  #     scope: support.function.builtin.semafor-intens
+
+  run_function:
+    - match: \b(RUN)\b
+      scope: meta.function-call.semafor-intens
+      captures:
+        1: keyword.other.semafor-intens
+        # 1: support.function.builtin.semafor-intens
+      push:
+        - match: \(
+          scope: punctuation.section.group.begin.semafor-intens
+          set:
+            - match: '\b({{name}})\b'
+              scope: variable.function.semafor-intens
+              set:
+                - match: \)
+                  scope: punctuation.section.group.end.semafor-intens
+                  set: end_of_statement_pop
