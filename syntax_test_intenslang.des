@@ -3,6 +3,8 @@
 // foo
 // <- source.intens comment.line.intens
 
+DATAPOOL
+
 INTEGER one, two;
 //  <- storage.type.intens
 //      ^^^ punctuation.definition.variable.intens
@@ -23,24 +25,38 @@ COLOR mycolor2 (
 //    ^^^^^^^^ punctuation.definition.variable.intens
 //             ^ punctuation.section.group.begin.intens
         INVALID = (red, black),
+//                            ^ punctuation.separator.intens
         < 0 = ("#fff", "#f00"),
-        RANGE(0, <2) = ("#ffffff", "#00ff00"),
+//                            ^ punctuation.separator.intens
+        RANGE(0, <2.1) = ("#ffffff", "#00ff00"),
+//            ^ constant.numeric.intens
+//                ^^^ constant.numeric.float.decimal.intens
+//                                             ^ punctuation.separator.intens
         2 = ("#ffffff", "#0000f"),
+//                               ^ punctuation.separator.intens
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
+//                                         ^ punctuation.separator.intens
         ELSE = ("#ffffff", "#0000ff")
     );
 //  ^ punctuation.section.group.end.intens
 //   ^ punctuation.terminator.intens
+
+INTEGER baz {TOGGLE};
+//  <- storage.type.intens
+//      ^^^ storage.modifier.intens
 
 INTEGER {EDITABLE}
 //  <- storage.type.intens
 //       ^^^^^^^^ storage.modifier.intens
     foo {LABEL="mylabel", TOGGLE, FUNC=myfunc},
 //  ^^^ punctuation.definition.variable.intens
+//                      ^ punctuation.separator.intens
+//                              ^ punctuation.separator.intens
+//                                     ^^^^^^ variable.function.intens
 //                                            ^ punctuation.separator.intens
-    bar {COLOR=mycolor};
+    bar {COLOR=mycolor2};
 //  ^^^ punctuation.definition.variable.intens
-//                     ^ punctuation.terminator.intens
+//                      ^ punctuation.terminator.intens
 
 SET myset ("zero"=0, "one"=1);
 // <- storage.type.enum.intens
@@ -50,6 +66,10 @@ SET myset ("zero"=0, "one"=1);
 //                           ^ punctuation.terminator.intens
 
 SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
+//         ^ punctuation.section.group.begin.intens
+//                      ^ punctuation.section.group.end.intens
+
+SET myset3 ("A"=1, "B"=2), myset4 ("C"=3, "D"=4);
 
 SET STRING ();
 // <- storage.type.enum.intens
@@ -79,7 +99,11 @@ STRUCT MYSTRUCT2 {
     INTEGER { EDITABLE }
         button1 {LABEL="mylabel", BUTTON, FUNC=myfunc},
         foo {SET=myset};
+
+    MYSTRUCT bar;
 };
+
+MYSTRUCT2 foo;
 
 STRUCT REAL {};
 // <- storage.type.struct.intens
@@ -96,12 +120,30 @@ STRUCT MYSTRUCT3 { INTEGER REAL;};
 //                              ^ punctuation.section.block.end.intens
 //                               ^ punctuation.terminator.intens
 
+END DATAPOOL;
+//          ^ punctuation.terminator.intens
+
+FUNCTIONS
+
 FUNC myfunc, myfunc2;
 // <- storage.type.function.intens
 //   ^^^^^^ entity.name.function.intens
 //         ^ punctuation.separator.intens
 //           ^^^^^^^ entity.name.function.intens
 //                  ^ punctuation.terminator.intens
+
+END FUNCTIONS;
+//           ^ punctuation.terminator.intens
+
+STREAMER
+END STREAMER;
+//          ^ punctuation.terminator.intens
+
+OPERATOR
+END OPERATOR;
+//          ^ punctuation.terminator.intens
+
+FUNCTIONS
 
 FUNC myfunc {
 // <- storage.type.function.intens
@@ -121,7 +163,10 @@ FUNC myfunc {
 //                 ^ punctuation.terminator.intens
 
     foo = 0;
-    WHILE(foo < 4) {
+    WHILE(foo < (1 + 4)) {
+//  ^^^^^ keyword.control.intens
+//       ^ punctuation.section.group.begin.intens
+//                     ^ punctuation.section.group.end.intens
         RUN( myfunc3 );
 //         ^ punctuation.section.group.begin.intens
 //           ^^^^^^^ variable.function.intens
@@ -132,7 +177,9 @@ FUNC myfunc {
             THIS.buzz = 2;
         }
         ELSE {
-            bar = 0;
+            bar = ABS(bar - ROUND(1 + 4.8));
+//                ^^^ support.function.builtin.intens
+//                          ^^^^^ support.function.builtin.intens
             RETURN;
 //          ^^^^^^ keyword.control.intens
 //                ^ punctuation.terminator.intens
@@ -141,13 +188,20 @@ FUNC myfunc {
     }
 
     IF ( REASON_OPEN ) {
+//  ^^ keyword.control.intens
+//     ^ punctuation.section.group.begin.intens
+//                   ^ punctuation.section.group.end.intens
+//                     ^ punctuation.section.block.begin.intens
         ABORT;
 //      ^^^^^ keyword.control.intens
 //           ^ punctuation.terminator.intens
     }
+//  ^ punctuation.section.block.end.intens
     ELSE IF ( REASON_CLOSE ) {
+//  ^^^^ keyword.control.intens
+//                           ^ punctuation.section.block.begin.intens
     }
-
+//  ^ punctuation.section.block.end.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
@@ -170,4 +224,12 @@ FUNC {DEADLY_SILENT, UPDATE_FORMS=NONE}
     myfunc4 {};
 //  ^^^^^^^ entity.name.function.intens
 
+END FUNCTIONS;
+//           ^ punctuation.terminator.intens
+
+UI_MANAGER
+END UI_MANAGER;
+//            ^ punctuation.terminator.intens
+
 END.
+// ^ punctuation.terminator.intens
