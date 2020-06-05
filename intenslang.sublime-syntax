@@ -18,9 +18,9 @@ variables:
         )\b
   builtin_functions: |-
         (?x)\b(
-          ABS|ASSIGN_CORR|ATAN|CLEAR|CONFIRM|COS|DATASET_TEXT|FILENAME|MESSAGEBOX|OPEN|OPEN_URL|
-          PACK|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|
-          THUMBNAIL|UNIT|UNSET|VALID|VAR
+          ABS|ALLOW|ASSIGN_CORR|ATAN|CLEAR|CONFIRM|COS|DATASET_TEXT|DISABLE|DISALLOW|ENABLE|
+          FILENAME|LABEL|MAP|MESSAGEBOX|OPEN|OPEN_URL|PACK|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|
+          SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|THUMBNAIL|UNIT|UNMAP|UNSET|VALID|VAR
         )\b
 
 
@@ -249,7 +249,7 @@ contexts:
   anonymous_group_body:
     - meta_scope: meta.group.intens
     - include: anonymous_group
-    - include: function_call
+    - include: function_call  # allow without a semicolon
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -287,7 +287,7 @@ contexts:
 
 
   variables_definition:
-    - match: \b{{base_type}}\b\s+
+    - match: \b{{base_type}}\b
       scope: storage.type.intens
       push: variables_definition_after_type
 
@@ -299,7 +299,7 @@ contexts:
 
 
   variables_properties_body:
-    - match: '\b(EDITABLE)\b'
+    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
       scope: storage.modifier.intens
     - include: end_of_block_pop
 
@@ -352,25 +352,23 @@ contexts:
             - match: '\b({{name}})\b'
               scope: variable.function.intens
               pop: true
-    - match: '\b{{name}}\b'
+    - match: '\b(SET)\b'
       scope: variable.parameter.intens
       push:
-        - match: '}'
-          scope: punctuation.section.group.end.intens
-          pop: true
-        - match: \,
-          scope: punctuation.separator.intens
-          pop: true
         - match: '='
           scope: keyword.operator.assignment.augmented.intens
           set:
             - match: '\b({{name}})\b'
-              scope: variable.other.intens
+              scope: storage.type.enum.intens
               pop: true
-            - match: \,
-              scope: punctuation.separator.intens
-              comment: 'in case something was consumed by prototype definition'
-              pop: true
+    - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+        3: variable.other.intens
+    - match: \,
+      scope: punctuation.separator.intens
+      set: variable_parameters_body
     - match: '}'
       scope: punctuation.section.group.end.intens
       pop: true
@@ -397,7 +395,11 @@ contexts:
   sets_after_name:
     - match: \(
       scope: punctuation.section.group.begin.intens
-      set: [end_of_statement_pop, set_body]
+      set: [sets_after_name, set_body]
+    - match: \,
+      scope: punctuation.separator.intens
+      set: sets_after_set
+    - include: end_of_statement_pop
 
 
   set_body:
@@ -409,7 +411,7 @@ contexts:
 
 
   functions:
-    - match: \b(FUNC)\b\s+
+    - match: \b(FUNC)\b
       scope: meta.function.intens
       captures:
         1: storage.type.function.intens
@@ -510,6 +512,26 @@ contexts:
 
 
   while_loop_condition_body:
+    - meta_scope: meta.group.intens
+    - include: anonymous_group
+    - match: \)
+      scope: punctuation.section.group.end.intens
+      pop: true
+
+
+  if_statement:
+    - match: '\b(IF)\b'
+      scope: keyword.control.intens
+      push: if_statement_condition
+
+
+  if_statement_condition:
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      set: if_statement_condition_body
+
+
+  if_statement_condition_body:
     - meta_scope: meta.group.intens
     - include: anonymous_group
     - match: \)

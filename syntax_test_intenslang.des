@@ -70,6 +70,7 @@ SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
 //                      ^ punctuation.section.group.end.intens
 
 SET myset3 ("A"=1, "B"=2), myset4 ("C"=3, "D"=4);
+//                         ^^^^^^ entity.name.enum.intens
 
 SET STRING ();
 // <- storage.type.enum.intens
@@ -95,8 +96,13 @@ STRUCT MYSTRUCT {
 //             ^ punctuation.section.block.end.intens
 //              ^ punctuation.terminator.intens
 
+STRUCT MYSTRUCT_EXT : MYSTRUCT {
+    INTEGER four;
+};
+
 STRUCT MYSTRUCT2 {
-    INTEGER { EDITABLE }
+    INTEGER{ EDITABLE }
+//  ^^^^^^^ storage.type.intens
         button1 {LABEL="mylabel", BUTTON, FUNC=myfunc},
         foo {SET=myset};
 
@@ -187,6 +193,10 @@ FUNC myfunc {
         foo++;
     }
 
+    IF (! RUN(myfunc3) ){
+        ABORT;
+    }
+
     IF ( REASON_OPEN ) {
 //  ^^ keyword.control.intens
 //     ^ punctuation.section.group.begin.intens
@@ -219,7 +229,7 @@ FUNC myfunc2 {},
 //           ^ punctuation.section.block.end.intens
 //            ^ punctuation.terminator.intens
 
-FUNC {DEADLY_SILENT, UPDATE_FORMS=NONE}
+FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
 // <- storage.type.function.intens
     myfunc4 {};
 //  ^^^^^^^ entity.name.function.intens
