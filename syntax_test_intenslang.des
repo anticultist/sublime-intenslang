@@ -1,4 +1,4 @@
-// SYNTAX TEST "semafor-intens.sublime-syntax"
+// SYNTAX TEST "intenslang.sublime-syntax"
 
 // foo
 // <- source.intens comment.line.intens
@@ -146,6 +146,24 @@ END STREAMER;
 //          ^ punctuation.terminator.intens
 
 OPERATOR
+
+SOCKET my_socket {
+//               ^ punctuation.section.group.begin.intens
+      PORT=666,
+      STREAM=my_stream,
+      FUNC=myfunc},
+//         ^^^^^^ variable.function.intens
+//               ^ punctuation.section.group.end.intens
+//                ^ punctuation.separator.intens
+  my_socket2 {
+//           ^ punctuation.section.group.begin.intens
+      PORT=333,
+      STREAM=my_stream2,
+      FUNC=myfunc2};
+//         ^^^^^^^ variable.function.intens
+//                ^ punctuation.section.group.end.intens
+//                 ^ punctuation.terminator.intens
+
 END OPERATOR;
 //          ^ punctuation.terminator.intens
 

@@ -173,9 +173,66 @@ contexts:
         - include: end_of_statement_pop
     - match: |-
         (?x)\b(
-          FILESTREAM|PROCESS|PROCESSGROUP|SOCKET
+          PROCESS|PROCESSGROUP
         )\b
       scope: storage.type.other.intens
+    - include: filestream
+    - include: socket
+
+
+  filestream:
+    - match: \b(FILESTREAM)\b
+      captures:
+        1: storage.type.other.intens
+      push:
+        - include: end_of_statement_pop
+        - include: filestream_after_keyword
+
+
+  filestream_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: filestream_after_name
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.intens
+      set: filestream_after_name
+
+
+  filestream_after_name:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.intens
+      set: filestream_after_keyword
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
+
+  socket:
+    - match: \b(SOCKET)\b
+      captures:
+        1: storage.type.other.intens
+      push:
+        - include: end_of_statement_pop
+        - include: sockets_after_keyword
+
+
+  sockets_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: sockets_after_name
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.intens
+      set: sockets_after_name
+
+
+  sockets_after_name:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.intens
+      set: sockets_after_keyword
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
 
 
   functions_block:
@@ -277,10 +334,10 @@ contexts:
         1: storage.type.struct.intens
       push:
         - include: end_of_statement_pop
-        - include: structures_after_struct
+        - include: structures_after_keyword
 
 
-  structures_after_struct:
+  structures_after_keyword:
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
       set: structures_after_name
@@ -341,7 +398,7 @@ contexts:
       push: variable_conditional_states_body
     - match: '{'
       scope: punctuation.section.group.begin.intens
-      push: variable_parameters_body
+      push: parameter_block
 
 
   variable_conditional_states_body:
@@ -357,8 +414,8 @@ contexts:
       pop: true
 
 
-  variable_parameters_body:
-    - match: '\b(FUNC)\b'
+  parameter_block:
+    - match: \b(FUNC)\b
       scope: variable.parameter.intens
       push:
         - match: '='
@@ -383,7 +440,7 @@ contexts:
         3: variable.other.intens
     - match: \,
       scope: punctuation.separator.intens
-      set: variable_parameters_body
+      set: parameter_block
     - match: '}'
       scope: punctuation.section.group.end.intens
       pop: true
@@ -395,10 +452,10 @@ contexts:
         1: storage.type.enum.intens
       push:
         - include: end_of_statement_pop
-        - include: sets_after_set
+        - include: sets_after_keyword
 
 
-  sets_after_set:
+  sets_after_keyword:
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
       set: sets_after_name
@@ -413,7 +470,7 @@ contexts:
       set: [sets_after_name, set_body]
     - match: \,
       scope: punctuation.separator.intens
-      set: sets_after_set
+      set: sets_after_keyword
     - include: end_of_statement_pop
 
 
@@ -432,10 +489,10 @@ contexts:
         1: storage.type.function.intens
       push:
         - include: end_of_statement_pop
-        - include: functions_after_func
+        - include: functions_after_keyword
 
 
-  functions_after_func:
+  functions_after_keyword:
     - include: function_properties
     - include: function_declaration
 
