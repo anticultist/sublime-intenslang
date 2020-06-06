@@ -122,6 +122,100 @@ contexts:
       scope: keyword.other.intens
 
 
+###########
+# General #
+###########
+
+  end_of_propram:
+    - match: '\b(END)\b\s*(.)'
+      captures:
+        1: keyword.other.intens
+        2: punctuation.terminator.intens
+
+
+  simple_statements:
+    - include: structures
+    - include: sets
+    - include: variables_definition
+    - include: functions
+
+
+  end_of_statement_pop:
+    - match: ;
+      scope: punctuation.terminator.intens
+      pop: true
+
+
+  end_of_block_pop:
+    - match: '}'
+      scope: punctuation.section.block.end.intens
+      pop: true
+
+
+  anonymous_block:
+    - match: '{'
+      scope: punctuation.section.block.begin.intens
+      push: anonymous_block_body
+
+
+  anonymous_block_body:
+    - meta_scope: meta.block.intens
+    - include: function_statements
+    - include: end_of_block_pop
+
+
+  anonymous_group:
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      push: anonymous_group_body
+
+
+  anonymous_group_body:
+    - meta_scope: meta.group.intens
+    - include: anonymous_group
+    - include: function_call  # allow without a semicolon
+    - match: \)
+      scope: punctuation.section.group.end.intens
+      pop: true
+
+
+  parameter_block:
+    - match: \b(FUNC)\b
+      scope: variable.parameter.intens
+      push:
+        - match: '='
+          scope: keyword.operator.assignment.augmented.intens
+          set:
+            - match: '\b({{name}})\b'
+              scope: variable.function.intens
+              pop: true
+    - match: '\b(SET)\b'
+      scope: variable.parameter.intens
+      push:
+        - match: '='
+          scope: keyword.operator.assignment.augmented.intens
+          set:
+            - match: '\b({{name}})\b'
+              scope: storage.type.enum.intens
+              pop: true
+    - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+        3: variable.other.intens
+    - match: \,
+      scope: punctuation.separator.intens
+      set: parameter_block
+    - match: '}'
+      scope: punctuation.section.group.end.intens
+      pop: true
+
+
+
+##################
+# Datapool Block #
+##################
+
   datapool_block:
     - match: '\b(DATAPOOL)\b'
       captures:
@@ -141,6 +235,134 @@ contexts:
         - include: end_of_statement_pop
 
 
+  structures:
+    - match: \b(STRUCT)\b\s+
+      scope: meta.struct.intens
+      captures:
+        1: storage.type.struct.intens
+      push:
+        - include: end_of_statement_pop
+        - include: structures_after_keyword
+
+
+  structures_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: structures_after_name
+    - match: '\b({{name}})\b'
+      scope: entity.name.struct.intens
+      set: structures_after_name
+
+
+  structures_after_name:
+    - match: '{'
+      scope: punctuation.section.block.begin.intens
+      set: [end_of_statement_pop, structure_body]
+
+
+  structure_body:
+    - meta_scope: meta.struct.intens
+    - include: end_of_block_pop
+    - include: variables_definition
+
+
+  sets:
+    - match: \b(SET)\b\s+
+      captures:
+        1: storage.type.enum.intens
+      push:
+        - include: end_of_statement_pop
+        - include: sets_after_keyword
+
+
+  sets_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: sets_after_name
+    - match: '\b({{name}})\b'
+      scope: entity.name.enum.intens
+      set: sets_after_name
+
+
+  sets_after_name:
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      set: [sets_after_name, set_body]
+    - match: \,
+      scope: punctuation.separator.intens
+      set: sets_after_keyword
+    - include: end_of_statement_pop
+
+
+  set_body:
+    - meta_scope: meta.enum.body.intens
+    - include: simple_assignments
+    - match: \)
+      scope: punctuation.section.group.end.intens
+      pop: true
+
+
+
+  variables_definition:
+    - match: \b{{base_type}}\b
+      scope: storage.type.intens
+      push: variables_definition_after_type
+
+
+  variables_properties:
+    - match: '{'
+      scope: punctuation.section.block.begin.intens
+      push: variables_properties_body
+
+
+  variables_properties_body:
+    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
+      scope: storage.modifier.intens
+    - include: end_of_block_pop
+
+
+  variables_definition_after_type:
+    - include: variables_properties
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: variables_definition_after_name
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.intens
+      set: variables_definition_after_name
+    - include: end_of_statement_pop
+      comment: 'here its an ill-formed definition'
+
+
+  variables_definition_after_name:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.intens
+      set: variables_definition_after_type
+    - match: '\('
+      scope: punctuation.section.group.begin.intens
+      push: variable_conditional_states_body
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
+
+
+  variable_conditional_states_body:
+    - include: anonymous_group
+    - include: simple_assignments
+    - include: function_call
+    - include: control_keywords
+    - match: ','
+      scope: punctuation.separator.intens
+      set: variable_conditional_states_body
+    - match: '\)'
+      scope: punctuation.section.group.end.intens
+      pop: true
+
+
+##################
+# Streamer Block #
+##################
+
   streamer_block:
     - match: '\b(STREAMER)\b'
       captures:
@@ -156,6 +378,10 @@ contexts:
       set:
         - include: end_of_statement_pop
 
+
+##################
+# Operator Block #
+##################
 
   operator_block:
     - match: '\b(OPERATOR)\b'
@@ -235,6 +461,10 @@ contexts:
       push: parameter_block
 
 
+###################
+# Functions Block #
+###################
+
   functions_block:
     - match: '\b(FUNCTIONS)\b'
       captures:
@@ -251,235 +481,6 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
-
-
-  ui_manager_block:
-    - match: '\b(UI_MANAGER)\b'
-      captures:
-        1: keyword.other.intens
-      push: ui_manager_block_body
-
-
-  ui_manager_block_body:
-    - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.intens
-      set:
-        - include: end_of_statement_pop
-    - match: |-
-        (?x)\b(
-          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|PLOT2D|TABLE|THERMO
-        )\b
-      scope: storage.type.other.intens
-
-
-  end_of_propram:
-    - match: '\b(END)\b\s*(.)'
-      captures:
-        1: keyword.other.intens
-        2: punctuation.terminator.intens
-
-
-  simple_statements:
-    - include: structures
-    - include: sets
-    - include: variables_definition
-    - include: functions
-
-
-  end_of_statement_pop:
-    - match: ;
-      scope: punctuation.terminator.intens
-      pop: true
-
-
-  end_of_block_pop:
-    - match: '}'
-      scope: punctuation.section.block.end.intens
-      pop: true
-
-
-  anonymous_block:
-    - match: '{'
-      scope: punctuation.section.block.begin.intens
-      push: anonymous_block_body
-
-
-  anonymous_block_body:
-    - meta_scope: meta.block.intens
-    - include: function_statements
-    - include: end_of_block_pop
-
-
-  anonymous_group:
-    - match: \(
-      scope: punctuation.section.group.begin.intens
-      push: anonymous_group_body
-
-
-  anonymous_group_body:
-    - meta_scope: meta.group.intens
-    - include: anonymous_group
-    - include: function_call  # allow without a semicolon
-    - match: \)
-      scope: punctuation.section.group.end.intens
-      pop: true
-
-
-  structures:
-    - match: \b(STRUCT)\b\s+
-      scope: meta.struct.intens
-      captures:
-        1: storage.type.struct.intens
-      push:
-        - include: end_of_statement_pop
-        - include: structures_after_keyword
-
-
-  structures_after_keyword:
-    - match: '{{illegal_names}}'
-      scope: invalid.illegal.name.intens
-      set: structures_after_name
-    - match: '\b({{name}})\b'
-      scope: entity.name.struct.intens
-      set: structures_after_name
-
-
-  structures_after_name:
-    - match: '{'
-      scope: punctuation.section.block.begin.intens
-      set: [end_of_statement_pop, structure_body]
-
-
-  structure_body:
-    - meta_scope: meta.struct.intens
-    - include: end_of_block_pop
-    - include: variables_definition
-
-
-  variables_definition:
-    - match: \b{{base_type}}\b
-      scope: storage.type.intens
-      push: variables_definition_after_type
-
-
-  variables_properties:
-    - match: '{'
-      scope: punctuation.section.block.begin.intens
-      push: variables_properties_body
-
-
-  variables_properties_body:
-    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
-      scope: storage.modifier.intens
-    - include: end_of_block_pop
-
-
-  variables_definition_after_type:
-    - include: variables_properties
-    - match: '{{illegal_names}}'
-      scope: invalid.illegal.name.intens
-      set: variables_definition_after_name
-    - match: '\b({{name}})\b'
-      scope: punctuation.definition.variable.intens
-      set: variables_definition_after_name
-    - include: end_of_statement_pop
-      comment: 'here its an ill-formed definition'
-
-
-  variables_definition_after_name:
-    - include: end_of_statement_pop
-    - match: \,
-      scope: punctuation.separator.intens
-      set: variables_definition_after_type
-    - match: '\('
-      scope: punctuation.section.group.begin.intens
-      push: variable_conditional_states_body
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
-
-
-  variable_conditional_states_body:
-    - include: anonymous_group
-    - include: simple_assignments
-    - include: function_call
-    - include: control_keywords
-    - match: ','
-      scope: punctuation.separator.intens
-      set: variable_conditional_states_body
-    - match: '\)'
-      scope: punctuation.section.group.end.intens
-      pop: true
-
-
-  parameter_block:
-    - match: \b(FUNC)\b
-      scope: variable.parameter.intens
-      push:
-        - match: '='
-          scope: keyword.operator.assignment.augmented.intens
-          set:
-            - match: '\b({{name}})\b'
-              scope: variable.function.intens
-              pop: true
-    - match: '\b(SET)\b'
-      scope: variable.parameter.intens
-      push:
-        - match: '='
-          scope: keyword.operator.assignment.augmented.intens
-          set:
-            - match: '\b({{name}})\b'
-              scope: storage.type.enum.intens
-              pop: true
-    - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
-      captures:
-        1: variable.parameter.intens
-        2: keyword.operator.assignment.augmented.intens
-        3: variable.other.intens
-    - match: \,
-      scope: punctuation.separator.intens
-      set: parameter_block
-    - match: '}'
-      scope: punctuation.section.group.end.intens
-      pop: true
-
-
-  sets:
-    - match: \b(SET)\b\s+
-      captures:
-        1: storage.type.enum.intens
-      push:
-        - include: end_of_statement_pop
-        - include: sets_after_keyword
-
-
-  sets_after_keyword:
-    - match: '{{illegal_names}}'
-      scope: invalid.illegal.name.intens
-      set: sets_after_name
-    - match: '\b({{name}})\b'
-      scope: entity.name.enum.intens
-      set: sets_after_name
-
-
-  sets_after_name:
-    - match: \(
-      scope: punctuation.section.group.begin.intens
-      set: [sets_after_name, set_body]
-    - match: \,
-      scope: punctuation.separator.intens
-      set: sets_after_keyword
-    - include: end_of_statement_pop
-
-
-  set_body:
-    - meta_scope: meta.enum.body.intens
-    - include: simple_assignments
-    - match: \)
-      scope: punctuation.section.group.end.intens
-      pop: true
 
 
   functions:
@@ -621,3 +622,29 @@ contexts:
   control_keywords:
     - match: '\b(IF|ELSE)\b'
       scope: keyword.control.intens
+
+
+
+####################
+# UI manager Block #
+####################
+
+  ui_manager_block:
+    - match: '\b(UI_MANAGER)\b'
+      captures:
+        1: keyword.other.intens
+      push: ui_manager_block_body
+
+
+  ui_manager_block_body:
+    - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
+      captures:
+        1: keyword.other.intens
+        2: keyword.other.intens
+      set:
+        - include: end_of_statement_pop
+    - match: |-
+        (?x)\b(
+          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|PLOT2D|TABLE|THERMO
+        )\b
+      scope: storage.type.other.intens
