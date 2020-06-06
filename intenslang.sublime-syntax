@@ -20,7 +20,7 @@ variables:
         (?x)\b(
           ABS|ALLOW|ASSIGN_CORR|ATAN|CLEAR|CONFIRM|COS|DATASET_TEXT|DISABLE|DISALLOW|ENABLE|
           FILENAME|LABEL|MAP|MESSAGEBOX|OPEN|OPEN_URL|PACK|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|
-          SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|THUMBNAIL|UNIT|UNMAP|UNSET|VALID|VAR
+          SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|THUMBNAIL|UNIT|UNMAP|UNSET|UPDATE_FORMS|VALID|VAR
         )\b
 
 
@@ -63,7 +63,7 @@ contexts:
 
 
   constants:
-    - match: \b(DEADLY_SILENT|EOLN|FALSE|HIGH|INDEX|INVALID|NONE|TRUE|OLDVALUE)\b
+    - match: \b(EOLN|FALSE|HIGH|INDEX|INVALID|NONE|TRUE|OLDVALUE)\b
       scope: constant.language.intens
     - include: reason_expression
 
@@ -115,6 +115,11 @@ contexts:
     - include: functions_block
     - include: ui_manager_block
     - include: end_of_propram
+    - match: |-
+        (?x)\b(
+          DESCRIPTION|HELPFILE|OPEN_URL
+        )\b
+      scope: keyword.other.intens
 
 
   datapool_block:
@@ -166,6 +171,11 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
+    - match: |-
+        (?x)\b(
+          FILESTREAM|PROCESS|PROCESSGROUP|SOCKET
+        )\b
+      scope: storage.type.other.intens
 
 
   functions_block:
@@ -200,6 +210,11 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
+    - match: |-
+        (?x)\b(
+          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|PLOT2D|TABLE|THERMO
+        )\b
+      scope: storage.type.other.intens
 
 
   end_of_propram:
@@ -434,6 +449,11 @@ contexts:
   function_properties_body:
     - meta_scope: meta.function.parameters.intens
     - include: end_of_block_pop
+    - match: |-
+        (?x)\b(
+          DEADLY_SILENT|PRIORITY|UPDATE_FORMS
+        )\b
+      scope: variable.parameter.intens
 
 
   function_declaration:
@@ -496,7 +516,7 @@ contexts:
               set:
                 - match: \)
                   scope: punctuation.section.group.end.intens
-                  set: end_of_statement_pop
+                  pop: true
 
 
   while_loop:
@@ -514,6 +534,7 @@ contexts:
   while_loop_condition_body:
     - meta_scope: meta.group.intens
     - include: anonymous_group
+    - include: function_call
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -534,6 +555,7 @@ contexts:
   if_statement_condition_body:
     - meta_scope: meta.group.intens
     - include: anonymous_group
+    - include: function_call
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
