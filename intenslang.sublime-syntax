@@ -12,6 +12,8 @@ variables:
   base_type: \b(?:COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
   name: \b[A-Za-z_][A-Za-z_0-9]*\b
+  float_number: '\b([0-9][0-9_]*)(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b'
+  int_number: '\b(-)?[0-9]+\b'
   illegal_names: |-
         (?x)\b(
           ABORT|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
@@ -56,9 +58,9 @@ contexts:
 
 
   numbers:
-    - match: '\b([0-9][0-9_]*)(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b'
+    - match: '\b({{float_number}})\b'
       scope: constant.numeric.float.decimal.intens
-    - match: '\b(-)?[0-9]+\b'
+    - match: '\b(int_number)\b'
       scope: constant.numeric.intens
 
 
@@ -179,7 +181,7 @@ contexts:
       pop: true
 
 
-  parameter_block:
+  func_parameter:
     - match: \b(FUNC)\b
       scope: variable.parameter.intens
       push:
@@ -189,6 +191,10 @@ contexts:
             - match: '\b({{name}})\b'
               scope: variable.function.intens
               pop: true
+
+
+  parameter_block:
+    - include: func_parameter
     - match: '\b(SET)\b'
       scope: variable.parameter.intens
       push:
@@ -198,6 +204,13 @@ contexts:
             - match: '\b({{name}})\b'
               scope: storage.type.enum.intens
               pop: true
+    - match: '\b(MARGIN|RANGE|SIZE)\b'
+      scope: support.function.builtin.intens
+    - match: '\b({{name}})\s*(?:(=)\s*(HORIZONTAL|NONE|VERTICAL))?\b'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+        3: constant.language.intens
     - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
       captures:
         1: variable.parameter.intens
@@ -209,6 +222,9 @@ contexts:
     - match: '}'
       scope: punctuation.section.group.end.intens
       pop: true
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
 
 
 
@@ -643,8 +659,55 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
+    - include: ui_struct
+
+
+  ui_struct:
     - match: |-
         (?x)\b(
           FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|PLOT2D|TABLE|THERMO
         )\b
       scope: storage.type.other.intens
+      push:
+        - include: ui_struct_after_keyword
+        - include: end_of_statement_pop
+
+
+  ui_struct_after_keyword:
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.intens
+      set: ui_struct_after_name
+
+
+  ui_struct_after_name:
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      push: ui_struct_body
+    - include: end_of_statement_pop
+
+
+  ui_struct_body:
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      push: ui_struct_body
+    - match: \)
+      scope: punctuation.section.group.end.intens
+      pop: true
+    - match: |-
+        (?x)\b(
+          LABEL|LEFT|PIXMAP|SEPARATOR|STRETCH|TABLE|TOP|UNIT|VOID
+        )\b
+      scope: support.function.builtin.intens
+    - match: '\['
+      push:
+        - match: '\b(JUSTIFY|SB)\b'
+          scope: variable.parameter.intens
+        - include: func_parameter
+        - match: '\]'
+          pop: true
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
