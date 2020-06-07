@@ -13,7 +13,6 @@ variables:
   identifier: '{{base_type}}'
   name: \b[A-Za-z_][A-Za-z_0-9]*\b
   float_number: '\b([0-9][0-9_]*)(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b'
-  int_number: '\b(-)?[0-9]+\b'
   illegal_names: |-
         (?x)\b(
           ABORT|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
@@ -59,8 +58,6 @@ contexts:
 
   numbers:
     - match: '\b({{float_number}})\b'
-      scope: constant.numeric.float.decimal.intens
-    - match: '\b(int_number)\b'
       scope: constant.numeric.intens
 
 
@@ -204,13 +201,24 @@ contexts:
             - match: '\b({{name}})\b'
               scope: storage.type.enum.intens
               pop: true
-    - match: '\b(MARGIN|RANGE|SIZE)\b'
       scope: support.function.builtin.intens
-    - match: '\b({{name}})\s*(?:(=)\s*(HORIZONTAL|NONE|VERTICAL))?\b'
+    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
+      scope: storage.modifier.intens
+    - match: '\b({{name}})\s*(=)\s*(HORIZONTAL|NONE|VERTICAL)\b'
       captures:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
         3: constant.language.intens
+    - match: '\b({{name}})\s*(=)\s*({{float_number}})\b'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+        3: constant.numeric.intens
+    - match: '\b({{name}})\s*(=)\s*({{builtin_functions}})\b'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+        3: support.function.builtin.intens
     - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
       captures:
         1: variable.parameter.intens
@@ -225,6 +233,7 @@ contexts:
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block
+    - include: anonymous_group
 
 
 
@@ -307,6 +316,9 @@ contexts:
     - match: \,
       scope: punctuation.separator.intens
       set: sets_after_keyword
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
     - include: end_of_statement_pop
 
 
@@ -325,20 +337,10 @@ contexts:
       push: variables_definition_after_type
 
 
-  variables_properties:
+  variables_definition_after_type:
     - match: '{'
       scope: punctuation.section.block.begin.intens
-      push: variables_properties_body
-
-
-  variables_properties_body:
-    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
-      scope: storage.modifier.intens
-    - include: end_of_block_pop
-
-
-  variables_definition_after_type:
-    - include: variables_properties
+      push: parameter_block
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
       set: variables_definition_after_name
@@ -516,18 +518,8 @@ contexts:
 
   function_properties:
     - match: '{'
-      scope: punctuation.section.block.begin.intens
-      push: function_properties_body
-
-
-  function_properties_body:
-    - meta_scope: meta.function.parameters.intens
-    - include: end_of_block_pop
-    - match: |-
-        (?x)\b(
-          DEADLY_SILENT|PRIORITY|UPDATE_FORMS
-        )\b
-      scope: variable.parameter.intens
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
 
 
   function_declaration:
@@ -703,9 +695,10 @@ contexts:
       scope: support.function.builtin.intens
     - match: '\['
       push:
-        - match: '\b(JUSTIFY|SB)\b'
+        - match: '\b(FRAME|JUSTIFY|SB)\b'
           scope: variable.parameter.intens
         - include: func_parameter
+        - include: function_call
         - match: '\]'
           pop: true
     - match: '{'
