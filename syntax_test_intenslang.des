@@ -29,6 +29,7 @@ COLOR mycolor2 (
         < 0 = ("#fff", "#f00"),
 //                            ^ punctuation.separator.intens
         RANGE(0, <2.1) = ("#ffffff", "#00ff00"),
+//      ^^^^^ support.function.builtin.intens
 //            ^ constant.numeric.intens
 //                ^^^ constant.numeric.intens
 //                                             ^ punctuation.separator.intens
@@ -97,6 +98,7 @@ STRUCT MYSTRUCT {
 //              ^ punctuation.terminator.intens
 
 STRUCT MYSTRUCT_EXT : MYSTRUCT {
+//                    ^^^^^^^^ entity.other.inherited-class.intens
     INTEGER four;
 };
 
@@ -134,18 +136,32 @@ FUNCTIONS
 
 FUNC myfunc, myfunc2;
 // <- storage.type.function.intens
-//   ^^^^^^ entity.name.function.intens
+//   ^^^^^^ variable.function.intens
 //         ^ punctuation.separator.intens
-//           ^^^^^^^ entity.name.function.intens
+//           ^^^^^^^ variable.function.intens
 //                  ^ punctuation.terminator.intens
+
+FUNC
+// <- storage.type.function.intens
+    myfunc
+//  ^^^^^^ variable.function.intens
+  , myfunc2
+//^ punctuation.separator.intens
+//  ^^^^^^^ variable.function.intens
+  ;
+//^ punctuation.terminator.intens
 
 END FUNCTIONS;
 //           ^ punctuation.terminator.intens
 
 STREAMER
 
+simple_stream (!foo, foo);
+
 my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
   (foo, bar, EOLN);
+
+datapool_stream {XML} (DATAPOOL);
 
 END STREAMER;
 //          ^ punctuation.terminator.intens
@@ -166,22 +182,34 @@ SOCKET my_socket {
 //                ^ punctuation.separator.intens
   my_socket2 {
 //           ^ punctuation.section.group.begin.intens
+      MFM,
       PORT=333,
       STREAM=my_stream2,
-      FUNC=myfunc2};
+      FUNC=myfunc2,
 //         ^^^^^^^ variable.function.intens
-//                ^ punctuation.section.group.end.intens
-//                 ^ punctuation.terminator.intens
+      ON_EOS=myfunc2,
+//           ^^^^^^^ variable.function.intens
+      ON_VIEW_ACTION=myfunc2,
+//                   ^^^^^^^ variable.function.intens
+      struct[*].data,
+      THUMBNAIL(struct[*].thumbnail, 200, 200)};
+//    ^^^^^^^^^ support.function.builtin.intens
+//                                            ^ punctuation.section.group.end.intens
+//                                             ^ punctuation.terminator.intens
 
 PROCESS myprocess_pr: BATCH { "myprocess.pl" };
 
 PROCESSGROUP myprocessgroup_pg {
                 "My name",
                 FORM=NONE,
-                HIDDEN}
+                HIDDEN,
+                NO_LOG}
     ([foo.bar, EOLN, foo.bar2]
      = myprocess_pr
      (foo.bar, EOLN, foo.bar2));
+
+TIMER my_timer {FUNC=myfunc};
+//                   ^^^^^^ variable.function.intens
 
 END OPERATOR;
 //          ^ punctuation.terminator.intens
@@ -209,6 +237,9 @@ FUNC myfunc {
          PORT=666,
          STREAM=my_stream);
 
+    folder = DIRNAME{DIRNAME=folder};
+    DIRNAME(myfilestream_fs);
+
     foo = 0;
     WHILE(foo < (1 + 4)) {
 //  ^^^^^ keyword.control.intens
@@ -227,6 +258,8 @@ FUNC myfunc {
             bar = ABS(bar - ROUND(1 + 4.8));
 //                ^^^ support.function.builtin.intens
 //                          ^^^^^ support.function.builtin.intens
+            bar += 1.;
+//                 ^^ constant.numeric.intens
             RETURN;
 //          ^^^^^^ keyword.control.intens
 //                ^ punctuation.terminator.intens
@@ -236,6 +269,8 @@ FUNC myfunc {
 
     IF (! RUN(myfunc3) ){
         ABORT;
+//      ^^^^^ keyword.control.intens
+//           ^ punctuation.terminator.intens
     }
 
     IF ( REASON_OPEN ) {
@@ -243,9 +278,9 @@ FUNC myfunc {
 //     ^ punctuation.section.group.begin.intens
 //                   ^ punctuation.section.group.end.intens
 //                     ^ punctuation.section.block.begin.intens
-        ABORT;
-//      ^^^^^ keyword.control.intens
-//           ^ punctuation.terminator.intens
+        ABORT("Abort message");
+//      ^^^^^ support.function.builtin.intens
+//                            ^ punctuation.terminator.intens
     }
 //  ^ punctuation.section.block.end.intens
     ELSE IF ( REASON_CLOSE ) {
@@ -264,11 +299,12 @@ FUNC myfunc2 {},
 //           ^ punctuation.section.block.begin.intens
 //            ^ punctuation.section.block.end.intens
 //             ^ punctuation.separator.intens
-    myfunc3 {};
+    myfunc3
 //  ^^^^^^^ entity.name.function.intens
-//          ^ punctuation.section.block.begin.intens
-//           ^ punctuation.section.block.end.intens
-//            ^ punctuation.terminator.intens
+    {};
+//  ^ punctuation.section.block.begin.intens
+//   ^ punctuation.section.block.end.intens
+//    ^ punctuation.terminator.intens
 
 FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
 // <- storage.type.function.intens
@@ -296,23 +332,27 @@ FIELDGROUP
 ;
 
 FORM
-  myform1 {
-      "fancy name 1",
-      HIDDEN,
-      FUNC=myfunc4
-    } (
-    ),
-  myform2 {
-      "fancy name 1",
-      CLOSE_BUTTON=NONE,
-      HIDE_CYCLE
-    }(
-    );
+  myform1 { "fancy name 1",
+            HIDDEN,
+            FUNC=myfunc4 }
+    ( ),
+  myform2 { "fancy name 1",
+            CLOSE_BUTTON=NONE,
+            HIDE_CYCLE }
+    ( );
 
 IMAGE img1 {
         SIZE(256,256),
         SOCKET=my_socket
         SETTINGS=foo.bar};
+
+INDEX my_index;
+
+TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
+                VERTICAL(TABLESIZE=7, RANGE(1))}
+        (LEFT();
+         TOP();
+         TABLE(););
 
 END UI_MANAGER;
 //            ^ punctuation.terminator.intens

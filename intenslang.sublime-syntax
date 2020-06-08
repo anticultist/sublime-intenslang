@@ -5,24 +5,30 @@
 # https://www.sublimetext.com/docs/3/scope_naming.html
 
 name: INTENS
-file_extensions: [des, inc]
+file_extensions: [des, inc, des.in, inc.in]
 scope: source.intens
 
 variables:
   base_type: \b(?:COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
   name: \b[A-Za-z_][A-Za-z_0-9]*\b
-  float_number: '\b([0-9][0-9_]*)(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b'
+  float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b)'
   illegal_names: |-
         (?x)\b(
           ABORT|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
         )\b
-  builtin_functions: |-
+  builtin_functions_with_args: |-
         (?x)\b(
-          ABS|ALLOW|ASSIGN_CORR|ATAN|CLEAR|CONFIRM|COS|DATASET_TEXT|DISABLE|DISALLOW|ENABLE|
-          FILENAME|LABEL|MAP|MESSAGEBOX|OPEN|OPEN_URL|PACK|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|
-          SAVE|SEND|SET|SIN|SIZE|SQRT|STOP|STRETCH|THUMBNAIL|UNIT|UNMAP|UNSET|UPDATE_FORMS|VALID|VAR
+          SEND
         )\b
+  builtin_functions_without_args: |-
+        (?x)\b(
+          ABORT|ABS|ALLOW|ASSIGN_CORR|ATAN|CLEAR|COMPOSE|CONFIRM|COS|DATASET_TEXT|DIRNAME|DISABLE|DISALLOW|ENABLE|
+          FILENAME|LABEL|LOG|MAP|MESSAGEBOX|NODE|OPEN|OPEN_URL|PACK|PARENT|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|
+          SAVE|SERIALIZE_FORM|SET|SET_INDEX|SET_REASON|SET_THIS|SIN|SIZE|SQRT|START|STOP|STRETCH|THUMBNAIL|
+          UNIT|UNMAP|UNSET|UPDATE_FORMS|VALID|VAR
+        )\b
+  builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
 
 contexts:
@@ -57,12 +63,12 @@ contexts:
 
 
   numbers:
-    - match: '\b({{float_number}})\b'
+    - match: '{{float_number}}'
       scope: constant.numeric.intens
 
 
   constants:
-    - match: \b(EOLN|FALSE|HIGH|INDEX|INVALID|NONE|TRUE|OLDVALUE)\b
+    - match: \b(EOLN|FALSE|HIGH|INDEX|INFO|INVALID|NONE|TRUE|OLDVALUE)\b
       scope: constant.language.intens
     - include: reason_expression
 
@@ -113,6 +119,7 @@ contexts:
     - include: operator_block
     - include: functions_block
     - include: ui_manager_block
+    - include: ui_struct
     - include: end_of_propram
     - match: |-
         (?x)\b(
@@ -135,7 +142,7 @@ contexts:
   simple_statements:
     - include: structures
     - include: sets
-    - include: variables_definition
+    - include: function_statements  # includes variables_definition
     - include: functions
 
 
@@ -167,6 +174,7 @@ contexts:
     - match: \(
       scope: punctuation.section.group.begin.intens
       push: anonymous_group_body
+    - include: simple_assignments
 
 
   anonymous_group_body:
@@ -179,7 +187,7 @@ contexts:
 
 
   func_parameter:
-    - match: \b(FUNC)\b
+    - match: \b(FUNC|ON_EOS|ON_VIEW_ACTION)\b
       scope: variable.parameter.intens
       push:
         - match: '='
@@ -201,15 +209,30 @@ contexts:
             - match: '\b({{name}})\b'
               scope: storage.type.enum.intens
               pop: true
+    - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b'
       scope: support.function.builtin.intens
-    - match: '\b(EDITABLE|OMIT_TTRAIL)\b'
+    - match: '\b(EDITABLE|OMIT_TTRAIL|OPTIONAL)\b'
       scope: storage.modifier.intens
-    - match: '\b({{name}})\s*(=)\s*(HORIZONTAL|NONE|VERTICAL)\b'
+    - include: argument_assignment
+    - match: \,
+      scope: punctuation.separator.intens
+      set: parameter_block
+    - match: '}'
+      scope: punctuation.section.group.end.intens
+      pop: true
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
+    - include: anonymous_group
+
+
+  argument_assignment:
+    - match: '\b({{name}})\s*(=)\s*(HIDDEN|HIGH|HORIZONTAL|NONE|VERTICAL)\b'
       captures:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
         3: constant.language.intens
-    - match: '\b({{name}})\s*(=)\s*({{float_number}})\b'
+    - match: '\b({{name}})\s*(=)\s*({{float_number}})'
       captures:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
@@ -224,17 +247,6 @@ contexts:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
         3: variable.other.intens
-    - match: \,
-      scope: punctuation.separator.intens
-      set: parameter_block
-    - match: '}'
-      scope: punctuation.section.group.end.intens
-      pop: true
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
-    - include: anonymous_group
-
 
 
 ##################
@@ -280,6 +292,7 @@ contexts:
 
 
   structures_after_name:
+    - include: inherit_from
     - match: '{'
       scope: punctuation.section.block.begin.intens
       set: [end_of_statement_pop, structure_body]
@@ -289,6 +302,14 @@ contexts:
     - meta_scope: meta.struct.intens
     - include: end_of_block_pop
     - include: variables_definition
+
+
+  inherit_from:
+    - match: ':'
+      push:
+        - match: '\b{{name}}\b'
+          scope: entity.other.inherited-class.intens
+          pop: true
 
 
   sets:
@@ -452,7 +473,7 @@ contexts:
       push: parameter_block
 
   socket:
-    - match: \b(SOCKET)\b
+    - match: \b(SOCKET|TIMER)\b
       captures:
         1: storage.type.other.intens
       push:
@@ -553,23 +574,38 @@ contexts:
     - include: anonymous_block
     - include: anonymous_group
     - include: control_keywords
-    - include: function_call
-    - match: '\b(ABORT|RETURN)\b\s*(;)'
+    - match: '\b(ABORT|EXIT|RETURN)\b\s*(;)'
       captures:
         1: keyword.control.intens
         2: punctuation.terminator.intens
+    - include: function_call
     - match: ';'
       scope: punctuation.terminator.intens
 
 
   function_call:
     - include: run_function
-    - match: '\b({{builtin_functions}})\b'
+    - match: '\b({{builtin_functions_with_args}})\b'
+      scope: support.function.builtin.intens
+      push:
+        - match: ';'
+          scope: punctuation.terminator.intens
+          pop: true
+        - match: '(\()'
+          captures:
+            1: punctuation.section.arguments.begin.intens
+          push:
+            - meta_scope: meta.function-call.arguments.intens
+            - match: \)
+              scope: punctuation.section.arguments.end.intens
+              pop: true
+            - include: argument_assignment
+    - match: '\b({{builtin_functions_without_args}})\b'
       scope: support.function.builtin.intens
 
 
   run_function:
-    - match: \b(RUN)\b
+    - match: \b(ALLOW|DISALLOW|RUN)\b
       scope: meta.function-call.intens
       captures:
         1: support.function.builtin.intens
@@ -657,7 +693,7 @@ contexts:
   ui_struct:
     - match: |-
         (?x)\b(
-          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|PLOT2D|TABLE|THERMO
+          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|MENU|PLOT2D|TABLE|THERMO
         )\b
       scope: storage.type.other.intens
       push:
@@ -690,7 +726,7 @@ contexts:
       pop: true
     - match: |-
         (?x)\b(
-          LABEL|LEFT|PIXMAP|SEPARATOR|STRETCH|TABLE|TOP|UNIT|VOID
+          LABEL|LEFT|LOG_WINDOW|PIXMAP|SEPARATOR|STD_WINDOW|STRETCH|TABLE|TOP|UNIT|VOID
         )\b
       scope: support.function.builtin.intens
     - match: '\['
