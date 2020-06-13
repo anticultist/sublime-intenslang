@@ -135,8 +135,8 @@ contexts:
     - include: operator_block
     - include: functions_block
     - include: ui_manager_block
-    - include: db_manager_block
     - include: ui_struct
+    - include: db_manager_block
     - include: end_of_propram
     - match: |-
         (?x)\b(
@@ -777,3 +777,18 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
+    - match: |-
+        (?x)\b(
+          FILTER|MENU|MODIFY|TRANSACTION
+        )\b
+      scope: storage.type.other.intens
+    - match: |-
+        (?x)\b(
+          FORM|HELPTEXT|HIDDEN|IGNORE|NO_LOG|REASON|RESET|SILENT|USERGROUPS
+        )\b
+      scope: variable.parameter.intens
+    - match: |-
+        (?x)\b(
+          AND|FROM|LIKE|LOGON|LOGOFF|OR|QUERY|SELECT|WHERE
+        )\b
+      scope: keyword.other.intens
