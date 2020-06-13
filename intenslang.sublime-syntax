@@ -9,24 +9,40 @@ file_extensions: [des, inc, des.in, inc.in]
 scope: source.intens
 
 variables:
-  base_type: \b(?:COLOR|COMPLEX|INTEGER|REAL|STRING)\b
+  base_type: \b(?:CDATA|COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
   name: \b[A-Za-z_][A-Za-z_0-9]*\b
   float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b)'
   illegal_names: |-
         (?x)\b(
-          ABORT|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
+          ABORT|CDATA|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
         )\b
   builtin_functions_with_args: |-
         (?x)\b(
-          SEND
+          REQUEST|SEND|SUBSCRIBE
         )\b
   builtin_functions_without_args: |-
         (?x)\b(
-          ABORT|ABS|ALLOW|ASSIGN_CORR|ATAN|CLEAR|COMPOSE|CONFIRM|COS|DATASET_TEXT|DIRNAME|DISABLE|DISALLOW|ENABLE|
-          FILENAME|LABEL|LOG|MAP|MESSAGEBOX|NODE|OPEN|OPEN_URL|PACK|PARENT|PRINT|QUIT|RANGE|ROUND|RUN|SCALE|
-          SAVE|SERIALIZE_FORM|SET|SET_INDEX|SET_REASON|SET_THIS|SIN|SIZE|SQRT|START|STOP|STRETCH|THUMBNAIL|
-          UNIT|UNMAP|UNSET|UPDATE_FORMS|VALID|VAR
+          ABORT|ABORTTRANSACTION|ABS|ACOS|ALLOW|ARG|ASIN|ASSIGN_CORR|ATAN|ATAN2|ATTRS|
+          BASENAME|BEGINTRANSACTION|
+          CHANGED|CLASSNAME|CLEAR|CLEAR_SELECTION|CLEARCYCLE|COMMITTRANSACTION|COMPARE|COMPLEX|COMPOSE|CONFIRM|CONFIRM_CANCEL|COPY|COS|
+          DATASET_TEXT|DELETE|DELETECYCLE|DIRNAME|DISABLE|DISALLOW|
+          ENABLE|
+          FILENAME|FIRSTCYCLE|
+          GET|GET_SELECTION|GOCYCLE|
+          IMAG|
+          LABEL|LASTCYCLE|LENGTH|LOAD|LOG|LOG10|
+          MAP|MESSAGEBOX|MODIFIED|
+          NEWCYCLE|NEXTCYCLE|NODE|
+          OPEN|OPEN_URL|
+          PACK|PARENT|PASTE|PREVIEW|PRINT|PRINT_LOG|PUBLISH|PUT|
+          QUIT|
+          RANGE|REAL|REPORT|RESET_ERROR|REST_LOGOFF|REST_LOGON|ROUND|ROUND10|ROUND5|RUN|
+          SAVE|SCALE|SELECT_LIST|SERIALIZE|SERIALIZE_FORM|SET|SET_DB_TIMESTAMP|SET_ERROR|SET_INDEX|SET_MQ_HOST|SET_MSG|SET_REASON|SET_RESOURCE|SET_THIS|SIN|SIZE|SORTORDER|SQRT|START|STOP|STRETCH|STRING_DATE|STRING_DATETIME|STRING_TIME|STRING_VALUE|STYLESHEET|
+          TAN|THUMBNAIL|TIMESTAMP|TOUCH|
+          UNIT|UNMAP|UNSET|UPDATE_FORMS|
+          VALID|VAR|VISIBLE|
+          WRITE_SETTINGS
         )\b
   builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
@@ -68,7 +84,7 @@ contexts:
 
 
   constants:
-    - match: \b(EOLN|FALSE|HIGH|INDEX|INFO|INVALID|NONE|TRUE|OLDVALUE)\b
+    - match: \b(EOLN|FALSE|HIGH|INDEX|INFO|INVALID|JSON|NONE|OLDVALUE|TRUE|TSEP|XML)\b
       scope: constant.language.intens
     - include: reason_expression
 
@@ -95,7 +111,7 @@ contexts:
 
 
   predefined_variables:
-    - match: \b(COLORBIT|INPUT|THIS)\b
+    - match: \b(BASE|COLORBIT|CURRENT_DATETIME|CURRENT_DATE|CURRENT_TIME|INPUT|SOURCE|SOURCE2|THIS)\b
       scope: variable.language.intens
 
 
@@ -211,7 +227,7 @@ contexts:
               pop: true
     - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b'
       scope: support.function.builtin.intens
-    - match: '\b(EDITABLE|OMIT_TTRAIL|OPTIONAL)\b'
+    - match: '\b(CELL|EDITABLE|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
       scope: storage.modifier.intens
     - include: argument_assignment
     - match: \,
@@ -693,7 +709,7 @@ contexts:
   ui_struct:
     - match: |-
         (?x)\b(
-          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|MENU|PLOT2D|TABLE|THERMO
+          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|MENU|NAVIGATOR|PLOT2D|PSPLOT|TABLE|THERMO|UNIPLOT|XRT3DPLOT
         )\b
       scope: storage.type.other.intens
       push:
