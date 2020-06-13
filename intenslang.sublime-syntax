@@ -135,6 +135,7 @@ contexts:
     - include: operator_block
     - include: functions_block
     - include: ui_manager_block
+    - include: db_manager_block
     - include: ui_struct
     - include: end_of_propram
     - match: |-
@@ -756,3 +757,23 @@ contexts:
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block
+
+
+####################
+# DB manager Block #
+####################
+
+  db_manager_block:
+    - match: '\b(DB_MANAGER)\b'
+      captures:
+        1: keyword.other.intens
+      push: db_manager_block_body
+
+
+  db_manager_block_body:
+    - match: '\b(END)\b\s+\b(DB_MANAGER)\b'
+      captures:
+        1: keyword.other.intens
+        2: keyword.other.intens
+      set:
+        - include: end_of_statement_pop
