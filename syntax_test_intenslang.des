@@ -192,10 +192,19 @@ SOCKET my_socket {
       ON_VIEW_ACTION=myfunc2,
 //                   ^^^^^^^ variable.function.intens
       struct[*].data,
-      THUMBNAIL(struct[*].thumbnail, 200, 200)};
+      THUMBNAIL(struct[*].thumbnail, 200, 200)},
 //    ^^^^^^^^^ support.function.builtin.intens
 //                                            ^ punctuation.section.group.end.intens
-//                                             ^ punctuation.terminator.intens
+//                                             ^ punctuation.separator.intens
+  my_socket3 {
+    PORT=666,
+    (
+        HEADER = "MYHEADER"
+      , REQUEST = my_stream
+      , FUNC = myfunc
+      , RESPONSE = simple_stream
+    )
+  };
 
 PROCESS myprocess_pr: BATCH { "myprocess.pl" };
 
@@ -234,6 +243,7 @@ FUNC myfunc {
 //                 ^ punctuation.terminator.intens
 
     SEND(HOST="localhost",
+//           ^ keyword.operator.assignment.augmented.intens
          PORT=666,
          STREAM=my_stream);
 
@@ -266,6 +276,11 @@ FUNC myfunc {
         }
         foo++;
     }
+
+    REQUEST(REQUEST=my_stream2, RESPONSE(my_stream, my_stream2), FUNC=myfunc2);
+//                                                               ^^^^ variable.parameter.intens
+//                                                                   ^ keyword.operator.assignment.augmented.intens
+//                                                                    ^^^^^^^ variable.function.intens
 
     IF (! RUN(myfunc3) ){
         ABORT;

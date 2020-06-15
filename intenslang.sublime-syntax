@@ -44,6 +44,10 @@ variables:
           VALID|VAR|VISIBLE|
           WRITE_SETTINGS
         )\b
+  builtin_functions_in_nested_context: |-
+        (?x)\b(
+          ABS|ACOS|ASIN|ATAN|ATAN2|COMPOSE|COS|LOG|LOG10|RANGE|ROUND|ROUND10|ROUND5|SIN|TAN|THUMBNAIL
+        )\b
   builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
 
@@ -197,7 +201,8 @@ contexts:
   anonymous_group_body:
     - meta_scope: meta.group.intens
     - include: anonymous_group
-    - include: function_call  # allow without a semicolon
+    - match: '{{builtin_functions_in_nested_context}}'
+      scope: support.function.builtin.intens
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -455,7 +460,7 @@ contexts:
         - include: end_of_statement_pop
     - match: |-
         (?x)\b(
-          PROCESS|PROCESSGROUP
+          MESSAGE_QUEUE|PROCESS|PROCESSGROUP
         )\b
       scope: storage.type.other.intens
     - include: filestream
