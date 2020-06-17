@@ -249,6 +249,10 @@ contexts:
 
 
   argument_assignment:
+    - match: '\b({{name}})\b\s*(=)\s*(?=")'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
     - match: '\b({{name}})\s*(=)\s*(HIDDEN|HIGH|HORIZONTAL|NONE|VERTICAL)\b'
       captures:
         1: variable.parameter.intens
