@@ -98,6 +98,7 @@ contexts:
       scope: keyword.operator.assignment.augmented.intens
     - include: simple_assignments
 
+
   simple_assignments:
     - match: '=(?!=)'
       scope: keyword.operator.assignment.intens
@@ -134,12 +135,14 @@ contexts:
 
 
   high_level_blocks:
+    - include: include_statement
     - include: datapool_block
     - include: streamer_block
     - include: operator_block
     - include: functions_block
     - include: ui_manager_block
     - include: ui_struct
+    - include: menu_definition
     - include: db_manager_block
     - include: end_of_propram
     - match: |-
@@ -273,6 +276,12 @@ contexts:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
         3: variable.other.intens
+
+
+  include_statement:
+    - match: '^\s*(INCLUDE)\b'
+      captures:
+        1: "keyword.control.import.intens"
 
 
 ##################
@@ -498,6 +507,7 @@ contexts:
       scope: punctuation.section.group.begin.intens
       push: parameter_block
 
+
   socket:
     - match: \b(SOCKET|TIMER)\b
       captures:
@@ -714,12 +724,13 @@ contexts:
       set:
         - include: end_of_statement_pop
     - include: ui_struct
+    - include: menu_definition
 
 
   ui_struct:
     - match: |-
         (?x)\b(
-          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|MENU|NAVIGATOR|PLOT2D|PSPLOT|TABLE|THERMO|UNIPLOT|XRT3DPLOT
+          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|NAVIGATOR|PLOT2D|PSPLOT|TABLE|THERMO|UNIPLOT|XRT3DPLOT
         )\b
       scope: storage.type.other.intens
       push:
@@ -766,6 +777,38 @@ contexts:
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block
+
+
+  menu_definition:
+    - match: '\b(MENU)\b'
+      scope: storage.type.other.intens
+      push:
+        - include: end_of_statement_pop
+        - include: menu_definition_after_keyword
+
+
+  menu_definition_after_keyword:
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      set: [menu_definition_after_keyword, menu_parameter_body]
+    - include: end_of_statement_pop
+
+
+  menu_parameter_body:
+    - meta_scope: meta.group.intens
+    - match: \)
+      scope: punctuation.section.group.end.intens
+      pop: true
+    - match: '='
+      scope: keyword.operator.assignment.augmented.intens
+    - match: '\b(FORM|SEPARATOR|TRANSACTION)\b'
+      scope: variable.parameter.intens
+    - match: '\b(FUNC)\b'
+      scope: variable.parameter.intens
+      push:
+        - match: '\b({{name}})\b'
+          scope: variable.function.intens
+          pop: true
 
 
 ####################
