@@ -260,7 +260,8 @@ FUNC myfunc {
 //           ^^^^^^^ variable.function.intens
 //                   ^ punctuation.section.group.end.intens
 //                    ^ punctuation.terminator.intens
-        IF (foo != 3) {
+        IF (foo != 3 && (VALID(foo))) {
+//                       ^^^^^ support.function.builtin.intens
             INPUT = OLDVALUE;
             THIS.buzz = 2;
         }

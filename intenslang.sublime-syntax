@@ -46,7 +46,7 @@ variables:
         )\b
   builtin_functions_in_nested_context: |-
         (?x)\b(
-          ABS|ACOS|ASIN|ATAN|ATAN2|COMPOSE|COS|LOG|LOG10|RANGE|ROUND|ROUND10|ROUND5|SIN|TAN|THUMBNAIL
+          ABS|ACOS|ASIN|ATAN|ATAN2|COMPOSE|COS|LOG|LOG10|RANGE|ROUND|ROUND10|ROUND5|SIN|TAN|THUMBNAIL|VALID
         )\b
   builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
@@ -271,7 +271,7 @@ contexts:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
         3: support.function.builtin.intens
-    - match: '\b({{name}})\s*(?:(=)\s*({{name}}))?\b'
+    - match: '\b({{name}})\s*(?:(=)\s*(\b[A-Za-z_][A-Za-z_.0-9]*\b))?\b'
       captures:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
@@ -473,7 +473,7 @@ contexts:
         - include: end_of_statement_pop
     - match: |-
         (?x)\b(
-          MESSAGE_QUEUE|PROCESS|PROCESSGROUP
+          BATCH|MESSAGE_QUEUE|PROCESS|PROCESSGROUP
         )\b
       scope: storage.type.other.intens
     - include: filestream
