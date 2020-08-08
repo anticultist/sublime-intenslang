@@ -25,16 +25,17 @@ variables:
         (?x)\b(
           ABORT|ABORTTRANSACTION|ABS|ACOS|ALLOW|ARG|ASIN|ASSIGN_CORR|ATAN|ATAN2|ATTRS|
           BASENAME|BEGINTRANSACTION|
-          CHANGED|CLASSNAME|CLEAR|CLEAR_SELECTION|CLEARCYCLE|COMMITTRANSACTION|COMPARE|COMPLEX|COMPOSE|CONFIRM|CONFIRM_CANCEL|COPY|COS|
+          CHANGED|CLASSNAME|CLEAR|CLEAR_SELECTION|CLEARCYCLE|COMMITTRANSACTION|COMPARE|COMPLEX|COMPOSE|COMPOSE_STRING|CONFIRM|CONFIRM_CANCEL|COPY|COS|
           DATASET_TEXT|DELETE|DELETECYCLE|DIRNAME|DISABLE|DISALLOW|
           ENABLE|
           FILENAME|FIRSTCYCLE|
           GET|GET_SELECTION|GOCYCLE|
+          HELPKEY|
           IMAG|
           LABEL|LASTCYCLE|LENGTH|LOAD|LOG|LOG10|
           MAP|MESSAGEBOX|MODIFIED|
           NEWCYCLE|NEXTCYCLE|NODE|
-          OPEN|OPEN_URL|
+          OPEN|OPEN_FILE|OPEN_URL|
           PACK|PARENT|PASTE|PREVIEW|PRINT|PRINT_LOG|PUBLISH|PUT|
           QUIT|
           RANGE|REAL|REPORT|RESET_ERROR|REST_LOGOFF|REST_LOGON|ROUND|ROUND10|ROUND5|RUN|
@@ -515,7 +516,7 @@ contexts:
 
 
   socket:
-    - match: \b(SOCKET|TIMER)\b
+    - match: \b(SOCKET|TIMER|MESSAGE_QUEUE)\b
       captures:
         1: storage.type.other.intens
       push:
@@ -641,7 +642,9 @@ contexts:
             - match: \)
               scope: punctuation.section.arguments.end.intens
               pop: true
+            - include: func_parameter
             - include: argument_assignment
+            - include: anonymous_group
     - match: '\b({{builtin_functions_without_args}})\b'
       scope: support.function.builtin.intens
 
