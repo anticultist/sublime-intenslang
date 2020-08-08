@@ -67,7 +67,7 @@ contexts:
       scope: punctuation.definition.string.begin.intens
       push:
         - meta_scope: string.quoted.double.intens
-        - match: '(<(/)?b>|<br(/)?>|<(/)?h[1-6]>|<(/)?html>|</table>|<(/)?td>|<(/)?th>|<(/)?tr>)'
+        - match: '(<(/)?b>|<br(/)?>|<(/)?h[1-6]>|<(/)?html>|<(/)?i>|</table>|<(/)?td>|<(/)?th>|<(/)?tr>|<(/)?u>)'
           scope: keyword.other.DML.html
         - match: '(<table).*(>)'
           captures:
