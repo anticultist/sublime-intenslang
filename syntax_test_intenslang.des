@@ -68,6 +68,8 @@ SET myset ("zero"=0, "one"=1);
 
 SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
 //         ^ punctuation.section.group.begin.intens
+//                 ^ keyword.operator.assignment.augmented.intens
+//                  ^^^^ constant.language.intens
 //                      ^ punctuation.section.group.end.intens
 
 SET myset3 ("A"=1, "B"=2), myset4 ("C"=3, "D"=4);
@@ -136,18 +138,18 @@ FUNCTIONS
 
 FUNC myfunc, myfunc2;
 // <- storage.type.function.intens
-//   ^^^^^^ variable.function.intens
+//   ^^^^^^ entity.name.function.intens
 //         ^ punctuation.separator.intens
-//           ^^^^^^^ variable.function.intens
+//           ^^^^^^^ entity.name.function.intens
 //                  ^ punctuation.terminator.intens
 
 FUNC
 // <- storage.type.function.intens
     myfunc
-//  ^^^^^^ variable.function.intens
+//  ^^^^^^ entity.name.function.intens
   , myfunc2
 //^ punctuation.separator.intens
-//  ^^^^^^^ variable.function.intens
+//  ^^^^^^^ entity.name.function.intens
   ;
 //^ punctuation.terminator.intens
 
@@ -194,15 +196,20 @@ SOCKET my_socket {
       struct[*].data,
       THUMBNAIL(struct[*].thumbnail, 200, 200)},
 //    ^^^^^^^^^ support.function.builtin.intens
+//              ^^^^^^ variable.other.intens
 //                                            ^ punctuation.section.group.end.intens
 //                                             ^ punctuation.separator.intens
   my_socket3 {
     PORT=666,
     (
-        HEADER = "MYHEADER"
-      , REQUEST = my_stream
-      , FUNC = myfunc
-      , RESPONSE = simple_stream
+        HEADER="MYHEADER"
+      , REQUEST=my_stream
+//    ^ punctuation.separator.intens
+      , FUNC=myfunc
+//      ^^^^ variable.parameter.intens
+//          ^ keyword.operator.assignment.augmented.intens
+//           ^^^^^^ variable.function.intens
+      , RESPONSE=simple_stream
     )
   };
 
@@ -248,6 +255,7 @@ FUNC myfunc {
          STREAM=my_stream);
 
     folder = DIRNAME{DIRNAME=folder};
+//                   ^^^^^^^ variable.parameter.intens
     DIRNAME(myfilestream_fs);
 
     foo = 0;
@@ -364,7 +372,13 @@ IMAGE img1 {
 
 INDEX my_index;
 
+FOLDER
+  my_folder { LEFT, VERTICAL, STRETCH } ();
+
 TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
+//              ^^^^^^^^^^ support.function.builtin.intens
+//                         ^^^^^^^^^ variable.parameter.intens
+//                                      ^^^^^ support.function.builtin.intens
                 VERTICAL(TABLESIZE=7, RANGE(1))}
         (LEFT();
          TOP();
@@ -372,6 +386,9 @@ TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
 
 END UI_MANAGER;
 //            ^ punctuation.terminator.intens
+
+LANGUAGE
+END LANGUAGE;
 
 END.
 // <- keyword.other.intens
