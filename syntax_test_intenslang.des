@@ -25,19 +25,22 @@ COLOR mycolor2 (
 //    ^^^^^^^^ punctuation.definition.variable.intens
 //             ^ punctuation.section.group.begin.intens
         INVALID = (red, black),
+//      ^^^^^^^ variable.parameter.intens
 //                            ^ punctuation.separator.intens
         < 0 = ("#fff", "#f00"),
+//              ^^^^ constant.other.color.rgb-value.intens
 //                            ^ punctuation.separator.intens
         RANGE(0, <2.1) = ("#ffffff", "#00ff00"),
 //      ^^^^^ support.function.builtin.intens
 //            ^ constant.numeric.intens
 //                ^^^ constant.numeric.intens
 //                                             ^ punctuation.separator.intens
-        2 = ("#ffffff", "#0000f"),
-//                               ^ punctuation.separator.intens
+        2 = ("#ffffff", "#0000ff"),
+//                                ^ punctuation.separator.intens
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
 //                                         ^ punctuation.separator.intens
         ELSE = ("#ffffff", "#0000ff")
+//      ^^^^ variable.parameter.intens
     );
 //  ^ punctuation.section.group.end.intens
 //   ^ punctuation.terminator.intens
@@ -161,6 +164,7 @@ STREAMER
 simple_stream (!foo, foo);
 
 my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
+//                     ^ keyword.operator.assignment.augmented.intens
   (foo, bar, EOLN);
 
 datapool_stream {XML} (DATAPOOL);
@@ -202,14 +206,14 @@ SOCKET my_socket {
   my_socket3 {
     PORT=666,
     (
-        HEADER="MYHEADER"
-      , REQUEST=my_stream
-//    ^ punctuation.separator.intens
-      , FUNC=myfunc
-//      ^^^^ variable.parameter.intens
-//          ^ keyword.operator.assignment.augmented.intens
-//           ^^^^^^ variable.function.intens
-      , RESPONSE=simple_stream
+      HEADER="MYHEADER",
+//                     ^ punctuation.separator.intens
+      REQUEST=my_stream,
+      FUNC=myfunc,
+//    ^^^^ variable.parameter.intens
+//        ^ keyword.operator.assignment.augmented.intens
+//         ^^^^^^ variable.function.intens
+      RESPONSE=simple_stream
     )
   };
 
@@ -222,10 +226,32 @@ PROCESSGROUP myprocessgroup_pg {
                 NO_LOG}
     ([foo.bar, EOLN, foo.bar2]
      = myprocess_pr
+//   ^ keyword.operator.assignment.augmented.intens
      (foo.bar, EOLN, foo.bar2));
 
 TIMER my_timer {FUNC=myfunc};
 //                   ^^^^^^ variable.function.intens
+
+FILESTREAM myfilestream_fs = my_stream {"My Stream",
+//                         ^ keyword.operator.assignment.augmented.intens
+                                        FILTER="CSV (*.csv)",
+                                        WRITEONLY};
+
+MESSAGE_QUEUE
+  reply_mq {
+    REPLY,
+    PORT_REQUEST=334,
+    ( HEADER="myheader1",
+      FUNC=myfunc,
+      RESPONSE(simple_stream, my_stream),
+      REQUEST(datapool_stream)
+    ),
+    ( HEADER="myheader2",
+      FUNC=myfunc,
+      RESPONSE(simple_stream, my_stream),
+      REQUEST(datapool_stream)
+    )
+  };
 
 END OPERATOR;
 //          ^ punctuation.terminator.intens
@@ -312,6 +338,8 @@ FUNC myfunc {
 //                           ^ punctuation.section.block.begin.intens
     }
 //  ^ punctuation.section.block.end.intens
+    MESSAGEBOX(COMPOSE("Finished %1!", "function"));
+//                               ^^ constant.other.placeholder.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
