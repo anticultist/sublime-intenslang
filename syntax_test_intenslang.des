@@ -412,6 +412,14 @@ TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
          TOP();
          TABLE(););
 
+MENU PRINT {EXPLICIT} (SEPARATOR),
+// <- storage.type.other.intens
+//          ^^^^^^^^ variable.parameter.intens
+//                     ^^^^^^^^^ variable.parameter.intens
+     "&Tools" (FUNC hello_func="Show Hello World Message",
+               // FORM fancy_form
+               FUNC bye_func="Quit");
+
 END UI_MANAGER;
 //            ^ punctuation.terminator.intens
 

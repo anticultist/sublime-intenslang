@@ -518,11 +518,11 @@ contexts:
         - include: end_of_statement_pop
     - match: |-
         (?x)\b(
-          BATCH|LATEXREPORT|MATHEMATICA|MENU|MESSAGE_QUEUE|PROCESS|PROCESSGROUP|PYTHON|REPORTSTREAM|TASK
+          BATCH|LATEXREPORT|MATHEMATICA|MENU|PROCESS|PYTHON|REPORTSTREAM|TASK
         )\b
       scope: storage.type.other.intens
     - include: filestream
-    - include: socket
+    - include: operator_structure
 
 
   filestream:
@@ -553,32 +553,33 @@ contexts:
       push: parameter_block
 
 
-  socket:
-    - match: \b(SOCKET|TIMER|MESSAGE_QUEUE)\b
+  operator_structure:
+    - match: \b(MESSAGE_QUEUE|PROCESSGROUP|SOCKET|TIMER)\b
       captures:
         1: storage.type.other.intens
       push:
         - include: end_of_statement_pop
-        - include: sockets_after_keyword
+        - include: operator_structure_after_keyword
 
 
-  sockets_after_keyword:
+  operator_structure_after_keyword:
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
-      set: sockets_after_name
+      set: operator_structure_after_name
     - match: '\b({{name}})\b'
       scope: punctuation.definition.variable.intens
-      set: sockets_after_name
+      set: operator_structure_after_name
 
 
-  sockets_after_name:
+  operator_structure_after_name:
     - include: end_of_statement_pop
     - match: \,
       scope: punctuation.separator.intens
-      set: sockets_after_keyword
+      set: operator_structure_after_keyword
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block
+    - include: anonymous_group
 
 
 ###################
@@ -838,6 +839,9 @@ contexts:
     - match: \(
       scope: punctuation.section.group.begin.intens
       set: [menu_definition_after_keyword, menu_parameter_body]
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block
     - include: end_of_statement_pop
 
 
