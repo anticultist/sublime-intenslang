@@ -31,7 +31,7 @@ variables:
           FILENAME|FIRSTCYCLE|
           GET|GET_SELECTION|GOCYCLE|
           HELPKEY|
-          IMAG|
+          ICON|IMAG|
           LABEL|LASTCYCLE|LENGTH|LOAD|LOG|LOG10|
           MAP|MESSAGEBOX|MODIFIED|
           NEWCYCLE|NEXTCYCLE|NODE|
@@ -50,11 +50,11 @@ variables:
           ABS|ACOS|ASIN|ATAN|ATAN2|
           COMPOSE|COS|
           HORIZONTAL|
-          LOG|LOG10|
+          LABEL|LOG|LOG10|
           RANGE|ROUND|ROUND10|ROUND5|
           SIN|
           TAN|THUMBNAIL|
-          VALID|VERTICAL
+          VALID|VAR|VERTICAL
         )\b
   builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
@@ -225,6 +225,7 @@ contexts:
     - include: anonymous_group
     - match: '{{builtin_functions_in_nested_context}}'
       scope: support.function.builtin.intens
+    - include: square_bracket
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -255,7 +256,7 @@ contexts:
               pop: true
     - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b'
       scope: support.function.builtin.intens
-    - match: '\b(CELL|EDITABLE|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
+    - match: '\b(CELL|EDITABLE|EXPLICIT|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
       scope: storage.modifier.intens
     - include: argument_assignment
     - match: \,
@@ -316,6 +317,21 @@ contexts:
       scope: support.function.builtin.intens
     - match: '\b([A-Z][A-Z0-9_]*)\b'
       scope: variable.parameter.intens
+
+
+  square_bracket:
+    - match: '\['
+      scope: punctuation.section.brackets.begin.intens
+      push:
+        - match: '\b(FRAME|JUSTIFY|SB)\b'
+          scope: variable.parameter.intens
+        - match: '#([A-Z])?'
+          scope: keyword.other.intens
+        - include: func_parameter
+        - include: function_call
+        - match: '\]'
+          scope: punctuation.section.brackets.end.intens
+          pop: true
 
 
   include_statement:
@@ -496,6 +512,7 @@ contexts:
         2: keyword.other.intens
       set:
         - include: end_of_statement_pop
+    - include: anonymous_group
 
 
 ##################
@@ -814,14 +831,7 @@ contexts:
           LABEL|LEFT|LOG_WINDOW|PIXMAP|SEPARATOR|STD_WINDOW|STRETCH|TABLE|TOP|UNIT|VOID
         )\b
       scope: support.function.builtin.intens
-    - match: '\['
-      push:
-        - match: '\b(FRAME|JUSTIFY|SB)\b'
-          scope: variable.parameter.intens
-        - include: func_parameter
-        - include: function_call
-        - match: '\]'
-          pop: true
+    - include: square_bracket
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block

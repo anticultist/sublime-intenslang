@@ -1,0 +1,20 @@
+{
+    "scope": "source.intens",
+    "completions": [
+        "EOLN",
+        "FALSE",
+        "HIGH",
+        "INDEX",
+        "INFO",
+        "INTEGER",
+        "INVALID",
+        "JSON",
+        "NONE",
+        "OLDVALUE",
+        "REAL",
+        "STRING",
+        "TRUE",
+        "TSEP",
+        "XML"
+    ]
+}

@@ -115,6 +115,7 @@ STRUCT MYSTRUCT2 {
 //               ^^^^^ storage.type.enum.intens
 
     MYSTRUCT bar;
+    STRING baz;
 };
 
 MYSTRUCT2 { OMIT_TTRAIL } foo;
@@ -168,6 +169,10 @@ my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
   (foo, bar, EOLN);
 
 datapool_stream {XML} (DATAPOOL);
+
+my_stream2 {PROCESS="thefile.txt"} (
+  foo
+);
 
 END STREAMER;
 //          ^ punctuation.terminator.intens
@@ -269,11 +274,13 @@ FUNC myfunc {
 //               ^^^ punctuation.definition.variable.intens
 //                  ^ punctuation.terminator.intens
 
-    RUN ( myfunc2 );
-//      ^ punctuation.section.group.begin.intens
-//        ^^^^^^^ variable.function.intens
-//                ^ punctuation.section.group.end.intens
-//                 ^ punctuation.terminator.intens
+    RUN( myfunc2 );
+//     ^ punctuation.section.group.begin.intens
+//       ^^^^^^^ variable.function.intens
+//               ^ punctuation.section.group.end.intens
+//                ^ punctuation.terminator.intens
+
+    RUN(foo.baz);
 
     SEND(HOST="localhost",
 //           ^ keyword.operator.assignment.augmented.intens
@@ -414,7 +421,7 @@ TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
 
 MENU PRINT {EXPLICIT} (SEPARATOR),
 // <- storage.type.other.intens
-//          ^^^^^^^^ variable.parameter.intens
+//          ^^^^^^^^ storage.modifier.intens
 //                     ^^^^^^^^^ variable.parameter.intens
      "&Tools" (FUNC hello_func="Show Hello World Message",
                // FORM fancy_form
