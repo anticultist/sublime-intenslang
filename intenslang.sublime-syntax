@@ -84,6 +84,8 @@ contexts:
           scope: constant.other.placeholder.intens
         - match: '(#)(\h{3}|\h{6})\b'
           scope: constant.other.color.rgb-value.intens
+        - match: '@[a-zA-Z]+@'
+          scope: keyword.other.fontname.intens
         - match: \\.
           scope: constant.character.escape.intens
         - match: '"'
@@ -513,6 +515,7 @@ contexts:
       set:
         - include: end_of_statement_pop
     - include: anonymous_group
+    - include: parameter_block
 
 
 ##################
@@ -540,6 +543,7 @@ contexts:
       scope: storage.type.other.intens
     - include: filestream
     - include: operator_structure
+    - include: task
 
 
   filestream:
@@ -568,6 +572,36 @@ contexts:
     - match: '{'
       scope: punctuation.section.group.begin.intens
       push: parameter_block
+
+
+  task:
+    - match: '\b(TASK)\b'
+      captures:
+        1: storage.type.other.intens
+      push:
+        - include: end_of_statement_pop
+        - include: task_after_keyword
+
+  task_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      set: task_after_name
+    - match: '\b({{name}})\b'
+      scope: punctuation.definition.variable.intens
+      set: task_after_name
+
+
+  task_after_name:
+    - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.intens
+      set: task_after_keyword
+    - match: '{'
+      scope: punctuation.section.block.begin.intens
+      push:
+        - meta_scope: meta.block.intens
+        - include: function_statements
+        - include: end_of_block_pop
 
 
   operator_structure:
@@ -711,6 +745,9 @@ contexts:
       captures:
         1: support.function.builtin.intens
       push:
+        - match: '\b({{name}})\b'
+          scope: variable.function.intens
+          pop: true
         - match: \(
           scope: punctuation.section.group.begin.intens
           set:

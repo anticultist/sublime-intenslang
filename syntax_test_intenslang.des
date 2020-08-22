@@ -3,8 +3,19 @@
 // foo
 // <- source.intens comment.line.intens
 
-DATAPOOL
+DESCRIPTION "Test Syntax";
 
+INCLUDE external_file.inc
+
+USERGROUPS
+  sime_user (
+    "me", "you"
+  )
+  , admin (
+    "someone"
+  );
+
+DATAPOOL
 INTEGER one, two;
 //  <- storage.type.intens
 //      ^^^ punctuation.definition.variable.intens
@@ -242,6 +253,16 @@ FILESTREAM myfilestream_fs = my_stream {"My Stream",
                                         FILTER="CSV (*.csv)",
                                         WRITEONLY};
 
+TASK mytask {"Optimize"} {
+  one = 1;
+  WHILE( one<3 ) {
+//^^^^^ meta.block.intens keyword.control.intens
+    RUN myfunc;
+//  ^^^ support.function.builtin.intens
+//      ^^^^^^ variable.function.intens
+  }
+};
+
 MESSAGE_QUEUE
   reply_mq {
     REPLY,
@@ -386,7 +407,8 @@ FIELDGROUP
 // <- storage.type.other.intens
   mygroup_fg { MARGIN(0) } (
 //             ^^^^^^ support.function.builtin.intens
-    foo.foo
+    foo.foo,
+    "@text@ Text @huge@ Huge @large@ Large"
   )
 ;
 
