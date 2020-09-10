@@ -1,6 +1,12 @@
-# INTENS syntax highlighting
+# INTENS Language Support
 
-This is an unofficial package to provide a syntax highlighting for the [INTENS](https://www.semafor.ch/en/products/intens/) language.
+This is an unofficial package to provide support for the [INTENS](https://www.semafor.ch/en/products/intens/)&reg; language of the Semafor AG company.
+
+**Features**
+* Syntax highlighting
+* Productivity scripts
+  * Add debug-prints to functions
+  * Count function usage
 
 ## Screenshot
 ![Screenshot](screenshot.png)
