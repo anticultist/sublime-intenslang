@@ -17,7 +17,7 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             if self.is_forward_declaration(function_definition_rgn.b):
                 continue
             
-            function_start = self.view.find("{", function_definition_rgn.b).b
+            function_start = self.find_ignoring_comments("{", function_definition_rgn.b).b
             insert_pos     = self.end_of_variable_definition_block(var_types_rexpr_str, function_start)
             
             insert_str = "\n"
@@ -41,6 +41,21 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             return "\t"
 
 
+    def find_ignoring_comments(self, pattern, start_point):
+        for _ in range(100):  # prevents an endless loop
+            region = self.view.find(pattern, start_point)
+            if region.empty():
+                return region
+            
+            if not self.view.match_selector(region.b, "comment.line.intens"):
+                return region  # not inside a comment
+
+            # set cursor at the end of that line
+            start_point = self.view.line(region.b).b + 1
+
+        return sublime.Region(start_point, start_point)
+
+
     def variable_types(self):
         # built-in base types
         var_types = ["CDATA", "COLOR", "COMPLEX", "INTEGER", "REAL", "STRING"]
@@ -53,11 +68,11 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
 
 
     def is_forward_declaration(self, function_name_end_pos):
-        next_block_start = self.view.find("{", function_name_end_pos)
+        next_block_start = self.find_ignoring_comments("{", function_name_end_pos)
         if next_block_start.empty():
             return True
 
-        next_seperation = self.view.find("(,|;)", function_name_end_pos)
+        next_seperation = self.find_ignoring_comments("(,|;)", function_name_end_pos)
         if next_seperation.empty():
             return False
 
@@ -65,19 +80,18 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
 
 
     def end_of_variable_definition_block(self, var_types_rexpr_str, function_start_pos):
-        possible_function_end     = self.view.find("}", function_start_pos)
-        possible_function_end_pos = float("inf") if possible_function_end.empty() else possible_function_end.b
+        function_end_pos = self.view.extract_scope(function_start_pos).b
 
         point = function_start_pos
-        for _ in range(100):
-            next_point = self.view.find(var_types_rexpr_str, point)
+        for _ in range(100):  # prevents an endless loop
+            next_point = self.find_ignoring_comments(var_types_rexpr_str, point)
             if next_point.empty():
                 break
             
-            if next_point.b > possible_function_end_pos:
+            if next_point.b > function_end_pos:
                 break
 
-            seperator_pos = self.view.find(";", point)
+            seperator_pos = self.find_ignoring_comments(";", point)
             if seperator_pos.empty():
                 break
 
