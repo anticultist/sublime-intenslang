@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>scope</key>
+	<string>source.intens</string>
+	<key>settings</key>
+	<dict>
+		<key>decreaseIndentPattern</key>
+		<string>(?x)
+		^ (.*\*/)? \s* \} .* $
+		</string>
+		<key>increaseIndentPattern</key>
+		<string>(?x)
+		^ .* \{ [^}"']* $
+		</string>
+
+		<key>bracketIndentNextLinePattern</key>
+		<string>(?x)
+		^ \s* \b(IF|WHILE|ELSE)\b [^;]* $
+		</string>
+
+		<key>unIndentedLinePattern</key>
+		<string><![CDATA[^\s*((//|#\b.*?>(?!\(.*\))).*)?$]]></string>
+
+		<key>indentSquareBrackets</key>
+		<true/>
+	</dict>
+</dict>
+</plist>

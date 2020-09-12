@@ -9,6 +9,7 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             sublime.message_dialog("There are no INTENS functions defined!")
             return
 
+        self.error_msg      = ""
         indentation         = self.indentation_str()
         var_types_rexpr_str = r"\b({})\b".format("|".join(self.variable_types()))
 
@@ -17,7 +18,7 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             if self.is_forward_declaration(function_definition_rgn.b):
                 continue
             
-            function_start = self.find_ignoring_comments("{", function_definition_rgn.b).b
+            function_start = self.find_ignoring_comments_and_strings("{", function_definition_rgn.b).b
             insert_pos     = self.end_of_variable_definition_block(var_types_rexpr_str, function_start)
             
             insert_str = "\n"
@@ -31,6 +32,9 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
 
             self.view.insert(edit, insert_pos, insert_str)
 
+        if self.error_msg:
+            sublime.message_dialog(self.error_msg)
+
 
     def indentation_str(self):
         settings = self.view.settings()
@@ -41,18 +45,20 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             return "\t"
 
 
-    def find_ignoring_comments(self, pattern, start_point):
+    def find_ignoring_comments_and_strings(self, pattern, start_point):
         for _ in range(100):  # prevents an endless loop
             region = self.view.find(pattern, start_point)
             if region.empty():
                 return region
             
-            if not self.view.match_selector(region.b, "comment.line.intens"):
+            if not self.view.match_selector(region.b, "comment.line.intens") and
+                    not self.view.match_selector(region.b, "string.quoted.double.intens"):
                 return region  # not inside a comment
 
             # set cursor at the end of that line
             start_point = self.view.line(region.b).b + 1
 
+        self.error_msg = "An error occurred during searching for '{}' pattern.".format(pattern)
         return sublime.Region(start_point, start_point)
 
 
@@ -68,11 +74,11 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
 
 
     def is_forward_declaration(self, function_name_end_pos):
-        next_block_start = self.find_ignoring_comments("{", function_name_end_pos)
+        next_block_start = self.find_ignoring_comments_and_strings("{", function_name_end_pos)
         if next_block_start.empty():
             return True
 
-        next_seperation = self.find_ignoring_comments("(,|;)", function_name_end_pos)
+        next_seperation = self.find_ignoring_comments_and_strings("(,|;)", function_name_end_pos)
         if next_seperation.empty():
             return False
 
@@ -84,14 +90,14 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
 
         point = function_start_pos
         for _ in range(100):  # prevents an endless loop
-            next_point = self.find_ignoring_comments(var_types_rexpr_str, point)
+            next_point = self.find_ignoring_comments_and_strings(var_types_rexpr_str, point)
             if next_point.empty():
                 break
             
             if next_point.b > function_end_pos:
                 break
 
-            seperator_pos = self.find_ignoring_comments(";", point)
+            seperator_pos = self.find_ignoring_comments_and_strings(";", point)
             if seperator_pos.empty():
                 break
 
