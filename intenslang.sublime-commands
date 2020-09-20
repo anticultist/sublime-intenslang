@@ -2,6 +2,6 @@
   { "caption": "INTENS: Add Debug-Prints To Functions",
     "command": "add_debug_prints_to_intens_functions"},
 
-  { "caption": "INTENS: Count Function Usage",
-    "command": "count_intens_function_usage"}
+  { "caption": "INTENS: Count Function References",
+    "command": "count_intens_function_references"}
 ]

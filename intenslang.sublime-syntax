@@ -354,6 +354,7 @@ contexts:
 
 
   datapool_block_body:
+    - meta_scope: meta.other.block.datapool.intens
     - match: '\b(END)\b\s+\b(DATAPOOL)\b'
       captures:
         1: keyword.other.intens
@@ -508,6 +509,7 @@ contexts:
 
 
   streamer_block_body:
+    - meta_scope: meta.other.block.streamer.intens
     - match: '\b(END)\b\s+\b(STREAMER)\b'
       captures:
         1: keyword.other.intens
@@ -530,6 +532,7 @@ contexts:
 
 
   operator_block_body:
+    - meta_scope: meta.other.block.operator.intens
     - match: '\b(END)\b\s+\b(OPERATOR)\b'
       captures:
         1: keyword.other.intens
@@ -645,6 +648,7 @@ contexts:
 
 
   functions_block_body:
+    - meta_scope: meta.other.block.functions.intens
     - match: '\b(END)\b\s+\b(FUNCTIONS)\b'
       captures:
         1: keyword.other.intens
@@ -819,6 +823,7 @@ contexts:
 
 
   ui_manager_block_body:
+    - meta_scope: meta.other.block.ui_manager.intens
     - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
       captures:
         1: keyword.other.intens
@@ -921,6 +926,7 @@ contexts:
 
 
   db_manager_block_body:
+    - meta_scope: meta.other.block.db_manager.intens
     - match: '\b(END)\b\s+\b(DB_MANAGER)\b'
       captures:
         1: keyword.other.intens
@@ -956,6 +962,7 @@ contexts:
 
 
   language_block_body:
+    - meta_scope: meta.other.block.language.intens
     - match: '\b(END)\b\s+\b(LANGUAGE)\b'
       captures:
         1: keyword.other.intens

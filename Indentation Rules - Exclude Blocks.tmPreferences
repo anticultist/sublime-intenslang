@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>scope</key>
+	<string><![CDATA[source.intens & (meta.other.block.datapool.intens | meta.other.block.db_manager.intens | meta.other.block.language.intens | meta.other.block.operator.intens | meta.other.block.streamer.intens | meta.other.block.ui_manager.intens)]]></string>
+	<key>settings</key>
+	<dict>
+		<key>unIndentedLinePattern</key>
+		<string>.</string>
+	</dict>
+</dict>
+</plist>
