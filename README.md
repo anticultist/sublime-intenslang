@@ -8,7 +8,7 @@ Features
 * Syntax highlighting
 * Productivity scripts:
   * Add debug-prints to functions
-  * Count function usage
+  * Count function references
 
 Screenshot
 ----------
