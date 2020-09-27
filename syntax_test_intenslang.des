@@ -408,7 +408,15 @@ FIELDGROUP
   mygroup_fg { MARGIN(0) } (
 //             ^^^^^^ support.function.builtin.intens
     foo.foo,
+    "<h3>Title</h3> <b>Bold</b>",
+//   ^^^^ keyword.other.DML.html
+//            ^^^^^ keyword.other.DML.html
+//                  ^^^ keyword.other.DML.html
+//                         ^^^^ keyword.other.DML.html
     "@text@ Text @huge@ Huge @large@ Large"
+//   ^^^^^^ keyword.other.fontname.intens
+//               ^^^^^^ keyword.other.fontname.intens
+//                           ^^^^^^^ keyword.other.fontname.intens
   )
 ;
 
