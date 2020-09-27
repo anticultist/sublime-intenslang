@@ -171,6 +171,8 @@ contexts:
           DESCRIPTION|HELPFILE|OPEN_URL
         )\b
       scope: keyword.other.intens
+    - match: '\b(USERGROUPS)\b'
+      scope: storage.type.other.intens
 
 
 ###########
@@ -246,6 +248,12 @@ contexts:
 
 
   parameter_block:
+    - meta_include_prototype: false
+    - match: '\b(INVALID)\b\s*(=)'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+    - include: prototype
     - include: func_parameter
     - match: '\b(SET)\b'
       scope: variable.parameter.intens
@@ -485,6 +493,12 @@ contexts:
 
 
   variable_conditional_states_body:
+    - meta_include_prototype: false
+    - match: '\b(ELSE|INVALID)\b\s*(=)'
+      captures:
+        1: variable.parameter.intens
+        2: keyword.operator.assignment.augmented.intens
+    - include: prototype
     - include: anonymous_group
     - include: simple_assignments
     - include: function_call

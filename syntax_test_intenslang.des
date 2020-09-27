@@ -8,6 +8,7 @@ DESCRIPTION "Test Syntax";
 INCLUDE external_file.inc
 
 USERGROUPS
+// <- storage.type.other.intens
   sime_user (
     "me", "you"
   )
@@ -47,6 +48,7 @@ COLOR mycolor2 (
 //                ^^^ constant.numeric.intens
 //                                             ^ punctuation.separator.intens
         2 = ("#ffffff", "#0000ff"),
+//            ^^^^^^^ constant.other.color.rgb-value.intens
 //                                ^ punctuation.separator.intens
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
 //                                         ^ punctuation.separator.intens
