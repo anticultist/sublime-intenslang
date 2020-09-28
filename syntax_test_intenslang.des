@@ -237,15 +237,20 @@ SOCKET my_socket {
 
 PROCESS myprocess_pr: BATCH { "myprocess.pl" };
 
-PROCESSGROUP myprocessgroup_pg {
-                "My name",
-                FORM=NONE,
-                HIDDEN,
-                NO_LOG}
-    ([foo.bar, EOLN, foo.bar2]
-     = myprocess_pr
-//   ^ keyword.operator.assignment.augmented.intens
-     (foo.bar, EOLN, foo.bar2));
+PROCESSGROUP
+  myprocessgroup_pg { "My name",
+                      FORM=NONE,
+                      HIDDEN,
+                      NO_LOG}
+      (
+        [(foo.bar[#]:-100, EOLN, foo.bar2)]
+//                ^ keyword.other.intens
+        = myprocess_pr
+//      ^ keyword.operator.assignment.augmented.intens
+          (foo.bar, EOLN, foo.bar2);
+      ),
+     myprocessgroup2_pg {"My name2", FORM=NONE, HIDDEN} ();
+//                                              ^^^^^^ variable.parameter.intens
 
 TIMER my_timer {FUNC=myfunc};
 //                   ^^^^^^ variable.function.intens

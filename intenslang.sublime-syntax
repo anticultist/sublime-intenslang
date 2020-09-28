@@ -338,6 +338,7 @@ contexts:
         - match: '#([A-Z])?'
           scope: keyword.other.intens
         - include: func_parameter
+        - include: anonymous_group
         - include: function_call
         - match: '\]'
           scope: punctuation.section.brackets.end.intens
