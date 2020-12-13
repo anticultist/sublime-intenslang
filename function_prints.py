@@ -51,7 +51,7 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             if region.empty():
                 return region
             
-            if not self.view.match_selector(region.b, "comment.line.intens") and
+            if not self.view.match_selector(region.b, "comment.line.intens") and \
                     not self.view.match_selector(region.b, "string.quoted.double.intens"):
                 return region  # not inside a comment
 
