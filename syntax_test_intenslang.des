@@ -319,7 +319,13 @@ FUNC myfunc {
 //                   ^^^^^^^ variable.parameter.intens
     DIRNAME(myfilestream_fs);
 
-    foo = 0;
+    foo = 1e3 + 1e-3 + 60E9 -7.9e-05 + 1e+009;
+//        ^^^ constant.numeric.intens
+//              ^^^^ constant.numeric.intens
+//                     ^^^^ constant.numeric.intens
+//                           ^^^^^^^ constant.numeric.intens
+//                                     ^^^^^^ constant.numeric.intens
+
     WHILE(foo < (1 + 4)) {
 //  ^^^^^ keyword.control.intens
 //       ^ punctuation.section.group.begin.intens
@@ -461,8 +467,10 @@ MENU PRINT {EXPLICIT} (SEPARATOR),
 //          ^^^^^^^^ storage.modifier.intens
 //                     ^^^^^^^^^ variable.parameter.intens
      "&Tools" (FUNC hello_func="Show Hello World Message",
+//             ^^^^ - storage.type.function.intens
                // FORM fancy_form
                FUNC bye_func="Quit");
+//             ^^^^ variable.parameter.intens
 
 END UI_MANAGER;
 //            ^ punctuation.terminator.intens
