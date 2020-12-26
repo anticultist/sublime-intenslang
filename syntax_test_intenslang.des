@@ -38,6 +38,7 @@ COLOR mycolor2 (
 //             ^ punctuation.section.group.begin.intens
         INVALID = (red, black),
 //      ^^^^^^^ variable.parameter.intens
+//              ^ keyword.operator.assignment.augmented.intens
 //                            ^ punctuation.separator.intens
         < 0 = ("#fff", "#f00"),
 //              ^^^^ constant.other.color.rgb-value.intens
@@ -48,12 +49,15 @@ COLOR mycolor2 (
 //                ^^^ constant.numeric.intens
 //                                             ^ punctuation.separator.intens
         2 = ("#ffffff", "#0000ff"),
+//        ^ keyword.operator.assignment.intens
 //            ^^^^^^^ constant.other.color.rgb-value.intens
 //                                ^ punctuation.separator.intens
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
+//               ^ keyword.operator.assignment.intens
 //                                         ^ punctuation.separator.intens
         ELSE = ("#ffffff", "#0000ff")
 //      ^^^^ variable.parameter.intens
+//           ^ keyword.operator.assignment.augmented.intens
     );
 //  ^ punctuation.section.group.end.intens
 //   ^ punctuation.terminator.intens
@@ -61,6 +65,10 @@ COLOR mycolor2 (
 INTEGER baz {TOGGLE};
 //  <- storage.type.intens
 //      ^^^ punctuation.definition.variable.intens
+
+REAL WHILE;
+//  <- storage.type.intens
+//   ^^^^^ invalid.illegal.name.intens
 
 INTEGER {EDITABLE}
 //  <- storage.type.intens
@@ -311,9 +319,12 @@ FUNC myfunc {
     RUN(foo.baz);
 
     SEND(HOST="localhost",
+//       ^^^^ variable.parameter.intens
 //           ^ keyword.operator.assignment.augmented.intens
          PORT=666,
+//       ^^^^ variable.parameter.intens
          STREAM=my_stream);
+//       ^^^^^^ variable.parameter.intens
 
     folder = DIRNAME{DIRNAME=folder};
 //                   ^^^^^^^ variable.parameter.intens
@@ -380,7 +391,11 @@ FUNC myfunc {
     }
 //  ^ punctuation.section.block.end.intens
     MESSAGEBOX(COMPOSE("Finished %1!", "function"));
+//  ^^^^^^^^^^ support.function.builtin.intens
+//            ^ punctuation.section.group.begin.intens
+//             ^^^^^^^ support.function.builtin.intens
 //                               ^^ constant.other.placeholder.intens
+//                                               ^ punctuation.section.group.end.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
