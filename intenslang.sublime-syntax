@@ -12,7 +12,7 @@ variables:
   base_type: \b(?:CDATA|COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
   name: \b[A-Za-z_][A-Za-z_0-9]*\b
-  float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+\-]?([0-9][0-9_]*))?\b)'
+  float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+-]?([0-9][0-9_]*))?\b)'
   illegal_names: |-
         (?x)\b(
           ABORT|CDATA|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
@@ -83,7 +83,7 @@ contexts:
         - match: '%([1-9]|1[0-5])\b'
           scope: constant.other.placeholder.intens
         - match: '(#)(\h{3}|\h{6})\b'
-          scope: constant.other.color.rgb-value.intens
+          scope: constant.other.color.rgb-value.hex.intens
         - match: '@[a-zA-Z]+@'
           scope: keyword.other.fontname.intens
         - match: \\.
@@ -97,7 +97,7 @@ contexts:
     - match: //
       scope: punctuation.definition.comment.intens
       push:
-        - meta_scope: comment.line.intens
+        - meta_scope: comment.line.double-slash.intens
         - match: $
           pop: true
 
@@ -136,7 +136,7 @@ contexts:
 
 
   predefined_variables:
-    - match: \b(BASE|COLORBIT|CURRENT_DATETIME|CURRENT_DATE|CURRENT_TIME|INPUT|SOURCE|SOURCE2|THIS)\b
+    - match: \b(BASE|COLORBIT|CURRENT_DATETIME|CURRENT_DATE|CURRENT_TIME|INPUT|LOCK|SOURCE|SOURCE2|THIS)\b
       scope: variable.language.intens
 
 
@@ -183,7 +183,7 @@ contexts:
     - match: '\b(END)\b\s*(.)'
       captures:
         1: keyword.other.intens
-        2: punctuation.terminator.intens
+        2: punctuation.terminator.propram.intens
 
 
   simple_statements:
@@ -195,7 +195,7 @@ contexts:
 
   end_of_statement_pop:
     - match: ;
-      scope: punctuation.terminator.intens
+      scope: punctuation.terminator.statement.intens
       pop: true
 
 
@@ -270,7 +270,7 @@ contexts:
       scope: storage.modifier.intens
     - include: argument_assignment
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: parameter_block
     - match: '}'
       scope: punctuation.section.group.end.intens
@@ -291,7 +291,7 @@ contexts:
     - include: func_parameter
     - include: argument_assignment
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: parameter_group_body
     - match: \)
       scope: punctuation.section.group.end.intens
@@ -444,7 +444,7 @@ contexts:
       scope: punctuation.section.group.begin.intens
       set: [sets_after_name, set_body]
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: sets_after_keyword
     - match: '{'
       scope: punctuation.section.group.begin.intens
@@ -476,14 +476,13 @@ contexts:
     - match: '\b({{name}})\b'
       scope: punctuation.definition.variable.intens
       set: variables_definition_after_name
-    - include: end_of_statement_pop
-      comment: 'here its an ill-formed definition'
+    - include: end_of_statement_pop  # here its an ill-formed definition
 
 
   variables_definition_after_name:
     - include: end_of_statement_pop
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: variables_definition_after_type
     - match: '\('
       scope: punctuation.section.group.begin.intens
@@ -505,7 +504,7 @@ contexts:
     - include: function_call
     - include: control_keywords
     - match: ','
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: variable_conditional_states_body
     - match: '\)'
       scope: punctuation.section.group.end.intens
@@ -585,7 +584,7 @@ contexts:
   filestream_after_name:
     - include: end_of_statement_pop
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: filestream_after_keyword
     - match: '{'
       scope: punctuation.section.group.begin.intens
@@ -612,7 +611,7 @@ contexts:
   task_after_name:
     - include: end_of_statement_pop
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: task_after_keyword
     - match: '{'
       scope: punctuation.section.block.begin.intens
@@ -643,7 +642,7 @@ contexts:
   operator_structure_after_name:
     - include: end_of_statement_pop
     - match: \,
-      scope: punctuation.separator.intens
+      scope: punctuation.separator.delimiter.intens
       set: operator_structure_after_keyword
     - match: '{'
       scope: punctuation.section.group.begin.intens
@@ -706,10 +705,9 @@ contexts:
 
   function_body:
     - include: end_of_statement_pop
-    - match: \,
-      scope: punctuation.separator.intens
+    - match: \,  # forward declaration
+      scope: punctuation.separator.delimiter.intens
       set: function_declaration
-      comment: 'forward declaration'
     - match: '{'
       scope: punctuation.section.block.begin.intens
       push:
@@ -729,10 +727,10 @@ contexts:
     - match: '\b(ABORT|EXIT|RETURN)\b\s*(;)'
       captures:
         1: keyword.control.intens
-        2: punctuation.terminator.intens
+        2: punctuation.terminator.statement.intens
     - include: function_call
     - match: ';'
-      scope: punctuation.terminator.intens
+      scope: punctuation.terminator.statement.intens
 
 
   function_call:
@@ -741,7 +739,7 @@ contexts:
       scope: support.function.builtin.intens
       push:
         - match: ';'
-          scope: punctuation.terminator.intens
+          scope: punctuation.terminator.statement.intens
           pop: true
         - match: '(\()'
           captures:
@@ -751,6 +749,8 @@ contexts:
             - match: \)
               scope: punctuation.section.arguments.end.intens
               pop: true
+            - match: \,
+              scope: punctuation.separator.delimiter.intens
             - include: func_parameter
             - include: argument_assignment
             - include: anonymous_group

@@ -1,7 +1,7 @@
 // SYNTAX TEST "intenslang.sublime-syntax"
 
 // foo
-// <- source.intens comment.line.intens
+// <- source.intens comment.line.double-slash.intens
 
 DESCRIPTION "Test Syntax";
 
@@ -20,16 +20,16 @@ DATAPOOL
 INTEGER one, two;
 //  <- storage.type.intens
 //      ^^^ punctuation.definition.variable.intens
-//         ^ punctuation.separator.intens
+//         ^ punctuation.separator.delimiter.intens
 //           ^^^ punctuation.definition.variable.intens
-//              ^ punctuation.terminator.intens
+//              ^ punctuation.terminator.statement.intens
 
 COLOR mycolor1 ();
 //  <- storage.type.intens
 //    ^^^^^^^^ punctuation.definition.variable.intens
 //             ^ punctuation.section.group.begin.intens
 //              ^ punctuation.section.group.end.intens
-//               ^ punctuation.terminator.intens
+//               ^ punctuation.terminator.statement.intens
 
 
 COLOR mycolor2 (
@@ -39,28 +39,28 @@ COLOR mycolor2 (
         INVALID = (red, black),
 //      ^^^^^^^ variable.parameter.intens
 //              ^ keyword.operator.assignment.augmented.intens
-//                            ^ punctuation.separator.intens
+//                            ^ punctuation.separator.delimiter.intens
         < 0 = ("#fff", "#f00"),
-//              ^^^^ constant.other.color.rgb-value.intens
-//                            ^ punctuation.separator.intens
+//              ^^^^ constant.other.color.rgb-value.hex.intens
+//                            ^ punctuation.separator.delimiter.intens
         RANGE(0, <2.1) = ("#ffffff", "#00ff00"),
 //      ^^^^^ support.function.builtin.intens
 //            ^ constant.numeric.intens
 //                ^^^ constant.numeric.intens
-//                                             ^ punctuation.separator.intens
+//                                             ^ punctuation.separator.delimiter.intens
         2 = ("#ffffff", "#0000ff"),
 //        ^ keyword.operator.assignment.intens
-//            ^^^^^^^ constant.other.color.rgb-value.intens
-//                                ^ punctuation.separator.intens
+//            ^^^^^^^ constant.other.color.rgb-value.hex.intens
+//                                ^ punctuation.separator.delimiter.intens
         "mytext" = ( "#e0e0e0", "#e0e0e0" ),
 //               ^ keyword.operator.assignment.intens
-//                                         ^ punctuation.separator.intens
+//                                         ^ punctuation.separator.delimiter.intens
         ELSE = ("#ffffff", "#0000ff")
 //      ^^^^ variable.parameter.intens
 //           ^ keyword.operator.assignment.augmented.intens
     );
 //  ^ punctuation.section.group.end.intens
-//   ^ punctuation.terminator.intens
+//   ^ punctuation.terminator.statement.intens
 
 INTEGER baz {TOGGLE};
 //  <- storage.type.intens
@@ -75,20 +75,20 @@ INTEGER {EDITABLE}
 //       ^^^^^^^^ storage.modifier.intens
     foo {LABEL="mylabel", TOGGLE, FUNC=myfunc},
 //  ^^^ punctuation.definition.variable.intens
-//                      ^ punctuation.separator.intens
-//                              ^ punctuation.separator.intens
+//                      ^ punctuation.separator.delimiter.intens
+//                              ^ punctuation.separator.delimiter.intens
 //                                     ^^^^^^ variable.function.intens
-//                                            ^ punctuation.separator.intens
+//                                            ^ punctuation.separator.delimiter.intens
     bar {COLOR=mycolor2};
 //  ^^^ punctuation.definition.variable.intens
-//                      ^ punctuation.terminator.intens
+//                      ^ punctuation.terminator.statement.intens
 
 SET myset ("zero"=0, "one"=1);
 // <- storage.type.enum.intens
 //  ^^^^^ entity.name.enum.intens
 //        ^ punctuation.section.group.begin.intens
 //                          ^ punctuation.section.group.end.intens
-//                           ^ punctuation.terminator.intens
+//                           ^ punctuation.terminator.statement.intens
 
 SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
 //         ^ punctuation.section.group.begin.intens
@@ -104,7 +104,7 @@ SET STRING ();
 //  ^^^^^^ invalid.illegal.name.intens
 //         ^ punctuation.section.group.begin.intens
 //          ^ punctuation.section.group.end.intens
-//           ^ punctuation.terminator.intens
+//           ^ punctuation.terminator.statement.intens
 
 STRUCT MYSTRUCT {
 // <- storage.type.struct.intens
@@ -113,15 +113,15 @@ STRUCT MYSTRUCT {
     INTEGER one, two;
 //  ^^^^^^^ storage.type.intens
 //          ^^^ punctuation.definition.variable.intens
-//             ^ punctuation.separator.intens
+//             ^ punctuation.separator.delimiter.intens
 //               ^^^ punctuation.definition.variable.intens
-//                  ^ punctuation.terminator.intens
+//                  ^ punctuation.terminator.statement.intens
     REAL three;};
 //  ^^^^ storage.type.intens
 //       ^^^^^ punctuation.definition.variable.intens
-//            ^ punctuation.terminator.intens
+//            ^ punctuation.terminator.statement.intens
 //             ^ punctuation.section.block.end.intens
-//              ^ punctuation.terminator.intens
+//              ^ punctuation.terminator.statement.intens
 
 STRUCT MYSTRUCT_EXT : MYSTRUCT {
 //                    ^^^^^^^^ entity.other.inherited-class.intens
@@ -146,40 +146,40 @@ STRUCT REAL {};
 //     ^^^^ invalid.illegal.name.intens
 //          ^ punctuation.section.block.begin.intens
 //           ^ punctuation.section.block.end.intens
-//            ^ punctuation.terminator.intens
+//            ^ punctuation.terminator.statement.intens
 
 STRUCT MYSTRUCT3 { INTEGER REAL;};
 //               ^ punctuation.section.block.begin.intens
 //                 ^^^^^^^ storage.type.intens
 //                         ^^^^ invalid.illegal.name.intens
-//                             ^ punctuation.terminator.intens
+//                             ^ punctuation.terminator.statement.intens
 //                              ^ punctuation.section.block.end.intens
-//                               ^ punctuation.terminator.intens
+//                               ^ punctuation.terminator.statement.intens
 
 END DATAPOOL;
-//          ^ punctuation.terminator.intens
+//          ^ punctuation.terminator.statement.intens
 
 FUNCTIONS
 
 FUNC myfunc, myfunc2;
 // <- storage.type.function.intens
 //   ^^^^^^ entity.name.function.intens
-//         ^ punctuation.separator.intens
+//         ^ punctuation.separator.delimiter.intens
 //           ^^^^^^^ entity.name.function.intens
-//                  ^ punctuation.terminator.intens
+//                  ^ punctuation.terminator.statement.intens
 
 FUNC
 // <- storage.type.function.intens
     myfunc
 //  ^^^^^^ entity.name.function.intens
   , myfunc2
-//^ punctuation.separator.intens
+//^ punctuation.separator.delimiter.intens
 //  ^^^^^^^ entity.name.function.intens
   ;
-//^ punctuation.terminator.intens
+//^ punctuation.terminator.statement.intens
 
 END FUNCTIONS;
-//           ^ punctuation.terminator.intens
+//           ^ punctuation.terminator.statement.intens
 
 STREAMER
 
@@ -196,7 +196,7 @@ my_stream2 {PROCESS="thefile.txt"} (
 );
 
 END STREAMER;
-//          ^ punctuation.terminator.intens
+//          ^ punctuation.terminator.statement.intens
 
 OPERATOR
 
@@ -206,12 +206,12 @@ SOCKET my_socket {
 //    ^^^^ variable.parameter.intens
 //        ^ keyword.operator.assignment.augmented.intens
 //         ^^^ constant.numeric.intens
-//            ^ punctuation.separator.intens
+//            ^ punctuation.separator.delimiter.intens
       STREAM=my_stream,
       FUNC=myfunc},
 //         ^^^^^^ variable.function.intens
 //               ^ punctuation.section.group.end.intens
-//                ^ punctuation.separator.intens
+//                ^ punctuation.separator.delimiter.intens
   my_socket2 {
 //           ^ punctuation.section.group.begin.intens
       MFM,
@@ -228,12 +228,12 @@ SOCKET my_socket {
 //    ^^^^^^^^^ support.function.builtin.intens
 //              ^^^^^^ variable.other.intens
 //                                            ^ punctuation.section.group.end.intens
-//                                             ^ punctuation.separator.intens
+//                                             ^ punctuation.separator.delimiter.intens
   my_socket3 {
     PORT=666,
     (
       HEADER="MYHEADER",
-//                     ^ punctuation.separator.intens
+//                     ^ punctuation.separator.delimiter.intens
       REQUEST=my_stream,
       FUNC=myfunc,
 //    ^^^^ variable.parameter.intens
@@ -295,7 +295,7 @@ MESSAGE_QUEUE
   };
 
 END OPERATOR;
-//          ^ punctuation.terminator.intens
+//          ^ punctuation.terminator.statement.intens
 
 FUNCTIONS
 
@@ -306,23 +306,25 @@ FUNC myfunc {
     INTEGER foo, bar;
 //  ^^^^^^^ storage.type.intens
 //          ^^^ punctuation.definition.variable.intens
-//             ^ punctuation.separator.intens
+//             ^ punctuation.separator.delimiter.intens
 //               ^^^ punctuation.definition.variable.intens
-//                  ^ punctuation.terminator.intens
+//                  ^ punctuation.terminator.statement.intens
 
     RUN( myfunc2 );
 //     ^ punctuation.section.group.begin.intens
 //       ^^^^^^^ variable.function.intens
 //               ^ punctuation.section.group.end.intens
-//                ^ punctuation.terminator.intens
+//                ^ punctuation.terminator.statement.intens
 
     RUN(foo.baz);
 
     SEND(HOST="localhost",
 //       ^^^^ variable.parameter.intens
 //           ^ keyword.operator.assignment.augmented.intens
+//                       ^ punctuation.separator.delimiter.intens
          PORT=666,
 //       ^^^^ variable.parameter.intens
+//               ^ punctuation.separator.delimiter.intens
          STREAM=my_stream);
 //       ^^^^^^ variable.parameter.intens
 
@@ -345,7 +347,7 @@ FUNC myfunc {
 //         ^ punctuation.section.group.begin.intens
 //           ^^^^^^^ variable.function.intens
 //                   ^ punctuation.section.group.end.intens
-//                    ^ punctuation.terminator.intens
+//                    ^ punctuation.terminator.statement.intens
         IF (foo != 3 && (VALID(foo))) {
 //                       ^^^^^ support.function.builtin.intens
             INPUT = OLDVALUE;
@@ -359,12 +361,14 @@ FUNC myfunc {
 //                 ^^ constant.numeric.intens
             RETURN;
 //          ^^^^^^ keyword.control.intens
-//                ^ punctuation.terminator.intens
+//                ^ punctuation.terminator.statement.intens
         }
         foo++;
     }
 
     REQUEST(REQUEST=my_stream2, RESPONSE(my_stream, my_stream2), FUNC=myfunc2);
+//                            ^ punctuation.separator.delimiter.intens
+//                                                             ^ punctuation.separator.delimiter.intens
 //                                                               ^^^^ variable.parameter.intens
 //                                                                   ^ keyword.operator.assignment.augmented.intens
 //                                                                    ^^^^^^^ variable.function.intens
@@ -372,7 +376,7 @@ FUNC myfunc {
     IF (! RUN(myfunc3) ){
         ABORT;
 //      ^^^^^ keyword.control.intens
-//           ^ punctuation.terminator.intens
+//           ^ punctuation.terminator.statement.intens
     }
 
     IF ( REASON_OPEN ) {
@@ -382,7 +386,7 @@ FUNC myfunc {
 //                     ^ punctuation.section.block.begin.intens
         ABORT("Abort message");
 //      ^^^^^ support.function.builtin.intens
-//                            ^ punctuation.terminator.intens
+//                            ^ punctuation.terminator.statement.intens
     }
 //  ^ punctuation.section.block.end.intens
     ELSE IF ( REASON_CLOSE ) {
@@ -399,26 +403,26 @@ FUNC myfunc {
 }
 // <-  punctuation.section.block.end.intens
 ;
-// <- punctuation.terminator.intens
+// <- punctuation.terminator.statement.intens
 
 FUNC myfunc2 {},
 // <- storage.type.function.intens
 //   ^^^^^^^ entity.name.function.intens
 //           ^ punctuation.section.block.begin.intens
 //            ^ punctuation.section.block.end.intens
-//             ^ punctuation.separator.intens
+//             ^ punctuation.separator.delimiter.intens
     myfunc3
 //  ^^^^^^^ entity.name.function.intens
     {};
 //  ^ punctuation.section.block.begin.intens
 //   ^ punctuation.section.block.end.intens
-//    ^ punctuation.terminator.intens
+//    ^ punctuation.terminator.statement.intens
 
 FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
 // <- storage.type.function.intens
 //  ^ punctuation.section.group.begin.intens
 //   ^^^^^^^^^^^^^ variable.parameter.intens
-//                ^ punctuation.separator.intens
+//                ^ punctuation.separator.delimiter.intens
 //                  ^^^^^^^^^^^^ variable.parameter.intens
 //                              ^ keyword.operator.assignment.augmented.intens
 //                               ^^^^ constant.language.intens
@@ -427,7 +431,7 @@ FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
 //  ^^^^^^^ entity.name.function.intens
 
 END FUNCTIONS;
-//           ^ punctuation.terminator.intens
+//           ^ punctuation.terminator.statement.intens
 
 UI_MANAGER
 
@@ -488,11 +492,11 @@ MENU PRINT {EXPLICIT} (SEPARATOR),
 //             ^^^^ variable.parameter.intens
 
 END UI_MANAGER;
-//            ^ punctuation.terminator.intens
+//            ^ punctuation.terminator.statement.intens
 
 LANGUAGE
 END LANGUAGE;
 
 END.
 // <- keyword.other.intens
-// ^ punctuation.terminator.intens
+// ^ punctuation.terminator.propram.intens
