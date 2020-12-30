@@ -9,7 +9,7 @@ INCLUDE external_file.inc
 
 USERGROUPS
 // <- storage.type.other.intens
-  sime_user (
+  some_user (
     "me", "you"
   )
   , admin (
@@ -97,6 +97,7 @@ SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
 //                      ^ punctuation.section.group.end.intens
 
 SET myset3 ("A"=1, "B"=2), myset4 ("C"=3, "D"=4);
+//                       ^ punctuation.separator.delimiter.intens
 //                         ^^^^^^ entity.name.enum.intens
 
 SET STRING ();
@@ -127,6 +128,9 @@ STRUCT MYSTRUCT_EXT : MYSTRUCT {
 //                    ^^^^^^^^ entity.other.inherited-class.intens
     INTEGER four;
 };
+
+STRUCT MYSTRUCT_EXT2 : WHILE {};
+//                     ^^^^^ invalid.illegal.name.intens
 
 STRUCT MYSTRUCT2 {
     INTEGER{ EDITABLE }
@@ -329,6 +333,7 @@ FUNC myfunc {
 //       ^^^^^^ variable.parameter.intens
 
     folder = DIRNAME{DIRNAME=folder};
+//         ^ keyword.operator.assignment.intens
 //                   ^^^^^^^ variable.parameter.intens
     DIRNAME(myfilestream_fs);
 

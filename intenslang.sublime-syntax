@@ -379,7 +379,7 @@ contexts:
 
 
   structures:
-    - match: \b(STRUCT)\b\s+
+    - match: \b(STRUCT)\b
       scope: meta.struct.intens
       captures:
         1: storage.type.struct.intens
@@ -416,13 +416,16 @@ contexts:
   inherit_from:
     - match: ':'
       push:
+        - match: '{{illegal_names}}'
+          scope: invalid.illegal.name.intens
+          pop: true
         - match: '\b{{name}}\b'
           scope: entity.other.inherited-class.intens
           pop: true
 
 
   sets:
-    - match: \b(SET)\b\s+
+    - match: \b(SET)\b
       captures:
         1: storage.type.enum.intens
       push:
