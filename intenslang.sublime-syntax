@@ -864,6 +864,9 @@ contexts:
 
 
   ui_struct_after_keyword:
+    - match: '{{illegal_names}}'
+      scope: invalid.illegal.name.intens
+      pop: ui_struct_after_name
     - match: '\b({{name}})\b'
       scope: punctuation.definition.variable.intens
       set: ui_struct_after_name

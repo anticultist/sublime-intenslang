@@ -199,6 +199,9 @@ my_stream2 {PROCESS="thefile.txt"} (
   foo
 );
 
+my_stream3 (!foo[#A].bar.one);
+//               ^^ keyword.other.intens
+
 END STREAMER;
 //          ^ punctuation.terminator.statement.intens
 
@@ -469,13 +472,16 @@ FORM
 
 IMAGE img1 {
         SIZE(256,256),
-        SOCKET=my_socket
+        SOCKET=my_socket,
         SETTINGS=foo.bar};
 
 INDEX my_index;
 
 FOLDER
   my_folder { LEFT, VERTICAL, STRETCH } ();
+
+FOLDER WHILE {} ();
+//     ^^^^^ invalid.illegal.name.intens
 
 TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
 //              ^^^^^^^^^^ support.function.builtin.intens
