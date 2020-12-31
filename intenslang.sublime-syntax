@@ -8,6 +8,9 @@ name: INTENS
 file_extensions: [des, inc, des.in, inc.in]
 scope: source.intens
 
+
+###############################################################################
+
 variables:
   base_type: \b(?:CDATA|COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
@@ -175,9 +178,7 @@ contexts:
       scope: storage.type.other.intens
 
 
-###########
-# General #
-###########
+###[ General ]#################################################################
 
   end_of_propram:
     - match: '\b(END)\b\s*(.)'
@@ -351,9 +352,7 @@ contexts:
         1: "keyword.control.import.intens"
 
 
-##################
-# Datapool Block #
-##################
+###[ Datapool Block ]##########################################################
 
   datapool_block:
     - match: '\b(DATAPOOL)\b'
@@ -415,6 +414,7 @@ contexts:
 
   inherit_from:
     - match: ':'
+      scope: punctuation.separator.intens
       push:
         - match: '{{illegal_names}}'
           scope: invalid.illegal.name.intens
@@ -514,9 +514,7 @@ contexts:
       pop: true
 
 
-##################
-# Streamer Block #
-##################
+###[ Streamer Block ]##########################################################
 
   streamer_block:
     - match: '\b(STREAMER)\b'
@@ -537,9 +535,7 @@ contexts:
     - include: parameter_block
 
 
-##################
-# Operator Block #
-##################
+###[ Operator Block ]##########################################################
 
   operator_block:
     - match: '\b(OPERATOR)\b'
@@ -653,9 +649,7 @@ contexts:
     - include: anonymous_group
 
 
-###################
-# Functions Block #
-###################
+###[ Functions Block ]#########################################################
 
   functions_block:
     - match: '\b(FUNCTIONS)\b'
@@ -829,9 +823,7 @@ contexts:
 
 
 
-####################
-# UI manager Block #
-####################
+###[ UI Manager Block ]########################################################
 
   ui_manager_block:
     - match: '\b(UI_MANAGER)\b'
@@ -935,9 +927,7 @@ contexts:
           pop: true
 
 
-####################
-# DB manager Block #
-####################
+###[ DB Manager Block ]########################################################
 
   db_manager_block:
     - match: '\b(DB_MANAGER)\b'
@@ -971,9 +961,7 @@ contexts:
       scope: keyword.other.intens
 
 
-##################
-# Language Block #
-##################
+###[ Language Block ]##########################################################
 
   language_block:
     - match: '\b(LANGUAGE)\b'
