@@ -81,7 +81,7 @@ contexts:
             1: keyword.other.DML.html
             2: keyword.other.DML.html
         - match: '%([1-9]|1[0-5])\b'
-          scope: constant.other.placeholder.intens
+          scope: constant.character.format.placeholder.other.intens
         - match: '(#)(\h{3}|\h{6})\b'
           scope: constant.other.color.rgb-value.hex.intens
         - match: '@[a-zA-Z]+@'

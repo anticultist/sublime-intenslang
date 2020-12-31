@@ -126,8 +126,10 @@ STRUCT MYSTRUCT {
 
 STRUCT MYSTRUCT_EXT : MYSTRUCT {
 //                    ^^^^^^^^ entity.other.inherited-class.intens
+//                             ^ punctuation.section.block.begin.intens
     INTEGER four;
 };
+// <- punctuation.section.block.end.intens
 
 STRUCT MYSTRUCT_EXT2 : WHILE {};
 //                     ^^^^^ invalid.illegal.name.intens
@@ -136,7 +138,7 @@ STRUCT MYSTRUCT2 {
     INTEGER{ EDITABLE }
 //  ^^^^^^^ storage.type.intens
         button1 {LABEL="mylabel", BUTTON, FUNC=myfunc},
-        foo {SET=myset};
+        foo {SET=myset, UNIT="Hz"};
 //               ^^^^^ storage.type.enum.intens
 
     MYSTRUCT bar;
@@ -188,8 +190,10 @@ END FUNCTIONS;
 STREAMER
 
 simple_stream (!foo, foo);
+//             ^ keyword.operator.logical.intens
 
 my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
+//          ^^^ constant.language.intens
 //                     ^ keyword.operator.assignment.augmented.intens
   (foo, bar, EOLN);
 
@@ -253,6 +257,7 @@ SOCKET my_socket {
 PROCESS myprocess_pr: BATCH { "myprocess.pl" };
 
 PROCESSGROUP
+// <- storage.type.other.intens
   myprocessgroup_pg { "My name",
                       FORM=NONE,
                       HIDDEN,
@@ -268,12 +273,18 @@ PROCESSGROUP
 //                                              ^^^^^^ variable.parameter.intens
 
 TIMER my_timer {FUNC=myfunc};
+// <- storage.type.other.intens
 //                   ^^^^^^ variable.function.intens
 
 FILESTREAM myfilestream_fs = my_stream {"My Stream",
+// <- storage.type.other.intens
 //                         ^ keyword.operator.assignment.augmented.intens
+//                                     ^ punctuation.section.group.begin.intens
                                         FILTER="CSV (*.csv)",
+//                                                          ^ punctuation.separator.delimiter.intens
                                         WRITEONLY};
+//                                               ^ punctuation.section.group.end.intens
+//                                                ^ punctuation.terminator.statement.intens
 
 TASK mytask {"Optimize"} {
   one = 1;
@@ -337,8 +348,10 @@ FUNC myfunc {
 
     folder = DIRNAME{DIRNAME=folder};
 //         ^ keyword.operator.assignment.intens
+//           ^^^^^^^ support.function.builtin.intens
 //                   ^^^^^^^ variable.parameter.intens
     DIRNAME(myfilestream_fs);
+//  ^^^^^^^ support.function.builtin.intens
 
     foo = 1e3 + 1e-3 + 60E9 -7.9e-05 + 1e+009;
 //        ^^^ constant.numeric.intens
@@ -357,9 +370,13 @@ FUNC myfunc {
 //                   ^ punctuation.section.group.end.intens
 //                    ^ punctuation.terminator.statement.intens
         IF (foo != 3 && (VALID(foo))) {
+//              ^^ keyword.operator.comparison.intens
+//                   ^^ keyword.operator.arithmetic.intens
 //                       ^^^^^ support.function.builtin.intens
             INPUT = OLDVALUE;
+//          ^^^^^ variable.language.intens
             THIS.buzz = 2;
+//          ^^^^ variable.language.intens
         }
         ELSE {
             bar = ABS(bar - ROUND(1 + 4.8));
@@ -390,6 +407,7 @@ FUNC myfunc {
     IF ( REASON_OPEN ) {
 //  ^^ keyword.control.intens
 //     ^ punctuation.section.group.begin.intens
+//       ^^^^^^^^^^^ constant.other.intens
 //                   ^ punctuation.section.group.end.intens
 //                     ^ punctuation.section.block.begin.intens
         ABORT("Abort message");
@@ -399,6 +417,7 @@ FUNC myfunc {
 //  ^ punctuation.section.block.end.intens
     ELSE IF ( REASON_CLOSE ) {
 //  ^^^^ keyword.control.intens
+//            ^^^^^^^^^^^^ constant.other.intens
 //                           ^ punctuation.section.block.begin.intens
     }
 //  ^ punctuation.section.block.end.intens
@@ -406,7 +425,8 @@ FUNC myfunc {
 //  ^^^^^^^^^^ support.function.builtin.intens
 //            ^ punctuation.section.group.begin.intens
 //             ^^^^^^^ support.function.builtin.intens
-//                               ^^ constant.other.placeholder.intens
+//                               ^^ constant.character.format.placeholder.other.intens
+//                                   ^ punctuation.separator.delimiter.intens
 //                                               ^ punctuation.section.group.end.intens
 }
 // <-  punctuation.section.block.end.intens
@@ -468,10 +488,14 @@ FORM
   myform2 { "fancy name 1",
             CLOSE_BUTTON=NONE,
             HIDE_CYCLE }
-    ( );
+    ( ),
+  logwin_form { "Logging Window" }
+    (LOG_WINDOW { SIZE=2000 } );
+//                    ^ keyword.operator.assignment.augmented.intens
 
 IMAGE img1 {
         SIZE(256,256),
+//      ^^^^ support.function.builtin.intens
         SOCKET=my_socket,
         SETTINGS=foo.bar};
 
@@ -492,15 +516,28 @@ TABLE my_table {HORIZONTAL(TABLESIZE=7, RANGE(1)),
          TOP();
          TABLE(););
 
+THERMO my_thermo {
+            RANGE(256,256),
+//          ^^^^^ support.function.builtin.intens
+            ORIENTATION=VERTICAL,
+//                      ^^^^^^^^ constant.language.intens
+            SIZE(50,100), UNIT=UNIT(foo.foo)
+//                             ^^^^ support.function.builtin.intens
+//                                 ^ punctuation.section.group.begin.intens
+//                                         ^ punctuation.section.group.end.intens
+        } (foo.bar);
+
 MENU PRINT {EXPLICIT} (SEPARATOR),
 // <- storage.type.other.intens
 //          ^^^^^^^^ storage.modifier.intens
 //                     ^^^^^^^^^ variable.parameter.intens
      "&Tools" (FUNC hello_func="Show Hello World Message",
 //             ^^^^ - storage.type.function.intens
-               // FORM fancy_form
+//                  ^^^^^^^^^^ variable.function.intens
+//                            ^ keyword.operator.assignment.augmented.intens
+               FORM fancy_form,
                FUNC bye_func="Quit");
-//             ^^^^ variable.parameter.intens
+//             ^^^^ variable.parameter.intens - invalid.illegal.name.intens
 
 END UI_MANAGER;
 //            ^ punctuation.terminator.statement.intens
