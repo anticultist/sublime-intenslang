@@ -37,6 +37,7 @@ COLOR mycolor2 (
 //    ^^^^^^^^ punctuation.definition.variable.intens
 //             ^ punctuation.section.group.begin.intens
         INVALID = (red, black),
+//                    ^ punctuation.separator.delimiter.intens
 //      ^^^^^^^ variable.parameter.intens
 //              ^ keyword.operator.assignment.augmented.intens
 //                            ^ punctuation.separator.delimiter.intens
@@ -75,6 +76,8 @@ INTEGER {EDITABLE}
 //       ^^^^^^^^ storage.modifier.intens
     foo {LABEL="mylabel", TOGGLE, FUNC=myfunc},
 //  ^^^ punctuation.definition.variable.intens
+//       ^^^^^ variable.parameter.intens - support.function.builtin.intens
+//            ^ keyword.operator.assignment.augmented.intens
 //                      ^ punctuation.separator.delimiter.intens
 //                              ^ punctuation.separator.delimiter.intens
 //                                     ^^^^^^ variable.function.intens
@@ -256,7 +259,9 @@ SOCKET my_socket {
     )
   };
 
-PROCESS myprocess_pr: BATCH { "myprocess.pl" };
+PROCESS myprocess_pr : BATCH { "myprocess.pl" };
+//                   ^ punctuation.separator.intens
+//                                             ^ punctuation.terminator.statement.intens
 
 PROCESSGROUP
 // <- storage.type.other.intens
@@ -451,7 +456,7 @@ FUNC myfunc2 {},
 //   ^ punctuation.section.block.end.intens
 //    ^ punctuation.terminator.statement.intens
 
-FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
+FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE, PRIORITY=HIGH}
 // <- storage.type.function.intens
 //  ^ punctuation.section.group.begin.intens
 //   ^^^^^^^^^^^^^ variable.parameter.intens
@@ -459,7 +464,8 @@ FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE}
 //                  ^^^^^^^^^^^^ variable.parameter.intens
 //                              ^ keyword.operator.assignment.augmented.intens
 //                               ^^^^ constant.language.intens
-//                                   ^ punctuation.section.group.end.intens
+//                                     ^^^^^^^^ variable.parameter.intens
+//                                                  ^ punctuation.section.group.end.intens
     myfunc4 {};
 //  ^^^^^^^ entity.name.function.intens
 
@@ -510,7 +516,10 @@ INDEX my_index;
 //            ^ punctuation.terminator.statement.intens
 
 FOLDER
-  my_folder { LEFT, VERTICAL, STRETCH } ();
+  my_folder { LEFT, VERTICAL, STRETCH } (
+        ["":baz, FUNC = myfunc4 ] (mygroup_fg)
+//                                 ^^^^^^^^^^ - variable.function.intens
+    );
 
 FOLDER WHILE {} ();
 //     ^^^^^ invalid.illegal.name.intens
