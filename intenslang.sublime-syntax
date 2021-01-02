@@ -249,6 +249,12 @@ contexts:
 
 
   parameter_block:
+    - match: '{'
+      scope: punctuation.section.group.begin.intens
+      push: parameter_block_body
+
+
+  parameter_block_body:
     - meta_include_prototype: false
     - match: '\b(INVALID)\b\s*(=)'
       captures:
@@ -272,13 +278,13 @@ contexts:
     - include: argument_assignment
     - match: \,
       scope: punctuation.separator.delimiter.intens
-      set: parameter_block
+      set: parameter_block_body
     - match: '}'
       scope: punctuation.section.group.end.intens
       pop: true
     - match: '{'
       scope: punctuation.section.group.begin.intens
-      push: parameter_block
+      push: parameter_block_body
     - include: parameter_group
 
 
@@ -449,9 +455,7 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: sets_after_keyword
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
     - include: end_of_statement_pop
 
 
@@ -470,9 +474,7 @@ contexts:
 
 
   variables_definition_after_type:
-    - match: '{'
-      scope: punctuation.section.block.begin.intens
-      push: parameter_block
+    - include: parameter_block
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
       set: variables_definition_after_name
@@ -490,9 +492,7 @@ contexts:
     - match: '\('
       scope: punctuation.section.group.begin.intens
       push: variable_conditional_states_body
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
 
 
   variable_conditional_states_body:
@@ -585,9 +585,7 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: filestream_after_keyword
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
 
 
   task:
@@ -643,9 +641,7 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: operator_structure_after_keyword
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
     - include: anonymous_group
 
 
@@ -681,14 +677,8 @@ contexts:
 
 
   functions_after_keyword:
-    - include: function_properties
+    - include: parameter_block
     - include: function_declaration
-
-
-  function_properties:
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
 
 
   function_declaration:
@@ -865,9 +855,7 @@ contexts:
 
 
   ui_struct_after_name:
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
     - match: \(
       scope: punctuation.section.group.begin.intens
       push: ui_struct_body
@@ -887,9 +875,7 @@ contexts:
         )\b
       scope: support.function.builtin.intens
     - include: square_bracket
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
 
 
   menu_definition:
@@ -904,9 +890,7 @@ contexts:
     - match: \(
       scope: punctuation.section.group.begin.intens
       set: [menu_definition_after_keyword, menu_parameter_body]
-    - match: '{'
-      scope: punctuation.section.group.begin.intens
-      push: parameter_block
+    - include: parameter_block
     - include: end_of_statement_pop
 
 
