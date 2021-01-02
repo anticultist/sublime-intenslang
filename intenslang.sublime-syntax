@@ -173,9 +173,11 @@ contexts:
         (?x)\b(
           DESCRIPTION|HELPFILE|OPEN_URL
         )\b
-      scope: keyword.other.intens
+      scope: keyword.control.intens
     - match: '\b(USERGROUPS)\b'
       scope: storage.type.other.intens
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
 
 
 ###[ General ]#################################################################
@@ -230,6 +232,8 @@ contexts:
     - include: anonymous_group
     - match: '{{builtin_functions_in_nested_context}}'
       scope: support.function.builtin.intens
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
     - include: square_bracket
     - match: \)
       scope: punctuation.section.group.end.intens
@@ -533,6 +537,8 @@ contexts:
         - include: end_of_statement_pop
     - include: anonymous_group
     - include: parameter_block
+    - match: ';'
+      scope: punctuation.terminator.statement.intens
 
 
 ###[ Operator Block ]##########################################################
@@ -560,6 +566,8 @@ contexts:
     - include: filestream
     - include: operator_structure
     - include: task
+    - match: ';'
+      scope: punctuation.terminator.statement.intens
 
 
   filestream:
@@ -832,6 +840,8 @@ contexts:
         - include: end_of_statement_pop
     - include: ui_struct
     - include: menu_definition
+    - match: ';'
+      scope: punctuation.terminator.statement.intens
 
 
   ui_struct:
@@ -860,6 +870,9 @@ contexts:
       scope: punctuation.section.group.begin.intens
       push: ui_struct_body
     - include: end_of_statement_pop
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
+      set: ui_struct_after_keyword
 
 
   ui_struct_body:
@@ -876,6 +889,10 @@ contexts:
       scope: support.function.builtin.intens
     - include: square_bracket
     - include: parameter_block
+    - match: ';'
+      scope: punctuation.terminator.statement.intens
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
 
 
   menu_definition:
@@ -899,6 +916,8 @@ contexts:
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
     - match: '='
       scope: keyword.operator.assignment.augmented.intens
     - match: '\b(FORM|SEPARATOR|TRANSACTION)\b'
