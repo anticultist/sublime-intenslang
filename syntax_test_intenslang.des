@@ -100,10 +100,10 @@ SET myset ("zero"=0, "one"=1);
 //                           ^ punctuation.terminator.statement.intens
 
 SET myset2 {INVALID=NONE} ("X"=0, "Y"=1);
-//         ^ punctuation.section.group.begin.intens
+//         ^ punctuation.section.block.begin.intens
 //                 ^ keyword.operator.assignment.augmented.intens
 //                  ^^^^ constant.language.intens
-//                      ^ punctuation.section.group.end.intens
+//                      ^ punctuation.section.block.end.intens
 
 SET myset3 ("A"=1, "B"=2), myset4 ("C"=3, "D"=4);
 //                       ^ punctuation.separator.delimiter.intens
@@ -223,7 +223,7 @@ END STREAMER;
 OPERATOR
 
 SOCKET my_socket {
-//               ^ punctuation.section.group.begin.intens
+//               ^ punctuation.section.block.begin.intens
       PORT=666,
 //    ^^^^ variable.parameter.intens
 //        ^ keyword.operator.assignment.augmented.intens
@@ -232,10 +232,10 @@ SOCKET my_socket {
       STREAM=my_stream,
       FUNC=myfunc},
 //         ^^^^^^ variable.function.intens
-//               ^ punctuation.section.group.end.intens
+//               ^ punctuation.section.block.end.intens
 //                ^ punctuation.separator.delimiter.intens
   my_socket2 {
-//           ^ punctuation.section.group.begin.intens
+//           ^ punctuation.section.block.begin.intens
       MFM,
       PORT=333,
       STREAM=my_stream2,
@@ -249,7 +249,7 @@ SOCKET my_socket {
       THUMBNAIL(struct[*].thumbnail, 200, 200)},
 //    ^^^^^^^^^ support.function.builtin.intens
 //              ^^^^^^ variable.other.intens
-//                                            ^ punctuation.section.group.end.intens
+//                                            ^ punctuation.section.block.end.intens
 //                                             ^ punctuation.separator.delimiter.intens
   my_socket3 {
     PORT=666,
@@ -293,11 +293,11 @@ TIMER my_timer {FUNC=myfunc};
 FILESTREAM myfilestream_fs = my_stream {"My Stream",
 // <- storage.type.other.intens
 //                         ^ keyword.operator.assignment.augmented.intens
-//                                     ^ punctuation.section.group.begin.intens
+//                                     ^ punctuation.section.block.begin.intens
                                         FILTER="CSV (*.csv)",
 //                                                          ^ punctuation.separator.delimiter.intens
                                         WRITEONLY};
-//                                               ^ punctuation.section.group.end.intens
+//                                               ^ punctuation.section.block.end.intens
 //                                                ^ punctuation.terminator.statement.intens
 
 TASK mytask {"Optimize"} {
@@ -466,14 +466,14 @@ FUNC myfunc2 {},
 
 FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE, PRIORITY=HIGH}
 // <- storage.type.function.intens
-//  ^ punctuation.section.group.begin.intens
+//  ^ punctuation.section.block.begin.intens
 //   ^^^^^^^^^^^^^ variable.parameter.intens
 //                ^ punctuation.separator.delimiter.intens
 //                  ^^^^^^^^^^^^ variable.parameter.intens
 //                              ^ keyword.operator.assignment
 //                               ^^^^ constant.language.intens
 //                                     ^^^^^^^^ variable.parameter.intens
-//                                                  ^ punctuation.section.group.end.intens
+//                                                  ^ punctuation.section.block.end.intens
     myfunc4 {};
 //  ^^^^^^^ entity.name.function.intens
 

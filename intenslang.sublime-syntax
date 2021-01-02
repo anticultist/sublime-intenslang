@@ -254,7 +254,7 @@ contexts:
 
   parameter_block:
     - match: '{'
-      scope: punctuation.section.group.begin.intens
+      scope: punctuation.section.block.begin.intens
       push: parameter_block_body
 
 
@@ -284,10 +284,10 @@ contexts:
       scope: punctuation.separator.delimiter.intens
       set: parameter_block_body
     - match: '}'
-      scope: punctuation.section.group.end.intens
+      scope: punctuation.section.block.end.intens
       pop: true
     - match: '{'
-      scope: punctuation.section.group.begin.intens
+      scope: punctuation.section.block.begin.intens
       push: parameter_block_body
     - include: parameter_group
 
