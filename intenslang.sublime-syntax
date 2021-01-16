@@ -580,6 +580,7 @@ contexts:
 
 
   filestream_after_keyword:
+    - include: end_of_statement_pop
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
       set: filestream_after_name
@@ -592,6 +593,9 @@ contexts:
     - include: end_of_statement_pop
     - match: \,
       scope: punctuation.separator.delimiter.intens
+      set: filestream_after_keyword
+    - match: =
+      scope: keyword.operator.assignment.augmented.intens
       set: filestream_after_keyword
     - include: parameter_block
 

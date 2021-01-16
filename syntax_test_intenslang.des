@@ -280,7 +280,7 @@ PROCESSGROUP
 //                ^ keyword.other.intens
 //                       ^ punctuation.separator.delimiter.intens
         = myprocess_pr
-//      ^ keyword.operator.assignment.augmented.intens
+//      ^ keyword.operator.assignment
           (foo.bar, EOLN, foo.bar2);
       ),
      myprocessgroup2_pg {"My name2", FORM=NONE, HIDDEN} ();
@@ -292,13 +292,26 @@ TIMER my_timer {FUNC=myfunc};
 
 FILESTREAM myfilestream_fs = my_stream {"My Stream",
 // <- storage.type.other.intens
+//         ^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
 //                         ^ keyword.operator.assignment.augmented.intens
+//                           ^^^^^^^^^ punctuation.definition.variable.intens
 //                                     ^ punctuation.section.block.begin.intens
                                         FILTER="CSV (*.csv)",
 //                                                          ^ punctuation.separator.delimiter.intens
                                         WRITEONLY};
 //                                               ^ punctuation.section.block.end.intens
 //                                                ^ punctuation.terminator.statement.intens
+
+FILESTREAM myfilestream2_fs = my_stream2 {"My Stream2", HIDDEN},
+//         ^^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
+//                          ^ keyword.operator.assignment.augmented.intens
+//                            ^^^^^^^^^^ punctuation.definition.variable.intens
+//                                                             ^ punctuation.separator.delimiter.intens
+           myfilestream3_fs = my_stream3 {"My Stream3", HIDDEN};
+//         ^^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
+//                          ^ keyword.operator.assignment.augmented.intens
+//                            ^^^^^^^^^^ punctuation.definition.variable.intens
+//                                                             ^ punctuation.terminator.statement.intens
 
 TASK mytask {"Optimize"} {
   one = 1;
@@ -439,6 +452,7 @@ FUNC myfunc {
 //                           ^ punctuation.section.block.begin.intens
     }
 //  ^ punctuation.section.block.end.intens
+
     MESSAGEBOX(COMPOSE("Finished %1!", "function"));
 //  ^^^^^^^^^^ support.function.builtin.intens
 //            ^ punctuation.section.group.begin.intens
@@ -446,6 +460,15 @@ FUNC myfunc {
 //                               ^^ constant.character.format.placeholder.other.intens
 //                                   ^ punctuation.separator.delimiter.intens
 //                                               ^ punctuation.section.group.end.intens
+    
+    foo.VAR("bar").four = 5;
+//      ^^^ support.function.builtin.intens
+//                      ^ keyword.operator.assignment.intens
+
+    SET(COLORBIT, foo.VAR("bar").three, 2);
+//                    ^^^ support.function.builtin.intens
+    SET(LOCK, foo.baz, TRUE);
+//                     ^^^^ constant.language.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
@@ -565,7 +588,7 @@ MENU PRINT {EXPLICIT} (SEPARATOR),
      "&Tools" (FUNC hello_func="Show Hello World Message",
 //             ^^^^ - storage.type.function.intens
 //                  ^^^^^^^^^^ variable.function.intens
-//                            ^ keyword.operator.assignment.augmented.intens
+//                            ^ keyword.operator.assignment
 //                                                       ^ punctuation.separator.delimiter.intens
                FORM fancy_form,
 //                            ^ punctuation.separator.delimiter.intens
