@@ -22,7 +22,7 @@ variables:
         )\b
   builtin_functions_with_args: |-
         (?x)\b(
-          REQUEST|SEND|SUBSCRIBE
+          DIRNAME|REQUEST|SEND|SUBSCRIBE
         )\b
   builtin_functions_without_args: |-
         (?x)\b(
@@ -276,7 +276,7 @@ contexts:
             - match: '\b({{name}})\b'
               scope: storage.type.enum.intens
               pop: true
-    - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b'
+    - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b(?!\s*=)'
       scope: support.function.builtin.intens
     - match: '\b(CELL|EDITABLE|EXPLICIT|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
       scope: storage.modifier.intens
@@ -742,20 +742,9 @@ contexts:
         - match: ';'
           scope: punctuation.terminator.statement.intens
           pop: true
-        - match: '(\()'
-          captures:
-            1: punctuation.section.arguments.begin.intens
-          push:
-            - meta_scope: meta.function-call.arguments.intens
-            - match: \)
-              scope: punctuation.section.arguments.end.intens
-              pop: true
-            - match: \,
-              scope: punctuation.separator.delimiter.intens
-            - include: func_parameter
-            - include: argument_assignment
-            - include: anonymous_group
-    - match: '\b({{builtin_functions_without_args}})\b'
+        - include: parameter_group
+        - include: parameter_block
+    - match: '\b({{builtin_functions_without_args}})\b(?!\s*=)'
       scope: support.function.builtin.intens
 
 

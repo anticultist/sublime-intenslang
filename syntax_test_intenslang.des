@@ -383,8 +383,8 @@ FUNC myfunc {
     folder = DIRNAME{DIRNAME=folder};
 //         ^ keyword.operator.assignment.intens
 //           ^^^^^^^ support.function.builtin.intens
-//                   ^^^^^^^ variable.parameter.intens
-//                          ^ keyword.operator.assignment.intens
+//                   ^^^^^^^ variable.parameter.intens - support.function.builtin.intens
+//                          ^ keyword.operator.assignment.augmented.intens
     DIRNAME(myfilestream_fs);
 //  ^^^^^^^ support.function.builtin.intens
 
@@ -542,7 +542,7 @@ FORM
     ( ),
   logwin_form { "Logging Window" }
     (LOG_WINDOW { SIZE=2000 } );
-//                ^^^^ - support.function.builtin.intens
+//                ^^^^ variable.parameter.intens - support.function.builtin.intens
 //                    ^ keyword.operator.assignment.augmented.intens
 
 IMAGE img1 {
