@@ -51,7 +51,8 @@ variables:
   builtin_functions_in_nested_context: |-
         (?x)\b(
           ABS|ACOS|ASIN|ATAN|ATAN2|
-          COMPOSE|COS|
+          COMPOSE|COMPOSE_STRING|COS|
+          DATASET_TEXT|
           HORIZONTAL|
           LABEL|LOG|LOG10|
           RANGE|ROUND|ROUND10|ROUND5|
@@ -299,6 +300,7 @@ contexts:
 
 
   parameter_group_body:
+    - include: anonymous_group
     - include: func_parameter
     - include: argument_assignment
     - match: \,

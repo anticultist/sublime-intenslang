@@ -328,18 +328,23 @@ MESSAGE_QUEUE
     REPLY,
     PORT_REQUEST=334,
     ( HEADER="myheader1",
+//  ^ punctuation.section.group.begin.intens
       FUNC=myfunc,
       RESPONSE(simple_stream, my_stream),
-//    ^^^^^^^^ support.function.builtin.intens
+//            ^ punctuation.section.group.begin.intens
+//                          ^ punctuation.separator.delimiter.intens
+//                                     ^ punctuation.section.group.end.intens
       REQUEST(datapool_stream)
-//    ^^^^^^^ support.function.builtin.intens
     ),
+//  ^ punctuation.section.group.end.intens
+//   ^ punctuation.separator.delimiter.intens
     ( HEADER="myheader2",
       FUNC=myfunc,
       RESPONSE(simple_stream, my_stream),
       REQUEST(datapool_stream)
     )
   };
+// ^ punctuation.terminator.statement.intens
 
 END OPERATOR;
 //          ^ punctuation.terminator.statement.intens
@@ -469,6 +474,8 @@ FUNC myfunc {
 //                    ^^^ support.function.builtin.intens
     SET(LOCK, foo.baz, TRUE);
 //                     ^^^^ constant.language.intens
+
+    PRINT("Important message: ", DATASET_TEXT(foo.foo), EOLN);
 }
 // <-  punctuation.section.block.end.intens
 ;
