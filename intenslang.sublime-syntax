@@ -14,7 +14,7 @@ scope: source.intens
 variables:
   base_type: \b(?:CDATA|COLOR|COMPLEX|INTEGER|REAL|STRING)\b
   identifier: '{{base_type}}'
-  name: \b[A-Za-z_][A-Za-z_0-9]*\b
+  name: '[A-Za-z_][A-Za-z_0-9]*'
   float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+-]?([0-9][0-9_]*))?\b)'
   illegal_names: |-
         (?x)\b(
@@ -197,6 +197,11 @@ contexts:
     - include: functions
 
 
+  end_of_statement:
+    - match: ;
+      scope: punctuation.terminator.statement.intens
+
+
   end_of_statement_pop:
     - match: ;
       scope: punctuation.terminator.statement.intens
@@ -226,6 +231,7 @@ contexts:
       scope: punctuation.section.group.begin.intens
       push: anonymous_group_body
     - include: simple_assignments
+    - include: parameter_block
 
 
   anonymous_group_body:
@@ -261,7 +267,7 @@ contexts:
 
   parameter_block_body:
     - meta_include_prototype: false
-    - match: '\b(INVALID)\b\s*(=)'
+    - match: '\b(INDEX|INVALID)\b\s*(=)'
       captures:
         1: variable.parameter.intens
         2: keyword.operator.assignment.augmented.intens
@@ -539,8 +545,7 @@ contexts:
         - include: end_of_statement_pop
     - include: anonymous_group
     - include: parameter_block
-    - match: ';'
-      scope: punctuation.terminator.statement.intens
+    - include: end_of_statement
 
 
 ###[ Operator Block ]##########################################################
@@ -568,8 +573,7 @@ contexts:
     - include: filestream
     - include: operator_structure
     - include: task
-    - match: ';'
-      scope: punctuation.terminator.statement.intens
+    - include: end_of_statement
 
 
   filestream:
@@ -730,8 +734,7 @@ contexts:
         1: keyword.control.intens
         2: punctuation.terminator.statement.intens
     - include: function_call
-    - match: ';'
-      scope: punctuation.terminator.statement.intens
+    - include: end_of_statement
 
 
   function_call:
@@ -739,9 +742,7 @@ contexts:
     - match: '\b({{builtin_functions_with_args}})\b'
       scope: support.function.builtin.intens
       push:
-        - match: ';'
-          scope: punctuation.terminator.statement.intens
-          pop: true
+        - include: end_of_statement_pop
         - include: parameter_group
         - include: parameter_block
     - match: '\b({{builtin_functions_without_args}})\b(?!\s*=)'
@@ -754,18 +755,22 @@ contexts:
       captures:
         1: support.function.builtin.intens
       push:
+        - include: end_of_statement_pop
         - match: '\b({{name}})\b'
           scope: variable.function.intens
           pop: true
         - match: \(
           scope: punctuation.section.group.begin.intens
           set:
-            - match: '\b({{name}})\b'
+            - match: '(?<!\.)\b({{name}})\b(?!\.)'
               scope: variable.function.intens
               set:
                 - match: \)
                   scope: punctuation.section.group.end.intens
                   pop: true
+            - match: \)
+              scope: punctuation.section.group.end.intens
+              pop: true
 
 
   while_loop:
@@ -835,8 +840,7 @@ contexts:
         - include: end_of_statement_pop
     - include: ui_struct
     - include: menu_definition
-    - match: ';'
-      scope: punctuation.terminator.statement.intens
+    - include: end_of_statement
 
 
   ui_struct:
@@ -884,8 +888,7 @@ contexts:
       scope: support.function.builtin.intens
     - include: square_bracket
     - include: parameter_block
-    - match: ';'
-      scope: punctuation.terminator.statement.intens
+    - include: end_of_statement
     - match: \,
       scope: punctuation.separator.delimiter.intens
 

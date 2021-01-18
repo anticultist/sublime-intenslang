@@ -369,6 +369,7 @@ FUNC myfunc {
 //                ^ punctuation.terminator.statement.intens
 
     RUN(foo.baz);
+//      ^^^^^^^ - variable.function.intens
 
     SEND(HOST="localhost",
 //       ^^^^ variable.parameter.intens
@@ -383,8 +384,10 @@ FUNC myfunc {
     folder = DIRNAME{DIRNAME=folder};
 //         ^ keyword.operator.assignment.intens
 //           ^^^^^^^ support.function.builtin.intens
+//                  ^ punctuation.section.block.begin.intens
 //                   ^^^^^^^ variable.parameter.intens - support.function.builtin.intens
 //                          ^ keyword.operator.assignment.augmented.intens
+//                                 ^ punctuation.section.block.end.intens
     DIRNAME(myfilestream_fs);
 //  ^^^^^^^ support.function.builtin.intens
 
@@ -476,6 +479,12 @@ FUNC myfunc {
 //                     ^^^^ constant.language.intens
 
     PRINT("Important message: ", DATASET_TEXT(foo.foo), EOLN);
+
+    MAP(foo.baz {INDEX=foo.one});
+//              ^ punctuation.section.block.begin.intens
+//               ^^^^^ variable.parameter.intens
+//                    ^ keyword.operator.assignment.augmented.intens
+//                            ^ punctuation.section.block.end.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
