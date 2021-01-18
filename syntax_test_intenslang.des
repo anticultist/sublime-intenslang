@@ -257,6 +257,8 @@ SOCKET my_socket {
       HEADER="MYHEADER",
 //                     ^ punctuation.separator.delimiter.intens
       REQUEST=my_stream,
+//    ^^^^^^^ variable.parameter.intens
+//           ^ keyword.operator.assignment.augmented.intens
       FUNC=myfunc,
 //    ^^^^ variable.parameter.intens
 //        ^ keyword.operator.assignment.augmented.intens
@@ -278,6 +280,7 @@ PROCESSGROUP
       (
         [(foo.bar[#]:-100, EOLN, foo.bar2)]
 //                ^ keyword.other.intens
+//                  ^ punctuation.separator.intens
 //                       ^ punctuation.separator.delimiter.intens
         = myprocess_pr
 //      ^ keyword.operator.assignment
@@ -476,6 +479,7 @@ FUNC myfunc {
     SET(COLORBIT, foo.VAR("bar").three, 2);
 //                    ^^^ support.function.builtin.intens
     SET(LOCK, foo.baz, TRUE);
+//      ^^^^ variable.language.intens
 //                     ^^^^ constant.language.intens
 
     PRINT("Important message: ", DATASET_TEXT(foo.foo), EOLN);
@@ -566,6 +570,11 @@ INDEX my_index;
 FOLDER
   my_folder { LEFT, VERTICAL, STRETCH } (
         ["":baz, FUNC = myfunc4 ] (mygroup_fg)
+//         ^ punctuation.separator.intens
+//             ^ punctuation.separator.delimiter.intens
+//               ^^^^ variable.parameter.intens
+//                    ^ keyword.operator.assignment.augmented.intens
+//                      ^^^^^^^ variable.function.intens
 //                                 ^^^^^^^^^^ - variable.function.intens
     );
 

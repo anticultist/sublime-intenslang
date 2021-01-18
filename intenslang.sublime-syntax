@@ -356,6 +356,8 @@ contexts:
           scope: variable.parameter.intens
         - match: '#([A-Z])?'
           scope: keyword.other.intens
+        - match: \,
+          scope: punctuation.separator.delimiter.intens
         - include: func_parameter
         - include: anonymous_group
         - include: function_call
