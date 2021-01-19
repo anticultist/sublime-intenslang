@@ -241,6 +241,10 @@ contexts:
       scope: support.function.builtin.intens
     - match: \,
       scope: punctuation.separator.delimiter.intens
+    - match: \.
+      scope: punctuation.accessor.dot.intens
+    - match: ':'
+      scope: punctuation.separator.slice.intens
     - include: square_bracket
     - match: \)
       scope: punctuation.section.group.end.intens
@@ -290,6 +294,8 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: parameter_block_body
+    - match: \.
+      scope: punctuation.accessor.dot.intens
     - match: '}'
       scope: punctuation.section.block.end.intens
       pop: true
@@ -312,6 +318,8 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: parameter_group_body
+    - match: \.
+      scope: punctuation.accessor.dot.intens
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -358,6 +366,8 @@ contexts:
           scope: keyword.other.intens
         - match: \,
           scope: punctuation.separator.delimiter.intens
+        - match: ':'
+          scope: punctuation.separator.slice.intens
         - include: func_parameter
         - include: anonymous_group
         - include: function_call
@@ -770,6 +780,8 @@ contexts:
                 - match: \)
                   scope: punctuation.section.group.end.intens
                   pop: true
+            - match: \.
+              scope: punctuation.accessor.dot.intens
             - match: \)
               scope: punctuation.section.group.end.intens
               pop: true
@@ -893,6 +905,10 @@ contexts:
     - include: end_of_statement
     - match: \,
       scope: punctuation.separator.delimiter.intens
+    - match: ':'
+      scope: punctuation.separator.slice.intens
+    - match: \.
+      scope: punctuation.accessor.dot.intens
 
 
   menu_definition:
