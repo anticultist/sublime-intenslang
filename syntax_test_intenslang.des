@@ -9,6 +9,7 @@ DESCRIPTION "Test Syntax";
 
 INCLUDE external_file.inc
 // <- keyword.control.import.intens
+//                   ^ - punctuation.accessor.dot.intens
 
 USERGROUPS
 // <- storage.type.other.intens
@@ -272,7 +273,9 @@ SOCKET my_socket {
   };
 
 PROCESS myprocess_pr : BATCH { "myprocess.pl" };
+// <- storage.type.other.intens
 //                   ^ punctuation.separator.intens
+//                     ^^^^^ storage.type.other.intens
 //                                             ^ punctuation.terminator.statement.intens
 
 PROCESSGROUP
@@ -498,6 +501,8 @@ FUNC myfunc {
 //               ^^^^^ variable.parameter.intens
 //                    ^ keyword.operator.assignment.augmented.intens
 //                            ^ punctuation.section.block.end.intens
+    ENABLE(baz[INDEX]);
+//             ^^^^^ constant.language.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
@@ -576,6 +581,8 @@ IMAGE img1 {
         SETTINGS=foo.bar};
 
 INDEX my_index;
+// <- storage.type.other.intens
+//    ^^^^^^^^ punctuation.definition.variable.intens
 //            ^ punctuation.terminator.statement.intens
 
 FOLDER

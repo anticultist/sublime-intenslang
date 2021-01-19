@@ -78,7 +78,7 @@ contexts:
       scope: punctuation.definition.string.begin.intens
       push:
         - meta_scope: string.quoted.double.intens
-        - match: '(<(/)?b>|<br(/)?>|<(/)?h[1-6]>|<(/)?html>|<(/)?i>|</table>|<(/)?td>|<(/)?th>|<(/)?tr>|<(/)?u>)'
+        - match: '(<(/)?\s*b>|<br\s*(/)?>|<(/)?\s*h[1-6]>|<(/)?\s*html>|<(/)?\s*i>|</\s*table>|<(/)?\s*td>|<(/)?\s*th>|<(/)?\s*tr>|<(/)?\s*u>)'
           scope: keyword.other.DML.html
         - match: '(<table).*(>)'
           captures:
@@ -294,8 +294,6 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: parameter_block_body
-    - match: \.
-      scope: punctuation.accessor.dot.intens
     - match: '}'
       scope: punctuation.section.block.end.intens
       pop: true
@@ -318,8 +316,6 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: parameter_group_body
-    - match: \.
-      scope: punctuation.accessor.dot.intens
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -354,6 +350,8 @@ contexts:
       scope: support.function.builtin.intens
     - match: '\b([A-Z][A-Z0-9_]*)\b'
       scope: variable.parameter.intens
+    - match: \.
+      scope: punctuation.accessor.dot.intens
 
 
   square_bracket:
@@ -377,9 +375,13 @@ contexts:
 
 
   include_statement:
+    - match: '^\s*(INCLUDE)\b\s+([A-Za-z\_\.0-9]+)'
+      captures:
+        1: keyword.control.import.intens
+        2: meta.generic-name.intens
     - match: '^\s*(INCLUDE)\b'
       captures:
-        1: "keyword.control.import.intens"
+        1: keyword.control.import.intens
 
 
 ###[ Datapool Block ]##########################################################
@@ -579,7 +581,7 @@ contexts:
         - include: end_of_statement_pop
     - match: |-
         (?x)\b(
-          BATCH|LATEXREPORT|MATHEMATICA|MENU|PROCESS|PYTHON|REPORTSTREAM
+          LATEXREPORT|MATHEMATICA|MENU|PYTHON|REPORTSTREAM
         )\b
       scope: storage.type.other.intens
     - include: filestream
@@ -649,7 +651,7 @@ contexts:
 
 
   operator_structure:
-    - match: \b(MESSAGE_QUEUE|PROCESSGROUP|SOCKET|TIMER)\b
+    - match: \b(MESSAGE_QUEUE|PROCESS|PROCESSGROUP|SOCKET|TIMER)\b
       captures:
         1: storage.type.other.intens
       push:
@@ -671,6 +673,18 @@ contexts:
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: operator_structure_after_keyword
+    - match: ':'
+      scope: punctuation.separator.intens
+      push:
+        - include: end_of_statement_pop
+        - match: '{{illegal_names}}'
+          scope: invalid.illegal.name.intens
+          pop: true
+        - match: '\b({{name}})\b'
+          scope: storage.type.other.intens
+          pop: true
+        - match: (?=[\",(){}\[\]])
+          pop: true
     - include: parameter_block
     - include: anonymous_group
 
@@ -747,6 +761,8 @@ contexts:
         2: punctuation.terminator.statement.intens
     - include: function_call
     - include: end_of_statement
+    - match: \.
+      scope: punctuation.accessor.dot.intens
 
 
   function_call:
@@ -846,13 +862,15 @@ contexts:
 
   ui_manager_block_body:
     - meta_scope: meta.other.block.ui_manager.intens
+    - meta_include_prototype: false
+    - include: ui_struct
+    - include: prototype
     - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
       captures:
         1: keyword.other.intens
         2: keyword.other.block.ui_manager.end.intens
       set:
         - include: end_of_statement_pop
-    - include: ui_struct
     - include: menu_definition
     - include: end_of_statement
 
@@ -860,7 +878,7 @@ contexts:
   ui_struct:
     - match: |-
         (?x)\b(
-          FIELDGROUP|FOLDER|FORM|IMAGE|LINEPLOT|NAVIGATOR|PLOT2D|PSPLOT|TABLE|THERMO|UNIPLOT|XRT3DPLOT
+          FIELDGROUP|FOLDER|FORM|IMAGE|INDEX|LINEPLOT|NAVIGATOR|PLOT2D|PSPLOT|TABLE|THERMO|UNIPLOT|XRT3DPLOT
         )\b
       scope: storage.type.other.intens
       push:
