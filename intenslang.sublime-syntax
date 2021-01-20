@@ -177,8 +177,7 @@ contexts:
       scope: keyword.control.intens
     - match: '\b(USERGROUPS)\b'
       scope: storage.type.other.intens
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
+    - include: comma
 
 
 ###[ General ]#################################################################
@@ -206,6 +205,11 @@ contexts:
     - match: ;
       scope: punctuation.terminator.statement.intens
       pop: true
+
+
+  comma:
+    - match: \,
+      scope: punctuation.separator.delimiter.intens
 
 
   end_of_block_pop:
@@ -239,8 +243,7 @@ contexts:
     - include: anonymous_group
     - match: '{{builtin_functions_in_nested_context}}'
       scope: support.function.builtin.intens
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
+    - include: comma
     - match: \.
       scope: punctuation.accessor.dot.intens
     - match: ':'
@@ -362,10 +365,9 @@ contexts:
           scope: variable.parameter.intens
         - match: '#([A-Z])?'
           scope: keyword.other.intens
-        - match: \,
-          scope: punctuation.separator.delimiter.intens
         - match: ':'
           scope: punctuation.separator.slice.intens
+        - include: comma
         - include: func_parameter
         - include: anonymous_group
         - include: function_call
@@ -507,7 +509,9 @@ contexts:
     - match: '\b({{name}})\b'
       scope: punctuation.definition.variable.intens
       set: variables_definition_after_name
-    - include: end_of_statement_pop  # here its an ill-formed definition
+    - include: end_of_statement_pop  # here its an ill-formed/unfinished definition
+    - match: (?=[}])  # here its an ill-formed/unfinished definition
+      pop: true
 
 
   variables_definition_after_name:
@@ -519,6 +523,8 @@ contexts:
       scope: punctuation.section.group.begin.intens
       push: variable_conditional_states_body
     - include: parameter_block
+    - match: (?=[}])  # here its an ill-formed/unfinished definition
+      pop: true
 
 
   variable_conditional_states_body:
@@ -921,8 +927,7 @@ contexts:
     - include: square_bracket
     - include: parameter_block
     - include: end_of_statement
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
+    - include: comma
     - match: ':'
       scope: punctuation.separator.slice.intens
     - match: \.
@@ -950,8 +955,7 @@ contexts:
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
+    - include: comma
     - match: '='
       scope: keyword.operator.assignment.augmented.intens
     - match: '\b(FORM|SEPARATOR|TRANSACTION)\b'
