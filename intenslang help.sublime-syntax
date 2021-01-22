@@ -1,0 +1,31 @@
+%YAML 1.2
+---
+
+name: INTENS Help
+# first_line_match: ^#[A-Za-z0-9]+
+scope: text.intenshelp
+
+# This syntax definition file tries to work around some limitations
+# therefore it uses partially the markdown and latex name space.
+
+contexts:
+  main:
+    - match: ^\#
+      push:
+        - meta_scope: markup.heading.latex.intenshelp
+        - match: $
+          pop: true
+    - match: '^\.'
+      scope: markup.heading.1.markdown.intenshelp punctuation.definition.heading.begin.markdown.intenshelp
+      push:
+        - meta_scope: meta.section.latex.intenshelp
+        - meta_content_scope: entity.name.section.latex.intenshelp markup.bold.intenshelp
+        - match: $
+          pop: true
+    - match: '^:'
+      scope: markup.heading.1.markdown.intenshelp punctuation.definition.heading.begin.markdown.intenshelp
+      push:
+        - meta_scope: meta.section.latex.intenshelp
+        - meta_content_scope: entity.name.section.latex.intenshelp markup.bold.intenshelp
+        - match: $
+          pop: true

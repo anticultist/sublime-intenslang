@@ -522,6 +522,7 @@ contexts:
     - match: '\('
       scope: punctuation.section.group.begin.intens
       push: variable_conditional_states_body
+    - include: square_bracket
     - include: parameter_block
     - match: (?=[}])  # here its an ill-formed/unfinished definition
       pop: true
@@ -1019,3 +1020,5 @@ contexts:
         2: keyword.other.block.language.end.intens
       set:
         - include: end_of_statement_pop
+    - include: simple_assignments
+    - include: end_of_statement

@@ -11,6 +11,10 @@ INCLUDE external_file.inc
 // <- keyword.control.import.intens
 //                   ^ - punctuation.accessor.dot.intens
 
+HELPFILE "myhelpfile.hlp",
+  OPEN_FILE "my_help.html" HELPKEY("mykey"),
+  OPEN_URL "https://www.semafor.ch/en/products/intens/";
+
 USERGROUPS
 // <- storage.type.other.intens
   some_user (
@@ -38,6 +42,10 @@ COLOR mycolor1 ();
 //              ^ punctuation.section.group.end.intens
 //               ^ punctuation.terminator.statement.intens
 
+REAL two_dimensional[5,2];
+//                  ^ punctuation.section.brackets.begin.intens
+//                    ^ punctuation.separator.delimiter.intens
+//                      ^ punctuation.section.brackets.end.intens
 
 COLOR mycolor2 (
 //  <- storage.type.intens
@@ -534,6 +542,12 @@ FUNC{DEADLY_SILENT, UPDATE_FORMS=NONE, PRIORITY=HIGH}
     myfunc4 {};
 //  ^^^^^^^ entity.name.function.intens
 
+FUNC function_test {
+  STRING mystring;
+
+  mystring = COMPOSE_STRING("Just a %1", "test.") & LABEL(foo) & UNIT(foo.foo);
+};
+
 END FUNCTIONS;
 //           ^ punctuation.terminator.statement.intens
 
@@ -643,6 +657,13 @@ END UI_MANAGER;
 //            ^ punctuation.terminator.statement.intens
 
 LANGUAGE
+USER_PATH = "";
+//        ^ keyword.operator.assignment.intens
+//            ^ punctuation.terminator.statement.intens
+INTENS_PATH = "";
+DESCRIPTION_FILE = "";
+DOMAIN = "";
+DEFAULT_LANG = "";
 END LANGUAGE;
 
 END.
