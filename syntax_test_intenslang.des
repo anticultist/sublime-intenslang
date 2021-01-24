@@ -164,6 +164,10 @@ STRUCT MYSTRUCT2 {
     STRING baz;
 };
 
+STRUCT MULTI_INHERITANCE : MYSTRUCT, MYSTRUCT2 {};
+//                                 ^ punctuation.separator.delimiter.intens
+//                                   ^^^^^^^^^ entity.other.inherited-class.intens
+
 MYSTRUCT2 { OMIT_TTRAIL } foo;
 
 STRUCT REAL {};
@@ -220,8 +224,11 @@ my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
 datapool_stream {XML} (DATAPOOL);
 
 my_stream2 {PROCESS="thefile.txt"} (
-  foo, foo.baz:-10
+  foo, foo.baz:-10:2:TSEP
 //            ^ punctuation.separator.slice.intens
+//                ^ punctuation.separator.slice.intens
+//                  ^ punctuation.separator.slice.intens
+//                   ^^^^ constant.language.intens
 );
 
 my_stream3 (!foo[#A].bar.one);
@@ -642,16 +649,27 @@ THERMO my_thermo {
 MENU PRINT {EXPLICIT} (SEPARATOR),
 // <- storage.type.other.intens
 //          ^^^^^^^^ storage.modifier.intens
+//                    ^ punctuation.section.group.begin.intens
 //                     ^^^^^^^^^ variable.parameter.intens
+//                              ^ punctuation.section.group.end.intens
+//                               ^ punctuation.separator.delimiter.intens
      "&Tools" (FUNC hello_func="Show Hello World Message",
 //             ^^^^ - storage.type.function.intens
 //                  ^^^^^^^^^^ variable.function.intens
 //                            ^ keyword.operator.assignment
 //                                                       ^ punctuation.separator.delimiter.intens
+               MENU "submenu" (FUNC myfunc4="Test"),
+//             ^^^^ variable.parameter.intens
+//                            ^ punctuation.section.group.begin.intens
+//                                                ^ punctuation.section.group.end.intens
+//                                                 ^ punctuation.separator.delimiter.intens
                FORM fancy_form,
+//             ^^^^ variable.parameter.intens
 //                            ^ punctuation.separator.delimiter.intens
                FUNC bye_func="Quit");
 //             ^^^^ variable.parameter.intens - invalid.illegal.name.intens
+//                                 ^ punctuation.section.group.end.intens
+//                                  ^ punctuation.terminator.statement.intens
 
 END UI_MANAGER;
 //            ^ punctuation.terminator.statement.intens

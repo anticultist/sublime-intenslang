@@ -280,7 +280,7 @@ contexts:
         2: keyword.operator.assignment.augmented.intens
     - include: prototype
     - include: func_parameter
-    - match: '\b(SET)\b'
+    - match: '\b(INDEXED_SET|SET)\b'
       scope: variable.parameter.intens
       push:
         - match: '='
@@ -363,7 +363,7 @@ contexts:
       push:
         - match: '\b(FRAME|JUSTIFY|SB)\b'
           scope: variable.parameter.intens
-        - match: '#([A-Z])?'
+        - match: '#([A-Za-z0-9])*'
           scope: keyword.other.intens
         - match: ':'
           scope: punctuation.separator.slice.intens
@@ -435,6 +435,7 @@ contexts:
     - match: '{'
       scope: punctuation.section.block.begin.intens
       set: [end_of_statement_pop, structure_body]
+    - include: end_of_statement_pop
 
 
   structure_body:
@@ -452,9 +453,10 @@ contexts:
       push:
         - match: '{{illegal_names}}'
           scope: invalid.illegal.name.intens
-          pop: true
         - match: '\b{{name}}\b'
           scope: entity.other.inherited-class.intens
+        - include: comma
+        - match: '(?={)'
           pop: true
 
 
@@ -946,8 +948,9 @@ contexts:
   menu_definition_after_keyword:
     - match: \(
       scope: punctuation.section.group.begin.intens
-      set: [menu_definition_after_keyword, menu_parameter_body]
+      push: menu_parameter_body
     - include: parameter_block
+    - include: comma
     - include: end_of_statement_pop
 
 
@@ -959,7 +962,7 @@ contexts:
     - include: comma
     - match: '='
       scope: keyword.operator.assignment.augmented.intens
-    - match: '\b(FORM|SEPARATOR|TRANSACTION)\b'
+    - match: '\b(FORM|MENU|PROCESS|SEPARATOR|TRANSACTION)\b'
       scope: variable.parameter.intens
     - match: '\b(FUNC)\b'
       scope: variable.parameter.intens
@@ -967,6 +970,9 @@ contexts:
         - match: '\b({{name}})\b'
           scope: variable.function.intens
           pop: true
+    - match: \(
+      scope: punctuation.section.group.begin.intens
+      push: menu_parameter_body
 
 
 ###[ DB Manager Block ]########################################################
