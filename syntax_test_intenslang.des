@@ -27,6 +27,16 @@ USERGROUPS
   );
 // ^ punctuation.terminator.statement.intens
 
+LANGUAGE
+USER_PATH = "";
+//        ^ keyword.operator.assignment.intens
+//            ^ punctuation.terminator.statement.intens
+INTENS_PATH = "";
+DESCRIPTION_FILE = "";
+DOMAIN = "";
+DEFAULT_LANG = "";
+END LANGUAGE;
+
 DATAPOOL
 INTEGER one, two;
 //  <- storage.type.intens
@@ -213,6 +223,7 @@ END FUNCTIONS;
 STREAMER
 
 simple_stream (!foo, foo);
+// <- punctuation.definition.variable.intens
 //             ^ keyword.operator.logical.intens
 //                       ^ punctuation.terminator.statement.intens
 
@@ -289,6 +300,7 @@ SOCKET my_socket {
 
 PROCESS myprocess_pr : BATCH { "myprocess.pl" };
 // <- storage.type.other.intens
+//      ^^^^^^^^^^^^ punctuation.definition.variable.intens
 //                   ^ punctuation.separator.intens
 //                     ^^^^^ storage.type.other.intens
 //                                             ^ punctuation.terminator.statement.intens
@@ -320,7 +332,7 @@ FILESTREAM myfilestream_fs = my_stream {"My Stream",
 // <- storage.type.other.intens
 //         ^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
 //                         ^ keyword.operator.assignment.augmented.intens
-//                           ^^^^^^^^^ punctuation.definition.variable.intens
+//                           ^^^^^^^^^ variable.other.intens
 //                                     ^ punctuation.section.block.begin.intens
                                         FILTER="CSV (*.csv)",
 //                                                          ^ punctuation.separator.delimiter.intens
@@ -331,12 +343,12 @@ FILESTREAM myfilestream_fs = my_stream {"My Stream",
 FILESTREAM myfilestream2_fs = my_stream2 {"My Stream2", HIDDEN},
 //         ^^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
 //                          ^ keyword.operator.assignment.augmented.intens
-//                            ^^^^^^^^^^ punctuation.definition.variable.intens
+//                            ^^^^^^^^^^ variable.other.intens
 //                                                             ^ punctuation.separator.delimiter.intens
            myfilestream3_fs = my_stream3 {"My Stream3", HIDDEN};
 //         ^^^^^^^^^^^^^^^^ punctuation.definition.variable.intens
 //                          ^ keyword.operator.assignment.augmented.intens
-//                            ^^^^^^^^^^ punctuation.definition.variable.intens
+//                            ^^^^^^^^^^ variable.other.intens
 //                                                             ^ punctuation.terminator.statement.intens
 
 TASK mytask {"Optimize"} {
@@ -674,15 +686,9 @@ MENU PRINT {EXPLICIT} (SEPARATOR),
 END UI_MANAGER;
 //            ^ punctuation.terminator.statement.intens
 
-LANGUAGE
-USER_PATH = "";
-//        ^ keyword.operator.assignment.intens
-//            ^ punctuation.terminator.statement.intens
-INTENS_PATH = "";
-DESCRIPTION_FILE = "";
-DOMAIN = "";
-DEFAULT_LANG = "";
-END LANGUAGE;
+
+DB_MANAGER {POSTGRES}
+END DB_MANAGER;
 
 END.
 // <- keyword.other.intens

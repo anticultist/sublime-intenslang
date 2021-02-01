@@ -566,10 +566,15 @@ contexts:
         2: keyword.other.block.streamer.end.intens
       set:
         - include: end_of_statement_pop
+    - include: stream_definition
     - include: anonymous_group
     - include: parameter_block
     - include: end_of_statement
 
+
+  stream_definition:
+    - match: '\b([A-Za-z_][A-Za-z_0-9]*)\b'
+      scope: punctuation.definition.variable.intens
 
 ###[ Operator Block ]##########################################################
 
@@ -593,40 +598,9 @@ contexts:
           LATEXREPORT|MATHEMATICA|MENU|PYTHON|REPORTSTREAM
         )\b
       scope: storage.type.other.intens
-    - include: filestream
-    - include: operator_structure
+    - include: operator_definition
     - include: task
     - include: end_of_statement
-
-
-  filestream:
-    - match: \b(FILESTREAM)\b
-      captures:
-        1: storage.type.other.intens
-      push:
-        - include: end_of_statement_pop
-        - include: filestream_after_keyword
-
-
-  filestream_after_keyword:
-    - include: end_of_statement_pop
-    - match: '{{illegal_names}}'
-      scope: invalid.illegal.name.intens
-      set: filestream_after_name
-    - match: '\b({{name}})\b'
-      scope: punctuation.definition.variable.intens
-      set: filestream_after_name
-
-
-  filestream_after_name:
-    - include: end_of_statement_pop
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
-      set: filestream_after_keyword
-    - match: =
-      scope: keyword.operator.assignment.augmented.intens
-      set: filestream_after_keyword
-    - include: parameter_block
 
 
   task:
@@ -659,29 +633,29 @@ contexts:
         - include: end_of_block_pop
 
 
-  operator_structure:
-    - match: \b(MESSAGE_QUEUE|PROCESS|PROCESSGROUP|SOCKET|TIMER)\b
+  operator_definition:
+    - match: \b(FILESTREAM|MESSAGE_QUEUE|PROCESS|PROCESSGROUP|SOCKET|TIMER)\b
       captures:
         1: storage.type.other.intens
       push:
         - include: end_of_statement_pop
-        - include: operator_structure_after_keyword
+        - include: operator_definition_after_keyword
 
 
-  operator_structure_after_keyword:
+  operator_definition_after_keyword:
     - match: '{{illegal_names}}'
       scope: invalid.illegal.name.intens
-      set: operator_structure_after_name
+      set: operator_definition_after_name
     - match: '\b({{name}})\b'
       scope: punctuation.definition.variable.intens
-      set: operator_structure_after_name
+      set: operator_definition_after_name
 
 
-  operator_structure_after_name:
+  operator_definition_after_name:
     - include: end_of_statement_pop
     - match: \,
       scope: punctuation.separator.delimiter.intens
-      set: operator_structure_after_keyword
+      set: operator_definition_after_keyword
     - match: ':'
       scope: punctuation.separator.intens
       push:
@@ -694,8 +668,18 @@ contexts:
           pop: true
         - match: (?=[\",(){}\[\]])
           pop: true
+    - match: =
+      scope: keyword.operator.assignment.augmented.intens
+      push: operator_definition_after_assignment
     - include: parameter_block
     - include: anonymous_group
+
+
+  operator_definition_after_assignment:
+    - match: '\b([A-Za-z_][A-Za-z_0-9]*)\b'
+      scope: variable.other.intens
+    - match: '(?=[\",(){}\[\];])'
+      pop: true
 
 
 ###[ Functions Block ]#########################################################
