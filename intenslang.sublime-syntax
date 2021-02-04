@@ -544,6 +544,8 @@ contexts:
     - match: ','
       scope: punctuation.separator.delimiter.intens
       set: variable_conditional_states_body
+    - match: \.
+      scope: punctuation.accessor.dot.intens
     - match: '\)'
       scope: punctuation.section.group.end.intens
       pop: true

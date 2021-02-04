@@ -69,6 +69,8 @@ COLOR mycolor2 (
         < 0 = ("#fff", "#f00"),
 //              ^^^^ constant.other.color.rgb-value.hex.intens
 //                            ^ punctuation.separator.delimiter.intens
+        < foo.foo = ("#fff", "#000"),
+//           ^ punctuation.accessor.dot.intens
         RANGE(0, <2.1) = ("#ffffff", "#00ff00"),
 //      ^^^^^ support.function.builtin.intens
 //            ^ constant.numeric.intens
@@ -178,7 +180,8 @@ STRUCT MULTI_INHERITANCE : MYSTRUCT, MYSTRUCT2 {};
 //                                 ^ punctuation.separator.delimiter.intens
 //                                   ^^^^^^^^^ entity.other.inherited-class.intens
 
-MYSTRUCT2 { OMIT_TTRAIL } foo;
+MYSTRUCT2 { OMIT_TTRAIL } foo, foo2;
+//                           ^ punctuation.separator.delimiter.intens
 
 STRUCT REAL {};
 // <- storage.type.struct.intens
@@ -233,6 +236,7 @@ my_stream { XML {SCHEMA="myschema.xsd", VERSION="1.0"} }
   (foo, bar, EOLN);
 
 datapool_stream {XML} (DATAPOOL);
+//                     ^^^^^^^^ variable.parameter.intens
 
 my_stream2 {PROCESS="thefile.txt"} (
   foo, foo.baz:-10:2:TSEP
@@ -321,8 +325,10 @@ PROCESSGROUP
 //      ^ keyword.operator.assignment
           (foo.bar, EOLN, foo.bar2);
       ),
-     myprocessgroup2_pg {"My name2", FORM=NONE, HIDDEN} ();
+     myprocessgroup2_pg {"My name2", FORM=NONE, HIDDEN}
 //                                              ^^^^^^ variable.parameter.intens
+      ([foo.bar] = myprocess_pr());
+//         ^ punctuation.accessor.dot.intens
 
 TIMER my_timer {FUNC=myfunc};
 // <- storage.type.other.intens
@@ -420,6 +426,9 @@ FUNC myfunc {
          STREAM=my_stream);
 //       ^^^^^^ variable.parameter.intens
 
+    SEND(HOST=foo.bar, PORT=333, STREAM=my_stream);
+//               ^ punctuation.accessor.dot.intens
+
     folder = DIRNAME{DIRNAME=folder};
 //         ^ keyword.operator.assignment.intens
 //           ^^^^^^^ support.function.builtin.intens
@@ -446,10 +455,11 @@ FUNC myfunc {
 //           ^^^^^^^ variable.function.intens
 //                   ^ punctuation.section.group.end.intens
 //                    ^ punctuation.terminator.statement.intens
-        IF (foo != 3 && (VALID(foo))) {
-//              ^^ keyword.operator.comparison.intens
-//                   ^^ keyword.operator.arithmetic.intens
-//                       ^^^^^ support.function.builtin.intens
+        IF (foo.bar != 3 && (VALID(foo))) {
+//             ^ punctuation.accessor.dot.intens
+//                  ^^ keyword.operator.comparison.intens
+//                       ^^ keyword.operator.arithmetic.intens
+//                           ^^^^^ support.function.builtin.intens
             INPUT = OLDVALUE;
 //          ^^^^^ variable.language.intens
             THIS.buzz = 2;
@@ -528,8 +538,14 @@ FUNC myfunc {
 //               ^^^^^ variable.parameter.intens
 //                    ^ keyword.operator.assignment.augmented.intens
 //                            ^ punctuation.section.block.end.intens
+
+    baz[INDEX] = "foo";
+//     ^ punctuation.section.brackets.begin.intens
+//           ^ punctuation.section.brackets.end.intens
     ENABLE(baz[INDEX]);
+//            ^ punctuation.section.brackets.begin.intens
 //             ^^^^^ constant.language.intens
+//                  ^ punctuation.section.brackets.end.intens
 }
 // <-  punctuation.section.block.end.intens
 ;
@@ -589,6 +605,26 @@ FIELDGROUP
 //   ^^^^^^ keyword.other.fontname.intens
 //               ^^^^^^ keyword.other.fontname.intens
 //                           ^^^^^^^ keyword.other.fontname.intens
+  ),
+  mygroup2_fg {TABLE ORIENTATION=VERTICAL} (
+//             ^^^^^ variable.parameter.intens
+//                   ^^^^^^^^^^^ variable.parameter.intens
+  )
+;
+
+PLOT2D my_plot {"My Plot"} (
+    plot { XAXIS { LABEL="X-Axis" },
+//       ^ punctuation.section.block.begin.intens
+//         ^^^^^ variable.parameter.intens
+//               ^ punctuation.section.block.begin.intens
+//                                ^ punctuation.section.block.end.intens
+           YAXIS1 { LABEL="Y-Axis", FORMAT="10" }
+//                ^ punctuation.section.block.begin.intens
+//                                              ^ punctuation.section.block.end.intens
+//         ^^^^^^ variable.parameter.intens
+           } (
+//         ^ punctuation.section.block.end.intens
+    )
   )
 ;
 
@@ -612,6 +648,7 @@ IMAGE img1 {
 //      ^^^^ support.function.builtin.intens
         SOCKET=my_socket,
         SETTINGS=foo.bar};
+//                  ^ punctuation.accessor.dot.intens
 
 INDEX my_index;
 // <- storage.type.other.intens
@@ -620,13 +657,14 @@ INDEX my_index;
 
 FOLDER
   my_folder { LEFT, VERTICAL, STRETCH } (
-        ["":baz, FUNC = myfunc4 ] (mygroup_fg)
+        ["":baz, FUNC = myfunc4, FRAME] (mygroup_fg)
 //         ^ punctuation.separator.slice.intens
 //             ^ punctuation.separator.delimiter.intens
 //               ^^^^ variable.parameter.intens
 //                    ^ keyword.operator.assignment.augmented.intens
 //                      ^^^^^^^ variable.function.intens
-//                                 ^^^^^^^^^^ - variable.function.intens
+//                               ^^^^^ variable.parameter.intens
+//                                       ^^^^^^^^^^ - variable.function.intens
     );
 
 FOLDER WHILE {} ();
