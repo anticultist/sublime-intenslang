@@ -581,6 +581,13 @@ FUNC function_test {
   STRING mystring;
 
   mystring = COMPOSE_STRING("Just a %1", "test.") & LABEL(foo) & UNIT(foo.foo);
+  mystring = COMPOSE_STRING("It is %1!", foo=="text");
+//                                       ^^^ - variable.parameter.intens
+
+  START(my_timer, PERIOD=1, DELAY=5);
+//                ^^^^^^ variable.parameter.intens
+//                          ^^^^^ variable.parameter.intens
+  STOP(my_timer);
 };
 
 END FUNCTIONS;

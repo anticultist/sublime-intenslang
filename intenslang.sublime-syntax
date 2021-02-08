@@ -58,6 +58,7 @@ variables:
           RANGE|ROUND|ROUND10|ROUND5|
           SIN|
           TAN|THUMBNAIL|
+          UNIT|
           VALID|VAR|VERTICAL
         )\b
   builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
@@ -314,11 +315,14 @@ contexts:
 
   parameter_group_body:
     - include: anonymous_group
+    - include: square_bracket
     - include: func_parameter
     - include: argument_assignment
     - match: \,
       scope: punctuation.separator.delimiter.intens
       set: parameter_group_body
+    - match: ':'
+      scope: punctuation.separator.slice.intens
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
@@ -367,6 +371,8 @@ contexts:
           scope: keyword.other.intens
         - match: ':'
           scope: punctuation.separator.slice.intens
+        - match: \.
+          scope: punctuation.accessor.dot.intens
         - include: comma
         - include: func_parameter
         - include: anonymous_group
@@ -569,7 +575,7 @@ contexts:
       set:
         - include: end_of_statement_pop
     - include: stream_definition
-    - include: anonymous_group
+    - include: parameter_group
     - include: parameter_block
     - include: end_of_statement
 
@@ -749,6 +755,7 @@ contexts:
     - include: assignments
     - include: anonymous_block
     - include: anonymous_group
+    - include: square_bracket
     - include: control_keywords
     - match: '\b(ABORT|EXIT|RETURN)\b\s*(;)'
       captures:
@@ -835,6 +842,8 @@ contexts:
     - meta_scope: meta.group.intens
     - include: anonymous_group
     - include: function_call
+    - match: \.
+      scope: punctuation.accessor.dot.intens
     - match: \)
       scope: punctuation.section.group.end.intens
       pop: true
