@@ -222,37 +222,31 @@ contexts:
   anonymous_block:
     - match: '{'
       scope: punctuation.section.block.begin.intens
-      push: anonymous_block_body
-
-
-  anonymous_block_body:
-    - meta_scope: meta.block.intens
-    - include: function_statements
-    - include: end_of_block_pop
+      push:
+        - meta_scope: meta.block.intens
+        - include: function_statements
+        - include: end_of_block_pop
 
 
   anonymous_group:
     - match: \(
       scope: punctuation.section.group.begin.intens
-      push: anonymous_group_body
-    - include: simple_assignments
-    - include: parameter_block
-
-
-  anonymous_group_body:
-    - meta_scope: meta.group.intens
-    - include: anonymous_group
-    - match: '{{builtin_functions_in_nested_context}}'
-      scope: support.function.builtin.intens
-    - include: comma
-    - match: \.
-      scope: punctuation.accessor.dot.intens
-    - match: ':'
-      scope: punctuation.separator.slice.intens
-    - include: square_bracket
-    - match: \)
-      scope: punctuation.section.group.end.intens
-      pop: true
+      push:
+        - meta_scope: meta.group.intens
+        - include: anonymous_group
+        - match: '{{builtin_functions_in_nested_context}}'
+          scope: support.function.builtin.intens
+        - include: comma
+        - match: \.
+          scope: punctuation.accessor.dot.intens
+        - match: ':'
+          scope: punctuation.separator.slice.intens
+        - include: square_bracket
+        - match: \)
+          scope: punctuation.section.group.end.intens
+          pop: true
+        - include: simple_assignments
+        - include: parameter_block
 
 
   func_parameter:
@@ -270,62 +264,52 @@ contexts:
   parameter_block:
     - match: '{'
       scope: punctuation.section.block.begin.intens
-      push: parameter_block_body
-
-
-  parameter_block_body:
-    - meta_include_prototype: false
-    - match: '\b(INDEX|INVALID)\b\s*(=)'
-      captures:
-        1: variable.parameter.intens
-        2: keyword.operator.assignment.augmented.intens
-    - include: prototype
-    - include: func_parameter
-    - match: '\b(INDEXED_SET|SET)\b'
-      scope: variable.parameter.intens
       push:
-        - match: '='
-          scope: keyword.operator.assignment.augmented.intens
-          set:
-            - match: '\b({{name}})\b'
-              scope: storage.type.enum.intens
-              pop: true
-    - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b(?!\s*=)'
-      scope: support.function.builtin.intens
-    - match: '\b(CELL|EDITABLE|EXPLICIT|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
-      scope: storage.modifier.intens
-    - include: argument_assignment
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
-      set: parameter_block_body
-    - match: '}'
-      scope: punctuation.section.block.end.intens
-      pop: true
-    - match: '{'
-      scope: punctuation.section.block.begin.intens
-      push: parameter_block_body
-    - include: parameter_group
+        - meta_include_prototype: false
+        - match: '\b(INDEX|INVALID)\b\s*(=)'
+          captures:
+            1: variable.parameter.intens
+            2: keyword.operator.assignment.augmented.intens
+        - include: prototype
+        - include: func_parameter
+        - match: '\b(INDEXED_SET|SET)\b'
+          scope: variable.parameter.intens
+          push:
+            - match: '='
+              scope: keyword.operator.assignment.augmented.intens
+              set:
+                - match: '\b({{name}})\b'
+                  scope: storage.type.enum.intens
+                  pop: true
+        - match: '\b(MARGIN|MARKER|RANGE|SCALE|SIZE|THUMBNAIL)\b(?!\s*=)'
+          scope: support.function.builtin.intens
+        - match: '\b(CELL|EDITABLE|EXPLICIT|GLOBAL|LOCKABLE|MATRIX|NO_DEPENDENCIES|OMIT_TTRAIL|OPTIONAL|SCALAR)\b'
+          scope: storage.modifier.intens
+        - include: argument_assignment
+        - match: \,
+          scope: punctuation.separator.delimiter.intens
+        - match: '}'
+          scope: punctuation.section.block.end.intens
+          pop: true
+        - include: parameter_block
+        - include: parameter_group
 
 
   parameter_group:
     - match: \(
       scope: punctuation.section.group.begin.intens
-      push: parameter_group_body
-
-
-  parameter_group_body:
-    - include: anonymous_group
-    - include: square_bracket
-    - include: func_parameter
-    - include: argument_assignment
-    - match: \,
-      scope: punctuation.separator.delimiter.intens
-      set: parameter_group_body
-    - match: ':'
-      scope: punctuation.separator.slice.intens
-    - match: \)
-      scope: punctuation.section.group.end.intens
-      pop: true
+      push:
+        - include: anonymous_group
+        - include: square_bracket
+        - include: func_parameter
+        - include: argument_assignment
+        - match: \,
+          scope: punctuation.separator.delimiter.intens
+        - match: ':'
+          scope: punctuation.separator.slice.intens
+        - match: \)
+          scope: punctuation.section.group.end.intens
+          pop: true
 
 
   argument_assignment:
@@ -398,23 +382,20 @@ contexts:
     - match: '\b(DATAPOOL)\b'
       captures:
         1: keyword.other.block.datapool.begin.intens
-      push: datapool_block_body
-
-
-  datapool_block_body:
-    - meta_scope: meta.other.block.datapool.intens
-    - match: '\b(END)\b\s+\b(DATAPOOL)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.datapool.end.intens
-      set:
-        - include: end_of_statement_pop
-    - include: structures
-    - include: sets
-    - include: variables_definition
-    - match: \b([A-Z][A-Z0-9_]*)\b
-      scope: storage.type.intens
-      push: variables_definition_after_type
+      push:
+        - meta_scope: meta.other.block.datapool.intens
+        - match: '\b(END)\b\s+\b(DATAPOOL)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.datapool.end.intens
+          set:
+            - include: end_of_statement_pop
+        - include: structures
+        - include: sets
+        - include: variables_definition
+        - match: \b([A-Z][A-Z0-9_]*)\b
+          scope: storage.type.intens
+          push: variables_definition_after_type
 
 
   structures:
@@ -424,16 +405,12 @@ contexts:
         1: storage.type.struct.intens
       push:
         - include: end_of_statement_pop
-        - include: structures_after_keyword
-
-
-  structures_after_keyword:
-    - match: '{{illegal_names}}'
-      scope: invalid.illegal.name.intens
-      set: structures_after_name
-    - match: '\b({{name}})\b'
-      scope: entity.name.struct.intens
-      set: structures_after_name
+        - match: '{{illegal_names}}'
+          scope: invalid.illegal.name.intens
+          set: structures_after_name
+        - match: '\b({{name}})\b'
+          scope: entity.name.struct.intens
+          set: structures_after_name
 
 
   structures_after_name:
@@ -549,7 +526,6 @@ contexts:
     - include: control_keywords
     - match: ','
       scope: punctuation.separator.delimiter.intens
-      set: variable_conditional_states_body
     - match: \.
       scope: punctuation.accessor.dot.intens
     - match: '\)'
@@ -563,21 +539,18 @@ contexts:
     - match: '\b(STREAMER)\b'
       captures:
         1: keyword.other.block.streamer.begin.intens
-      push: streamer_block_body
-
-
-  streamer_block_body:
-    - meta_scope: meta.other.block.streamer.intens
-    - match: '\b(END)\b\s+\b(STREAMER)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.streamer.end.intens
-      set:
-        - include: end_of_statement_pop
-    - include: stream_definition
-    - include: parameter_group
-    - include: parameter_block
-    - include: end_of_statement
+      push:
+        - meta_scope: meta.other.block.streamer.intens
+        - match: '\b(END)\b\s+\b(STREAMER)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.streamer.end.intens
+          set:
+            - include: end_of_statement_pop
+        - include: stream_definition
+        - include: parameter_group
+        - include: parameter_block
+        - include: end_of_statement
 
 
   stream_definition:
@@ -590,25 +563,22 @@ contexts:
     - match: '\b(OPERATOR)\b'
       captures:
         1: keyword.other.block.operator.begin.intens
-      push: operator_block_body
-
-
-  operator_block_body:
-    - meta_scope: meta.other.block.operator.intens
-    - match: '\b(END)\b\s+\b(OPERATOR)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.operator.end.intens
-      set:
-        - include: end_of_statement_pop
-    - match: |-
-        (?x)\b(
-          LATEXREPORT|MATHEMATICA|MENU|PYTHON|REPORTSTREAM
-        )\b
-      scope: storage.type.other.intens
-    - include: operator_definition
-    - include: task
-    - include: end_of_statement
+      push:
+        - meta_scope: meta.other.block.operator.intens
+        - match: '\b(END)\b\s+\b(OPERATOR)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.operator.end.intens
+          set:
+            - include: end_of_statement_pop
+        - match: |-
+            (?x)\b(
+              LATEXREPORT|MATHEMATICA|MENU|PYTHON|REPORTSTREAM
+            )\b
+          scope: storage.type.other.intens
+        - include: operator_definition
+        - include: task
+        - include: end_of_statement
 
 
   task:
@@ -696,19 +666,16 @@ contexts:
     - match: '\b(FUNCTIONS)\b'
       captures:
         1: keyword.other.block.functions.begin.intens
-      push: functions_block_body
-
-
-  functions_block_body:
-    - meta_scope: meta.other.block.functions.intens
-    - match: '\b(END)\b\s+\b(FUNCTIONS)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.functions.end.intens
-      set:
-        - include: end_of_statement_pop
-    - include: functions
-    - include: variables_definition
+      push:
+        - meta_scope: meta.other.block.functions.intens
+        - match: '\b(END)\b\s+\b(FUNCTIONS)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.functions.end.intens
+          set:
+            - include: end_of_statement_pop
+        - include: functions
+        - include: variables_definition
 
 
   functions:
@@ -718,12 +685,8 @@ contexts:
         1: storage.type.function.intens
       push:
         - include: end_of_statement_pop
-        - include: functions_after_keyword
-
-
-  functions_after_keyword:
-    - include: parameter_block
-    - include: function_declaration
+        - include: parameter_block
+        - include: function_declaration
 
 
   function_declaration:
@@ -808,13 +771,11 @@ contexts:
   while_loop:
     - match: '\b(WHILE)\b'
       scope: keyword.control.intens
-      push: while_loop_condition
-
-
-  while_loop_condition:
-    - match: \(
-      scope: punctuation.section.group.begin.intens
-      set: while_loop_condition_body
+      push:
+        - include: end_of_statement_pop
+        - match: \(
+          scope: punctuation.section.group.begin.intens
+          set: while_loop_condition_body
 
 
   while_loop_condition_body:
@@ -829,13 +790,11 @@ contexts:
   if_statement:
     - match: '\b(IF)\b'
       scope: keyword.control.intens
-      push: if_statement_condition
-
-
-  if_statement_condition:
-    - match: \(
-      scope: punctuation.section.group.begin.intens
-      set: if_statement_condition_body
+      push:
+        - include: end_of_statement_pop
+        - match: \(
+          scope: punctuation.section.group.begin.intens
+          set: if_statement_condition_body
 
 
   if_statement_condition_body:
@@ -861,22 +820,19 @@ contexts:
     - match: '\b(UI_MANAGER)\b'
       captures:
         1: keyword.other.block.ui_manager.begin.intens
-      push: ui_manager_block_body
-
-
-  ui_manager_block_body:
-    - meta_scope: meta.other.block.ui_manager.intens
-    - meta_include_prototype: false
-    - include: ui_struct
-    - include: prototype
-    - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.ui_manager.end.intens
-      set:
-        - include: end_of_statement_pop
-    - include: menu_definition
-    - include: end_of_statement
+      push:
+        - meta_scope: meta.other.block.ui_manager.intens
+        - meta_include_prototype: false
+        - include: ui_struct
+        - include: prototype
+        - match: '\b(END)\b\s+\b(UI_MANAGER)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.ui_manager.end.intens
+          set:
+            - include: end_of_statement_pop
+        - include: menu_definition
+        - include: end_of_statement
 
 
   ui_struct:
@@ -937,37 +893,32 @@ contexts:
       scope: storage.type.other.intens
       push:
         - include: end_of_statement_pop
-        - include: menu_definition_after_keyword
+        - include: menu_parameter
+        - include: parameter_block
+        - include: comma
+        - include: end_of_statement_pop
 
 
-  menu_definition_after_keyword:
+  menu_parameter:
     - match: \(
       scope: punctuation.section.group.begin.intens
-      push: menu_parameter_body
-    - include: parameter_block
-    - include: comma
-    - include: end_of_statement_pop
-
-
-  menu_parameter_body:
-    - meta_scope: meta.group.intens
-    - match: \)
-      scope: punctuation.section.group.end.intens
-      pop: true
-    - include: comma
-    - match: '='
-      scope: keyword.operator.assignment.augmented.intens
-    - match: '\b(FORM|MENU|PROCESS|SEPARATOR|TRANSACTION)\b'
-      scope: variable.parameter.intens
-    - match: '\b(FUNC)\b'
-      scope: variable.parameter.intens
       push:
-        - match: '\b({{name}})\b'
-          scope: variable.function.intens
+        - meta_scope: meta.group.intens
+        - match: \)
+          scope: punctuation.section.group.end.intens
           pop: true
-    - match: \(
-      scope: punctuation.section.group.begin.intens
-      push: menu_parameter_body
+        - include: comma
+        - match: '='
+          scope: keyword.operator.assignment.augmented.intens
+        - match: '\b(FORM|MENU|PROCESS|SEPARATOR|TRANSACTION)\b'
+          scope: variable.parameter.intens
+        - match: '\b(FUNC)\b'
+          scope: variable.parameter.intens
+          push:
+            - match: '\b({{name}})\b'
+              scope: variable.function.intens
+              pop: true
+        - include: menu_parameter
 
 
 ###[ DB Manager Block ]########################################################
@@ -976,32 +927,29 @@ contexts:
     - match: '\b(DB_MANAGER)\b'
       captures:
         1: keyword.other.block.db_manager.begin.intens
-      push: db_manager_block_body
-
-
-  db_manager_block_body:
-    - meta_scope: meta.other.block.db_manager.intens
-    - match: '\b(END)\b\s+\b(DB_MANAGER)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.db_manager.end.intens
-      set:
-        - include: end_of_statement_pop
-    - match: |-
-        (?x)\b(
-          FILTER|MENU|MODIFY|TRANSACTION
-        )\b
-      scope: storage.type.other.intens
-    - match: |-
-        (?x)\b(
-          FORM|HELPTEXT|HIDDEN|IGNORE|NO_LOG|REASON|RESET|SILENT|USERGROUPS
-        )\b
-      scope: variable.parameter.intens
-    - match: |-
-        (?x)\b(
-          AND|FROM|LIKE|LOGON|LOGOFF|OR|QUERY|SELECT|WHERE
-        )\b
-      scope: keyword.other.intens
+      push:
+        - meta_scope: meta.other.block.db_manager.intens
+        - match: '\b(END)\b\s+\b(DB_MANAGER)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.db_manager.end.intens
+          set:
+            - include: end_of_statement_pop
+        - match: |-
+            (?x)\b(
+              FILTER|MENU|MODIFY|TRANSACTION
+            )\b
+          scope: storage.type.other.intens
+        - match: |-
+            (?x)\b(
+              FORM|HELPTEXT|HIDDEN|IGNORE|NO_LOG|REASON|RESET|SILENT|USERGROUPS
+            )\b
+          scope: variable.parameter.intens
+        - match: |-
+            (?x)\b(
+              AND|FROM|LIKE|LOGON|LOGOFF|OR|QUERY|SELECT|WHERE
+            )\b
+          scope: keyword.other.intens
 
 
 ###[ Language Block ]##########################################################
@@ -1010,16 +958,13 @@ contexts:
     - match: '\b(LANGUAGE)\b'
       captures:
         1: keyword.other.block.language.begin.intens
-      push: language_block_body
-
-
-  language_block_body:
-    - meta_scope: meta.other.block.language.intens
-    - match: '\b(END)\b\s+\b(LANGUAGE)\b'
-      captures:
-        1: keyword.other.intens
-        2: keyword.other.block.language.end.intens
-      set:
-        - include: end_of_statement_pop
-    - include: simple_assignments
-    - include: end_of_statement
+      push:
+        - meta_scope: meta.other.block.language.intens
+        - match: '\b(END)\b\s+\b(LANGUAGE)\b'
+          captures:
+            1: keyword.other.intens
+            2: keyword.other.block.language.end.intens
+          set:
+            - include: end_of_statement_pop
+        - include: simple_assignments
+        - include: end_of_statement
