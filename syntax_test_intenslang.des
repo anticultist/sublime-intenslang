@@ -528,7 +528,7 @@ FUNC myfunc {
     SET(COLORBIT, foo.VAR("bar").three, 2);
 //                    ^^^ support.function.builtin.intens
     SET(LOCK, foo.baz, TRUE);
-//      ^^^^ variable.language.intens
+//      ^^^^ variable.parameter.intens
 //                     ^^^^ constant.language.intens
 
     PRINT("Important message: ", DATASET_TEXT(foo.foo), EOLN);

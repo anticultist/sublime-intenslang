@@ -20,11 +20,7 @@ variables:
         (?x)\b(
           ABORT|CDATA|COMPLEX|ELSE|END|EXIT|FUNC|IF|INTEGER|NONE|REAL|RETURN|STRING|STRUCT|WHILE
         )\b
-  builtin_functions_with_args: |-
-        (?x)\b(
-          DIRNAME|REQUEST|SEND|SUBSCRIBE
-        )\b
-  builtin_functions_without_args: |-
+  builtin_functions: |-
         (?x)\b(
           ABORT|ABORTTRANSACTION|ABS|ACOS|ALLOW|ARG|ASIN|ASSIGN_CORR|ATAN|ATAN2|ATTRS|
           BASENAME|BEGINTRANSACTION|
@@ -61,7 +57,6 @@ variables:
           UNIT|
           VALID|VAR|VERTICAL
         )\b
-  builtin_functions: '\b({{builtin_functions_with_args}}|{{builtin_functions_without_args}})\b'
 
 
 contexts:
@@ -141,7 +136,7 @@ contexts:
 
 
   predefined_variables:
-    - match: \b(BASE|COLORBIT|CURRENT_DATETIME|CURRENT_DATE|CURRENT_TIME|INPUT|LOCK|SOURCE|SOURCE2|THIS)\b
+    - match: \b(BASE|INPUT|SOURCE|SOURCE2|THIS)\b
       scope: variable.language.intens
 
 
@@ -732,14 +727,9 @@ contexts:
 
   function_call:
     - include: run_function
-    - match: '\b({{builtin_functions_with_args}})\b'
-      scope: support.function.builtin.intens
-      push:
-        - include: end_of_statement_pop
-        - include: parameter_group
-        - include: parameter_block
-    - match: '\b({{builtin_functions_without_args}})\b(?!\s*=)'
-      scope: support.function.builtin.intens
+    - include: function_call_with_round_brackets
+    - include: function_call_with_curly_bracket
+    - include: function_call_without_arguments
 
 
   run_function:
@@ -766,6 +756,55 @@ contexts:
             - match: \)
               scope: punctuation.section.group.end.intens
               pop: true
+
+
+  function_call_with_round_brackets:
+    - match: '\b([A-Z][A-Z0-9_]*)\b\s*(\()'
+      captures:
+        1: support.function.builtin.intens
+        2: punctuation.section.group.begin.intens
+      push:
+        - include: comma
+        - include: square_bracket
+        - include: function_call_with_round_brackets
+        - include: parameter_block
+        - include: func_parameter
+        - match: '\b(COLORBIT|LOCK)\b'
+          scope: variable.parameter.intens
+        - match: '\b([A-Z][A-Z0-9_]*)\b\s*(=)(?!=)'
+          captures:
+            1: variable.parameter.intens
+            2: keyword.operator.assignment.augmented.intens
+        - match: \.
+          scope: punctuation.accessor.dot.intens
+        - match: \)
+          scope: punctuation.section.group.end.intens
+          pop: true
+
+
+  function_call_with_curly_bracket:
+    - match: '\b(DIRNAME|FILENAME)\b\s*(\{)'
+      captures:
+        1: support.function.builtin.intens
+        2: punctuation.section.block.begin.intens
+      push:
+        - include: comma
+        - include: square_bracket
+        - include: function_call_with_round_brackets
+        - match: '\b([A-Z][A-Z0-9_]*)\b\s*(=)(?!=)'
+          captures:
+            1: variable.parameter.intens
+            2: keyword.operator.assignment.augmented.intens
+        - match: \.
+          scope: punctuation.accessor.dot.intens
+        - match: \}
+          scope: punctuation.section.block.end.intens
+          pop: true
+
+
+  function_call_without_arguments:
+    - match: '\b(ABORTTRANSACTION|BEGINTRANSACTION|CLEARCYCLE|COMMITTRANSACTION|COPY|CURRENT_DATETIME|CURRENT_DATE|CURRENT_TIME|DELETECYCLE|FIRSTCYCLE|LASTCYCLE|NEWCYCLE|NEXTCYCLE|PASTE|PRINT_LOG|RESET_ERROR|REST_LOGOFF|SERIALIZE_FORM|SET_ERROR|UPDATE_FORMS|WRITE_SETTINGS)\b(?!\s*=)'
+      scope: support.function.builtin.intens
 
 
   while_loop:
