@@ -769,7 +769,7 @@ contexts:
         - include: function_call_with_round_brackets
         - include: parameter_block
         - include: func_parameter
-        - match: '\b(COLORBIT|LOCK)\b'
+        - match: '\b(COLOR|COLORBIT|LOCK)\b'
           scope: variable.parameter.intens
         - match: '\b([A-Z][A-Z0-9_]*)\b\s*(=)(?!=)'
           captures:

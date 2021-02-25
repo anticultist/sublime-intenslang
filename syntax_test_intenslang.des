@@ -173,7 +173,7 @@ STRUCT MYSTRUCT2 {
 //               ^^^^^ storage.type.enum.intens
 
     MYSTRUCT bar;
-    STRING baz;
+    STRING baz {LABEL="My Label", LABEL};
 };
 
 STRUCT MULTI_INHERITANCE : MYSTRUCT, MYSTRUCT2 {};
@@ -525,7 +525,10 @@ FUNC myfunc {
 //                ^ punctuation.accessor.dot.intens
 //                      ^ keyword.operator.assignment.intens
 
+    SET(COLOR, foo.VAR("bar").three, 2);
+//      ^^^^^ variable.parameter.intens
     SET(COLORBIT, foo.VAR("bar").three, 2);
+//      ^^^^^^^^ variable.parameter.intens
 //                    ^^^ support.function.builtin.intens
     SET(LOCK, foo.baz, TRUE);
 //      ^^^^ variable.parameter.intens
