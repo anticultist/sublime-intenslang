@@ -98,6 +98,8 @@ contexts:
       scope: punctuation.definition.comment.intens
       push:
         - meta_scope: comment.line.double-slash.intens
+        - match: \b(NOTE|TODO|XXX)\b
+          scope: keyword.codetag.notation.intens
         - match: $
           pop: true
 

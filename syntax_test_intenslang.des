@@ -3,6 +3,9 @@
 // foo
 // <- source.intens comment.line.double-slash.intens
 
+// NOTE: my note
+// ^^^^ keyword.codetag.notation.intens
+
 DESCRIPTION "Test Syntax";
 // <- keyword.control.intens
 //                       ^ punctuation.terminator.statement.intens
