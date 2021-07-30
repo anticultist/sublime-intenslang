@@ -1,0 +1,37 @@
+%YAML 1.2
+---
+
+name: INTENS Session log
+scope: text.intenssessionlog
+
+variables:
+  float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+-]?([0-9][0-9_]*))?\b)'
+
+contexts:
+  main:
+    - match: '^Print> '
+      scope: markup.bold.intenssessionlog
+    - match: '^(ERROR) : ServerSocket - (\d+) - (.*)'
+      captures:
+        1: markup.bold.intenssessionlog
+        2: constant.numeric.intenssessionlog
+        3: markup.italic.intenssessionlog
+    - match: '^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:)'
+      captures:
+        1: markup.bold.intenssessionlog
+    - match: '<invalid>'
+      scope: markup.italic.intenssessionlog
+    - match: '(=)\s*'
+      captures:
+        1: keyword.operator.assignment.intenssessionlog
+      push:
+        - match: '{{float_number}}'
+          scope: constant.numeric.intenssessionlog
+        - match: '-'
+          scope: constant.numeric.intenssessionlog
+        - match: '\bnan\b'
+          scope: constant.numeric.intenssessionlog
+        - match: (?=.)
+          pop: true
+        - match: $
+          pop: true
