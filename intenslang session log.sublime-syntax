@@ -5,31 +5,98 @@ name: INTENS Session log
 scope: text.intenssessionlog
 
 variables:
+  name: '[A-Za-z_][A-Za-z_0-9]*'
   float_number: '\b([0-9][0-9_]*)(\.|(\.([0-9][0-9_]*))?([eE][+-]?([0-9][0-9_]*))?\b)'
 
 contexts:
   main:
-    - match: '^Print> '
-      scope: markup.bold.intenssessionlog
-    - match: '^(ERROR) : ServerSocket - (\d+) - (.*)'
+    - match: '^(Print>) (FUNC) ({{name}})$'
       captures:
         1: markup.bold.intenssessionlog
-        2: constant.numeric.intenssessionlog
-        3: markup.italic.intenssessionlog
+        2: storage.type.function.intenssessionlog
+        3: support.function.builtin.intenssessionlog
+    - match: '^Print> '
+      scope: markup.bold.intenssessionlog
+    - match: '^(ERROR) (:) (ServerSocket) (-) (\d+) (-) (.*)'
+      captures:
+        1: keyword.control.intenssessionlog
+        2: punctuation.separator.intenssessionlog
+        3: support.type.intenssessionlog
+        4: punctuation.separator.intenssessionlog
+        5: constant.numeric.intenssessionlog
+        6: punctuation.separator.intenssessionlog
+        7: markup.italic.intenssessionlog
     - match: '^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:)'
       captures:
         1: markup.bold.intenssessionlog
-    - match: '<invalid>'
-      scope: markup.italic.intenssessionlog
+      push:
+        - match: '$'
+          pop: true
+        - match: '\bopened file\b'
+          scope: support.function.builtin.intenssessionlog
+        - match: '(BEGIN)([ \.]:) (OPEN|SAVE) (FileStream) (.*)'
+          captures:
+            1: keyword.control.intenssessionlog
+            2: punctuation.separator.intenssessionlog
+            3: support.function.builtin.intenssessionlog
+            4: support.type.intenssessionlog
+            5: markup.italic.intenssessionlog
+        - match: '(END) (:) (FileStream) (.*)'
+          captures:
+            1: keyword.control.intenssessionlog
+            2: punctuation.separator.intenssessionlog
+            3: support.type.intenssessionlog
+            4: markup.italic.intenssessionlog
+        - match: '(ERROR) (:) (ClientSocket) (-) (.*)'
+          captures:
+            1: keyword.control.intenssessionlog
+            2: punctuation.separator.intenssessionlog
+            3: support.type.intenssessionlog
+            4: punctuation.separator.intenssessionlog
+            5: markup.italic.intenssessionlog
+        - match: 'with params'
+          scope: markup.italic.intenssessionlog
+        - match: '\['
+          scope: punctuation.section.brackets.begin.intenssessionlog
+          push:
+            - match: (?=$)
+              pop: true
+            - match: '\]'
+              scope: punctuation.section.brackets.end.intenssessionlog
+              pop: true
+            - match: \,
+              scope: punctuation.separator.delimiter.intenssessionlog
+            - match: \'
+              scope: punctuation.definition.string.begin.intenssessionlog
+              push:
+                - meta_scope: string.quoted.single.intenssessionlog
+                - match: (?=$)
+                  pop: true
+                - match: \'
+                  scope: punctuation.definition.string.end.intenssessionlog
+                  pop: true
+    - match: '(Return value) (-)?({{float_number}})'
+      captures:
+        1: keyword.control.intenssessionlog
+        2: constant.numeric.intenssessionlog
+        3: constant.numeric.intenssessionlog
+    - match: '(exit) (.*)'
+      captures:
+        1: markup.bold.intenssessionlog
+        2: markup.italic.intenssessionlog
     - match: '(=)\s*'
       captures:
         1: keyword.operator.assignment.intenssessionlog
       push:
         - match: '{{float_number}}'
           scope: constant.numeric.intenssessionlog
+        - match: '[0-9a-f]+'
+          scope: constant.numeric.intenssessionlog
         - match: '-'
           scope: constant.numeric.intenssessionlog
         - match: '\bnan\b'
+          scope: constant.numeric.intenssessionlog
+        - match: '<invalid>'
           scope: constant.numeric.intenssessionlog
         - match: (?=.)
           pop: true
