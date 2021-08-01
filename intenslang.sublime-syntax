@@ -98,7 +98,7 @@ contexts:
       scope: punctuation.definition.comment.intens
       push:
         - meta_scope: comment.line.double-slash.intens
-        - match: \b(BUG|HACK|NOTE|TODO|XXX)\b
+        - match: \b(BUG|FIXME|HACK|NOTE|TODO|XXX|XXXTODO)\b
           scope: keyword.codetag.notation.intens
         - match: $
           pop: true
