@@ -10,11 +10,12 @@ variables:
 
 contexts:
   main:
-    - match: '^(Print>) (FUNC) ({{name}})$'
+    - match: '^(Print>) (FUNC) ({{name}})(\s*(//.*)?)?$'
       captures:
         1: markup.bold.intenssessionlog
         2: storage.type.function.intenssessionlog
         3: support.function.builtin.intenssessionlog
+        4: comment.line.double-dash.intenssessionlog
     - match: '^Print> '
       scope: markup.bold.intenssessionlog
     - match: '^(ERROR) (:) (ServerSocket) (-) (\d+) (-) (.*)'
@@ -26,7 +27,7 @@ contexts:
         5: constant.numeric.intenssessionlog
         6: punctuation.separator.intenssessionlog
         7: markup.italic.intenssessionlog
-    - match: '^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d:)'
+    - match: '^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d[ ]?:)'
       captures:
         1: markup.bold.intenssessionlog
       push:
@@ -66,15 +67,7 @@ contexts:
               pop: true
             - match: \,
               scope: punctuation.separator.delimiter.intenssessionlog
-            - match: \'
-              scope: punctuation.definition.string.begin.intenssessionlog
-              push:
-                - meta_scope: string.quoted.single.intenssessionlog
-                - match: (?=$)
-                  pop: true
-                - match: \'
-                  scope: punctuation.definition.string.end.intenssessionlog
-                  pop: true
+            - include: one_line_string
     - match: '(Return value) (-)?({{float_number}})'
       captures:
         1: keyword.control.intenssessionlog
@@ -90,7 +83,7 @@ contexts:
       push:
         - match: '{{float_number}}'
           scope: constant.numeric.intenssessionlog
-        - match: '[0-9a-f]+'
+        - match: '\b[0-9a-f]+\b'
           scope: constant.numeric.intenssessionlog
         - match: '-'
           scope: constant.numeric.intenssessionlog
@@ -98,7 +91,19 @@ contexts:
           scope: constant.numeric.intenssessionlog
         - match: '<invalid>'
           scope: constant.numeric.intenssessionlog
+        - include: one_line_string
         - match: (?=.)
           pop: true
         - match: $
+          pop: true
+
+  one_line_string:
+    - match: \'
+      scope: punctuation.definition.string.begin.intenssessionlog
+      push:
+        - meta_scope: string.quoted.single.intenssessionlog
+        - match: (?=$)
+          pop: true
+        - match: \'
+          scope: punctuation.definition.string.end.intenssessionlog
           pop: true
