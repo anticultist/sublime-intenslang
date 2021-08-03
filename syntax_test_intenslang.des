@@ -14,6 +14,18 @@ INCLUDE external_file.inc
 // <- keyword.control.import.intens
 //                   ^ - punctuation.accessor.dot.intens
 
+#include <my_folder/other_file.inc>
+// <- meta.preprocessor.include.c keyword.control.import.include.c
+//       ^ punctuation.definition.string.begin.c
+//                                ^ punctuation.definition.string.end.c
+//       ^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.other.lt-gt.include.c
+
+#include "other.inc"
+// <- meta.preprocessor.include.c keyword.control.import.include.c
+//       ^ punctuation.definition.string.begin.intens
+//                 ^ punctuation.definition.string.end.c
+//       ^^^^^^^^^^^ string.quoted.double.include.c
+
 HELPFILE "myhelpfile.hlp",
   OPEN_FILE "my_help.html" HELPKEY("mykey"),
   OPEN_URL "https://www.semafor.ch/en/products/intens/";

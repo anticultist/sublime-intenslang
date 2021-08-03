@@ -67,6 +67,7 @@ contexts:
     - include: constants
     - include: predefined_variables
     - include: operators
+    - include: preprocessor_statement
 
 
   double_quote_string:
@@ -371,6 +372,33 @@ contexts:
     - match: '^\s*(INCLUDE)\b'
       captures:
         1: keyword.control.import.intens
+
+
+  preprocessor_statement:
+    - match: '^\s*(#include)\b'
+      scope: keyword.control.import.include.c
+      push:
+        - meta_scope: meta.preprocessor.include.c
+        - match: $
+          pop: true
+        - match: '<'
+          scope: punctuation.definition.string.begin.c
+          push:
+            - meta_scope: string.quoted.other.lt-gt.include.c
+            - match: $
+              scope: invalid.illegal.unclosed-string.intens
+              pop: true
+            - match: '>'
+              scope: punctuation.definition.string.end.c
+        - match: '"'
+          scope: punctuation.definition.string.begin.intens
+          push:
+            - meta_scope: string.quoted.double.include.c
+            - match: $
+              scope: invalid.illegal.unclosed-string.intens
+              pop: true
+            - match: '"'
+              scope: punctuation.definition.string.end.c
 
 
 ###[ Datapool Block ]##########################################################
