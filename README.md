@@ -5,11 +5,16 @@ This is an unofficial package to provide support for [Sublime Text](https://www.
 
 Features
 --------
+
 * Syntax highlighting
+  * INTENS description files
+  * INTENS session logs
+  * INTENS helpfiles
 * Productivity scripts:
   * Add debug-prints to functions
   * Count function references
 
 Screenshot
 ----------
+
 ![Screenshot](screenshot.png)
