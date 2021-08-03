@@ -77,6 +77,8 @@ contexts:
       captures:
         1: markup.bold.intenssessionlog
         2: markup.italic.intenssessionlog
+    - match: '[\.\-=#<>]{3,}'
+      scope: punctuation.separator.intenssessionlog
     - match: '(=)\s*'
       captures:
         1: keyword.operator.assignment.intenssessionlog
@@ -91,6 +93,8 @@ contexts:
           scope: constant.numeric.intenssessionlog
         - match: '<invalid>'
           scope: constant.numeric.intenssessionlog
+        - match: '{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}'  # GUID
+          scope: string.unquoted.intenssessionlog
         - include: one_line_string
         - match: (?=.)
           pop: true
