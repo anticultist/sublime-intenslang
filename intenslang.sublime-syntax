@@ -379,26 +379,29 @@ contexts:
       scope: keyword.control.import.include.c
       push:
         - meta_scope: meta.preprocessor.include.c
-        - match: $
+        - match: (?=$)
           pop: true
-        - match: '<'
+        - match: \s*
+        - match: '\<'
           scope: punctuation.definition.string.begin.c
           push:
             - meta_scope: string.quoted.other.lt-gt.include.c
-            - match: $
-              scope: invalid.illegal.unclosed-string.intens
+            - match: (?=$)
               pop: true
-            - match: '>'
+            - match: '\>'
               scope: punctuation.definition.string.end.c
+              pop: true
         - match: '"'
           scope: punctuation.definition.string.begin.intens
           push:
             - meta_scope: string.quoted.double.include.c
-            - match: $
-              scope: invalid.illegal.unclosed-string.intens
+            - match: (?=$)
               pop: true
             - match: '"'
               scope: punctuation.definition.string.end.c
+              pop: true
+        - match: (?=.)
+          pop: true
 
 
 ###[ Datapool Block ]##########################################################

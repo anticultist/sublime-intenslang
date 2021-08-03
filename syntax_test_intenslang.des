@@ -14,17 +14,19 @@ INCLUDE external_file.inc
 // <- keyword.control.import.intens
 //                   ^ - punctuation.accessor.dot.intens
 
-#include <my_folder/other_file.inc>
+#include <my_folder/other_file.inc>  // comment
 // <- meta.preprocessor.include.c keyword.control.import.include.c
 //       ^ punctuation.definition.string.begin.c
 //                                ^ punctuation.definition.string.end.c
 //       ^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.other.lt-gt.include.c
+//                                   ^^^^^^^^^^ comment.line.double-slash.intens
 
-#include "other.inc"
+#include "other.inc"  // comment
 // <- meta.preprocessor.include.c keyword.control.import.include.c
 //       ^ punctuation.definition.string.begin.intens
 //                 ^ punctuation.definition.string.end.c
 //       ^^^^^^^^^^^ string.quoted.double.include.c
+//                    ^^ comment.line.double-slash.intens
 
 HELPFILE "myhelpfile.hlp",
   OPEN_FILE "my_help.html" HELPKEY("mykey"),
