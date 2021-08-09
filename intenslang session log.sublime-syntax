@@ -27,14 +27,29 @@ contexts:
         5: constant.numeric.intenssessionlog
         6: punctuation.separator.intenssessionlog
         7: markup.italic.intenssessionlog
-    - match: '^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d[ ]?:)'
+    - match: '^(\d\d\d\d)(-)(\d\d)(-)(\d\d \d\d)(:)(\d\d)(:)(\d\d[ ]?)(:)'
       captures:
         1: markup.bold.intenssessionlog
+        2: punctuation.separator.intenssessionlog
+        3: markup.bold.intenssessionlog
+        4: punctuation.separator.intenssessionlog
+        5: markup.bold.intenssessionlog
+        6: punctuation.separator.intenssessionlog
+        7: markup.bold.intenssessionlog
+        8: punctuation.separator.intenssessionlog
+        9: markup.bold.intenssessionlog
+        10: punctuation.separator.intenssessionlog
       push:
         - match: '$'
           pop: true
         - match: '\bopened file\b'
           scope: support.function.builtin.intenssessionlog
+        - match: '(ABORT) (:) (FUNCTION) ({{name}})$'
+          captures:
+            1: keyword.control.intenssessionlog
+            2: punctuation.separator.intenssessionlog
+            3: support.function.builtin.intenssessionlog
+            4: support.type.intenssessionlog
         - match: '(BEGIN)([ \.]:) (OPEN|SAVE) (FileStream) (.*)'
           captures:
             1: keyword.control.intenssessionlog
