@@ -44,12 +44,12 @@ contexts:
           pop: true
         - match: '\bopened file\b'
           scope: support.function.builtin.intenssessionlog
-        - match: '(ABORT) (:) (FUNCTION) ({{name}})$'
+        - match: '(ABORT) (:) (FUNCTION|PROCESSGROUP|TASK)( ({{name}}))?$'
           captures:
             1: keyword.control.intenssessionlog
             2: punctuation.separator.intenssessionlog
             3: support.function.builtin.intenssessionlog
-            4: support.type.intenssessionlog
+            5: support.type.intenssessionlog
         - match: '(BEGIN)([ \.]:) (OPEN|SAVE) (FileStream) (.*)'
           captures:
             1: keyword.control.intenssessionlog
@@ -94,7 +94,7 @@ contexts:
         2: markup.italic.intenssessionlog
     - match: '[\.\-=#<>]{3,}'
       scope: punctuation.separator.intenssessionlog
-    - match: '(=)\s*'
+    - match: '([<>]?=)\s*'
       captures:
         1: keyword.operator.assignment.intenssessionlog
       push:
