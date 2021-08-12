@@ -23,7 +23,7 @@ class CountIntensFunctionReferencesCommand(sublime_plugin.TextCommand):
                 undefined_functions[function_name] += 1
 
         # add functions called by INTENS itself
-        for function_name in ["QUIT", "INIT"]:
+        for function_name in ["QUIT", "INIT", "AFTER_DB_LOGON", "ON_CYCLE_SWITCH", "AFTER_UPDATE_FORMS"]:
             if function_name not in func_references:
                 continue
             func_references[function_name] += 1
