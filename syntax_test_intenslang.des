@@ -374,6 +374,15 @@ FILESTREAM myfilestream2_fs = my_stream2 {"My Stream2", HIDDEN},
 //                            ^^^^^^^^^^ variable.other.intens
 //                                                             ^ punctuation.terminator.statement.intens
 
+TASK mytask, mytask2, mytask3;
+// <- storage.type.other.intens
+//   ^^^^^^ punctuation.definition.variable.intens
+//         ^ punctuation.separator.delimiter.intens
+//           ^^^^^^^ punctuation.definition.variable.intens
+//                  ^ punctuation.separator.delimiter.intens
+//                    ^^^^^^^ punctuation.definition.variable.intens
+//                           ^ punctuation.terminator.statement.intens
+
 TASK mytask {"Optimize"} {
   one = 1;
   WHILE( one<3 ) {
