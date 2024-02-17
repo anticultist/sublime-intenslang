@@ -766,4 +766,4 @@ END DB_MANAGER;
 
 END.
 // <- keyword.other.intens
-// ^ punctuation.terminator.propram.intens
+// ^ punctuation.terminator.program.intens

@@ -168,7 +168,7 @@ contexts:
     - include: menu_definition
     - include: db_manager_block
     - include: language_block
-    - include: end_of_propram
+    - include: end_of_program
     - match: |-
         (?x)\b(
           DESCRIPTION|HELPFILE|OPEN_URL
@@ -181,11 +181,11 @@ contexts:
 
 ###[ General ]#################################################################
 
-  end_of_propram:
+  end_of_program:
     - match: '\b(END)\b\s*(.)'
       captures:
         1: keyword.other.intens
-        2: punctuation.terminator.propram.intens
+        2: punctuation.terminator.program.intens
 
 
   simple_statements:

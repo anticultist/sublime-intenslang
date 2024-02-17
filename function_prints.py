@@ -78,11 +78,11 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
         if next_block_start.empty():
             return True
 
-        next_seperation = self.find_ignoring_comments_and_strings("(,|;)", function_name_end_pos)
-        if next_seperation.empty():
+        next_separation = self.find_ignoring_comments_and_strings("(,|;)", function_name_end_pos)
+        if next_separation.empty():
             return False
 
-        return next_seperation.b < next_block_start.b
+        return next_separation.b < next_block_start.b
 
 
     def end_of_variable_definition_block(self, var_types_rexpr_str, function_start_pos):
@@ -97,10 +97,10 @@ class AddDebugPrintsToIntensFunctionsCommand(sublime_plugin.TextCommand):
             if next_point.b > function_end_pos:
                 break
 
-            seperator_pos = self.find_ignoring_comments_and_strings(";", point)
-            if seperator_pos.empty():
+            separator_pos = self.find_ignoring_comments_and_strings(";", point)
+            if separator_pos.empty():
                 break
 
-            point = seperator_pos.b
+            point = separator_pos.b
 
         return point
