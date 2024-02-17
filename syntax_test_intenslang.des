@@ -562,6 +562,8 @@ FUNC myfunc {
 
     PRINT("Important message: ", DATASET_TEXT(foo.foo), EOLN);
 
+    PRINT "hello";
+
     MAP(foo.baz {INDEX=foo.one});
 //              ^ punctuation.section.block.begin.intens
 //               ^^^^^ variable.parameter.intens
